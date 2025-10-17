@@ -1,3 +1,11 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/karlmzlinux/voidchan/main/voidchan logo.png" alt="VoidChan Logo" width="300">
+</p>
+
+# 🌌 VoidChan
+
+
+
 # VoidChan
 # 🌌 VoidChan
 
