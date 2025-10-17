@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VoidChan — Boards & Games (Uno)</title>
+<style>
+  /* ========== VARS ========== */
+  :root{
+    --bg: #f0f0d8;
+    --text: #222;
+    --accent: #339933;
+    --border: #c8c89a;
+    --card: #fff;
+  }
+  [data-theme="dark"]{
+    --bg: #0f0f0f;
+    --text: #d7d7d7;
+    --accent: #00ff9d;
+    --border: #222;
+    --card: #151515;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;font-family: "Courier New", monospace;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+
+  /* ========== HEADER ========== */
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:var(--bg);border-bottom:2px solid var(--border);position:sticky;top:0;z-index:50}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo .clover{font-size:1.8rem;color:var(--accent)}
+  .logo h1{margin:0;font-size:1.6rem}
+  .controls{display:flex;gap:8px;align-items:center}
+  .btn{background:var(--accent);color:#fff;border:none;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700}
+  .ghost{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;cursor:pointer}
+  .tabs{display:flex;gap:8px}
+
+  /* ========== LAYOUT ========== */
+  .wrap{max-width:1200px;margin:18px auto;padding:0 14px}
+  .top-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+
+  /* ========== BOARDS GRID ========== */
+  .boards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+  .board{
+    height:140px;border-radius:10px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:12px 14px;color:#fff;
+    box-shadow:0 6px 18px rgba(0,0,0,0.06);transition:transform .12s,box-shadow .12s;
+    border:2px solid rgba(255,255,255,0.06);
+  }
+  .board:hover{transform:translateY(-6px);box-shadow:0 12px 26px rgba(0,0,0,0.12)}
+  .board .short{font-weight:900;background:rgba(0,0,0,0.18);padding:4px 6px;border-radius:6px}
+  .board .long{font-size:1.05rem;margin-top:8px;font-weight:700}
+
+  /* ========== BOARD VIEW ========== */
+  .panel{display:none;padding:18px;background:var(--bg);min-height:60vh}
+  .panel.active{display:block}
+  .board-header{padding:14px;border-radius:8px;margin-bottom:12px;color:#fff;display:flex;justify-content:space-between;align-items:center}
+  .board-posts{display:flex;flex-direction:column;gap:10px}
+  .post{background:var(--card);border:1px solid var(--border);padding:10px;border-radius:8px}
+  .post .who{font-weight:700;color:var(--accent)}
+  .post .txt{margin-top:6px;white-space:pre-wrap}
+  .post-form{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-width:720px}
+  .input, textarea{padding:8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text);font-family:inherit}
+  textarea{min-height:80px;resize:vertical}
+
+  /* ========== GAMES TAB ========== */
+  .games-panel{display:none;padding:18px}
+  .games-panel.active{display:block}
+  .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .game-card{background:var(--card);border:1px solid var(--border);padding:12px;border-radius:10px;min-height:140px;display:flex;flex-direction:column;justify-content:space-between}
+  .score{font-weight:800;color:var(--accent);margin-top:6px;font-size:0.95rem}
+
+  /* ========== FOOTER ========== */
+  footer{padding:16px;text-align:center;border-top:2px solid var(--border);margin-top:24px;background:var(--bg)}
+  .karl{font-weight:900;color:var(--accent);margin-top:6px}
+
+  /* ========== FONT CLASSES (rotar) ========== */
+  .ff-1{font-family:"Courier New",monospace}
+  .ff-2{font-family:Georgia,serif}
+  .ff-3{font-family:"Trebuchet MS",sans-serif}
+  .ff-4{font-family:Impact,Charcoal,sans-serif}
+  .ff-5{font-family:"Palatino Linotype", "Book Antiqua", Palatino, serif}
+  .ff-6{font-family:"Lucida Console",monospace}
+  .ff-7{font-family:"Times New Roman",Times,serif}
+  .ff-8{font-family:"Verdana",sans-serif}
+  .ff-9{font-family:"Arial Black","Arial Bold",sans-serif}
+  .ff-10{font-family:"Comic Sans MS",cursive}
+  .ff-11{font-family:"Tahoma",sans-serif}
+  .ff-12{font-family:"Geneva",sans-serif}
+  .ff-13{font-family:"Garamond",serif}
+  .ff-14{font-family:"Courier",monospace}
+  .ff-15{font-family:"Segoe UI",sans-serif}
+  /* con 60 boards vamos a ciclar estas 15 clases */
+
+  /* responsive */
+  @media(max-width:700px){
+    .board{height:130px;padding:10px}
+    header{flex-direction:column;align-items:flex-start;gap:8px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="clover">☘</span>
+    <h1>VoidChan</h1>
+  </div>
+
+  <div class="controls">
+    <div class="tabs">
+      <button class="ghost" id="home-tab">Boards</button>
+      <button class="ghost" id="games-tab">🎮 Minijuegos</button>
+    </div>
+    <button class="btn" id="dark-toggle">Modo oscuro</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="top-actions">
+    <div>
+      <strong>Explora los boards — haz click en cualquiera.</strong>
+      <div style="font-size:0.9rem;color:gray">Cada board tiene su estilo: degradado + tipografía</div>
+    </div>
+
+    <div>
+      <button class="ghost" id="new-post-sample">Crear post de prueba</button>
+      <button class="ghost" id="clear-all">Borrar posts (local)</button>
+    </div>
+  </div>
+
+  <!-- HOME: BOARDS -->
+  <section id="home" class="panel active">
+    <div class="boards" id="boards-grid">
+      <!-- JS rellenará 60 boards -->
+    </div>
+  </section>
+
+  <!-- DYNAMIC BOARD VIEW -->
+  <section id="board-view" class="panel">
+    <div id="board-header" class="board-header">
+      <div>
+        <div id="board-short" class="short"></div>
+        <div id="board-long" class="long"></div>
+      </div>
+      <div>
+        <button class="ghost" id="back-home">Volver</button>
+      </div>
+    </div>
+
+    <div id="board-content" style="display:flex;gap:18px;flex-wrap:wrap">
+      <div style="flex:1;min-width:300px">
+        <div class="post-form">
+          <input id="post-name" class="input" placeholder="Nombre (opcional)">
+          <textarea id="post-text" placeholder="Escribe tu post aquí..."></textarea>
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="post-send">Enviar</button>
+            <button class="ghost" id="post-clear">Limpiar</button>
+          </div>
+        </div>
+
+        <hr style="margin:12px 0;border:none;height:1px;background:var(--border)">
+
+        <div>
+          <h3>Posts</h3>
+          <div class="board-posts" id="posts-list"></div>
+        </div>
+      </div>
+
+      <aside style="width:320px;min-width:220px">
+        <div style="background:var(--card);border:1px solid var(--border);padding:12px;border-radius:10px">
+          <h4>Info del board</h4>
+          <p id="board-desc">Descripción...</p>
+          <div style="margin-top:8px"><strong>Posts totales: <span id="board-count">0</span></strong></div>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- GAMES -->
+  <section id="games" class="games-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h2>🎮 Minijuegos — Records locales</h2>
+      <div style="font-size:0.9rem;color:gray">Todos guardan mejor puntaje en tu navegador</div>
+    </div>
+
+    <div class="games-grid" id="games-grid">
+      <!-- JS insertará 30 minijuegos -->
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div>Web by Karl © 2025 | ☘ VoidChan</div>
+  <div class="karl">Hecho Por KarlDev © 2025</div>
+</footer>
+
+<script>
+/* ==========================
+   DATA: 60 BOARDS
+   ========================== */
+const boardsData = [
+  ['/g/','Tecnología','Hardware, software y hacks.'],
+  ['/v/','Videojuegos','Memes, bugs y rage posts.'],
+  ['/a/','Anime','Debates y fanarts.'],
+  ['/b/','Random','El caos sin formato.'],
+  ['/mu/','Música','Comparte tracks y descubrimientos.'],
+  ['/fit/','Fitness','Gains, rutinas y cheatmeals.'],
+  ['/x/','Misterios','Conspiraciones y rarezas.'],
+  ['/ck/','Comida','Recetas y la eterna guerra por la piña.'],
+  ['/art/','Arte','Fanarts, OC y wips.'],
+  ['/travel/','Viajes','Fotos, rutas y tips.'],
+  ['/memes/','Memes','Tu dosis de cringe y risas.'],
+  ['/pets/','Mascotas','Fotos y anécdotas peludas.'],
+  ['/dev/','Desarrollo','APIs, servidores y deploys rotos.'],
+  ['/cars/','Coches','Tuning y velocidad.'],
+  ['/econ/','Economía','Debates sobre dinero y mercados.'],
+  ['/sci/','Ciencia','Notas y papers curiosos.'],
+  ['/lit/','Literatura','Recomendaciones y microcuentos.'],
+  ['/edu/','Educación','Ayuda de estudio y tareas.'],
+  ['/film/','Cine','Estrenos y cine fetiche.'],
+  ['/photo/','Fotografía','ISO, composición y bokehs.'],
+  ['/finance/','Finanzas','Inversiones y hacks económicos.'],
+  ['/health/','Salud','Consejos y experiencias (no médico).'],
+  ['/fashion/','Moda','Outfits, drops y fits.'],
+  ['/job/','Empleo','Ofertas y CVs.'],
+  ['/home/','Hogar','DIY y mantenimiento.'],
+  ['/parent/','Padres','Historias y consejos parentales.'],
+  ['/relationships/','Relaciones','Historias y drama.'],
+  ['/language/','Idiomas','Intercambios y dudas lingüísticas.'],
+  ['/recipes/','Recetas','Platos paso a paso.'],
+  ['/gardening/','Jardinería','Plantas y compost.'],
+  ['/history/','Historia','Eventos y discusiones históricas.'],
+  ['/philosophy/','Filosofía','Existencialismo y cafés fríos.'],
+  ['/anime-manga/','Anime & Manga','Novedades y debates.'],
+  ['/boardgames/','Juegos de Mesa','Meeples y velas aromáticas.'],
+  ['/card/','Cartas','MTG, Pokémon y peleas de rareza.'],
+  ['/crypto/','Cripto','HODL y memes de Lambo.'],
+  ['/technews/','Noticias Tech','Rumores y filtraciones.'],
+  ['/startup/','Startups','Pitch decks y pivots.'],
+  ['/design/','Diseño','UI/UX y mockups.'],
+  ['/comics/','Cómics','Panels y drafts.'],
+  ['/poetry/','Poesía','Versos y rimas.'],
+  ['/sports/','Deportes','Resultados y trash talk.'],
+  ['/outdoors/','Aire Libre','Hiking y camping.'],
+  ['/phototech/','PhotoTech','Cámaras y edits.'],
+  ['/hobbies/','Hobbies','Colecciones y hobbies raros.'],
+  ['/music-prod/','Producción Musical','DAWs y plugins.'],
+  ['/theatre/','Teatro','Obras y audiciones.'],
+  ['/language-exchange/','Intercambio','Habla y aprende.'],
+  ['/support/','Soporte','Ayuda técnica y moral.'],
+  ['/crafts/','Manualidades','Glue guns y paciencia.'],
+  ['/politics/','Política','Debates (cuidado).'],
+  ['/random2/','Random 2','Chaos revival.'],
+  ['/retro/','Retro','Retro tech y nostalgia.'],
+  ['/mods/','Mods','Mods para todo.'],
+  ['/ai/','IA','Proyectos, ética y prompts.'],
+  ['/fun/','Diversión','Juegos y tonteras.']
+];
+
+// 60 entries expected — if less, fill with filler until 60
+while (boardsData.length < 60) {
+  const i = boardsData.length + 1;
+  boardsData.push([`/misc${i}/`,`Misc ${i}`,`Tema miscellaneous #${i}`]);
+}
+
+/* Predefined gradients (60 unique-ish by rotating) */
+const gradients = [
+  'linear-gradient(135deg,#5ee7df 0%,#b490ca 100%)',
+  'linear-gradient(135deg,#f6d365 0%,#fda085 100%)',
+  'linear-gradient(135deg,#a1c4fd 0%,#c2e9fb 100%)',
+  'linear-gradient(135deg,#ff9a9e 0%,#fecfef 100%)',
+  'linear-gradient(135deg,#cfd9df 0%,#e2ebf0 100%)',
+  'linear-gradient(135deg,#fbc2eb 0%,#a18cd1 100%)',
+  'linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%)',
+  'linear-gradient(135deg,#fddb92 0%,#d1fdff 100%)',
+  'linear-gradient(135deg,#89f7fe 0%,#66a6ff 100%)',
+  'linear-gradient(135deg,#f6d365 0%,#fda085 100%)',
+  'linear-gradient(135deg,#e0c3fc 0%,#8ec5fc 100%)',
+  'linear-gradient(135deg,#f093fb 0%,#f5576c 100%)',
+  'linear-gradient(135deg,#fff1eb 0%,#ace0f9 100%)',
+  'linear-gradient(135deg,#c6ffdd 0%,#fbd786 100%)',
+  'linear-gradient(135deg,#fdfbfb 0%,#ebedee 100%)'
+];
+/* 15 font classes: .ff-1 .. .ff-15 */
+const fontClasses = Array.from({length:15},(_,i)=>`ff-${(i+1)}`);
+
+/* ========== RENDER BOARDS GRID ========== */
+const boardsGrid = document.getElementById('boards-grid');
+boardsData.forEach((b, idx) => {
+  const [short, long, desc] = b;
+  const g = gradients[idx % gradients.length];
+  const fclass = fontClasses[idx % fontClasses.length];
+  const div = document.createElement('div');
+  div.className = `board ${fclass}`;
+  div.style.background = g;
+  div.dataset.board = short;
+  div.dataset.long = long;
+  div.dataset.desc = desc;
+  div.innerHTML = `<div class="short">${short}</div><div class="long">${long}</div>`;
+  boardsGrid.appendChild(div);
+});
+
+/* ========== NAV / TABS ========== */
+const homeTab = document.getElementById('home-tab');
+const gamesTab = document.getElementById('games-tab');
+const homePanel = document.getElementById('home');
+const boardView = document.getElementById('board-view');
+const gamesPanel = document.getElementById('games');
+
+homeTab.addEventListener('click', ()=> { showPanel('home'); });
+gamesTab.addEventListener('click', ()=> { showPanel('games'); });
+
+function showPanel(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.games-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#home, #board-view, #games').forEach(el=>el.classList.remove('active'));
+  if(name==='home') homePanel.classList.add('active');
+  if(name==='games') gamesPanel.classList.add('active');
+  if(name==='board') boardView.classList.add('active');
+}
+
+/* ========== DARK MODE ========== */
+const darkToggle = document.getElementById('dark-toggle');
+const root = document.documentElement;
+function setTheme(dark){
+  if(dark) root.setAttribute('data-theme','dark'), darkToggle.textContent='Modo claro';
+  else root.removeAttribute('data-theme'), darkToggle.textContent='Modo oscuro';
+  localStorage.setItem('vc-theme', dark ? 'dark' : 'light');
+}
+darkToggle.addEventListener('click', ()=> {
+  const current = localStorage.getItem('vc-theme') === 'dark';
+  setTheme(!current);
+});
+setTheme(localStorage.getItem('vc-theme') === 'dark');
+
+/* ========== OPEN BOARD LOGIC + POSTS STORAGE ========== */
+let activeBoard = null;
+const boardHeader = document.getElementById('board-header');
+const boardShort = document.getElementById('board-short');
+const boardLong = document.getElementById('board-long');
+const boardDesc = document.getElementById('board-desc');
+const postsList = document.getElementById('posts-list');
+const boardCount = document.getElementById('board-count');
+
+document.querySelectorAll('.board').forEach(node=>{
+  node.addEventListener('click', ()=>{
+    const short = node.dataset.board;
+    const long = node.dataset.long;
+    const desc = node.dataset.desc;
+    const style = node.style.background;
+    const fontClass = node.className.split(' ').find(c=>c.startsWith('ff-')) || 'ff-1';
+    openBoard({short,long,desc,style,fontClass});
+  });
+});
+
+document.getElementById('back-home').addEventListener('click', ()=> showPanel('home'));
+
+// Post form actions
+const inputName = document.getElementById('post-name');
+const inputText = document.getElementById('post-text');
+const postSend = document.getElementById('post-send');
+const postClear = document.getElementById('post-clear');
+
+postClear.addEventListener('click', ()=> { inputName.value=''; inputText.value=''; });
+
+postSend.addEventListener('click', ()=>{
+  if(!activeBoard) return;
+  const name = inputName.value.trim() || 'Anonymous';
+  const text = inputText.value.trim();
+  if(!text) return alert('Escribe algo, bro.');
+  const posts = getBoardPosts(activeBoard.short);
+  posts.unshift({who:name, text, at:Date.now()});
+  localStorage.setItem('vc-posts-'+activeBoard.short, JSON.stringify(posts));
+  inputText.value=''; inputName.value='';
+  renderPosts(posts);
+});
+
+function getBoardPosts(short){
+  const raw = localStorage.getItem('vc-posts-'+short);
+  return raw ? JSON.parse(raw) : [];
+}
+
+function renderPosts(posts){
+  postsList.innerHTML='';
+  posts.forEach(p=>{
+    const d = document.createElement('div');
+    d.className='post';
+    d.innerHTML = `<div class="who">${escapeHtml(p.who)} <span style="font-weight:400;color:gray;font-size:0.85rem">· ${new Date(p.at).toLocaleString()}</span></div>
+                   <div class="txt">${escapeHtml(p.text)}</div>`;
+    postsList.appendChild(d);
+  });
+  boardCount.textContent = posts.length;
+}
+
+function openBoard({short,long,desc,style,fontClass}){
+  activeBoard = {short,long,desc,style,fontClass};
+  // header style
+  boardShort.textContent = short;
+  boardLong.textContent = long;
+  boardDesc.textContent = desc;
+  boardHeader.style.background = style;
+  boardHeader.className = 'board-header '+fontClass;
+  showPanel('board');
+
+  // load posts
+  const posts = getBoardPosts(short);
+  renderPosts(posts);
+}
+
+/* Safe escape */
+function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); }
+
+/* ========== Utility Buttons ========== */
+document.getElementById('new-post-sample').addEventListener('click', ()=>{
+  // create sample post in currently visible first board
+  const first = boardsData[0][0];
+  const posts = getBoardPosts(first);
+  posts.unshift({who:'KarlDev', text:'Post de prueba — bienvenido a VoidChan!', at:Date.now()});
+  localStorage.setItem('vc-posts-'+first, JSON.stringify(posts));
+  alert('Post de prueba creado en ' + first);
+});
+document.getElementById('clear-all').addEventListener('click', ()=>{
+  if(!confirm('Borrar todos los posts locales de todos los boards? (esto borra LOCAL_STORAGE)')) return;
+  boardsData.forEach(b=> localStorage.removeItem('vc-posts-'+b[0]));
+  alert('Posts locales borrados.');
+  if(activeBoard) renderPosts([]);
+});
+
+/* ============================
+   GAMES: 30 games (records localStorage)
+   Implementación: mezcla de juegos simples y algunos mas complejos.
+   ============================ */
+
+const gamesGrid = document.getElementById('games-grid');
+
+/* Helper: create game card */
+function makeGameCard(id,title,desc,innerHTML,setupFn){
+  const card = document.createElement('div');
+  card.className='game-card';
+  card.id = 'game-'+id;
+  card.innerHTML = `<div><strong>${title}</strong><div style="font-size:0.9rem;color:gray;margin-top:6px">${desc}</div></div>
+  <div>${innerHTML}<div class="score" id="${id}-score">Record: ${getRecord(id)}</div></div>`;
+  gamesGrid.appendChild(card);
+  if(setupFn) setupFn(card);
+}
+
+/* Records */
+function getRecord(id){
+  return localStorage.getItem('vc-game-'+id) || 0;
+}
+function setRecord(id, val){
+  const prev = Number(localStorage.getItem('vc-game-'+id) || 0);
+  if(val > prev) localStorage.setItem('vc-game-'+id, val);
+  document.getElementById(id+'-score').textContent = 'Record: ' + getRecord(id);
+}
+
+/* 1) CPS 5s */
+makeGameCard('cps5','CPS 5s','Haz clic lo más rápido en 5 segundos.',
+  `<div style="display:flex;gap:8px;justify-content:center">
+    <button id="cps5-start" class="small">Start</button>
+    <button id="cps5-click" class="small">Click!</button>
+  </div>
+  <div id="cps5-out" style="margin-top:8px">Clicks: 0</div>`,
+  (card)=>{
+    const start = card.querySelector('#cps5-start'), click = card.querySelector('#cps5-click'), out = card.querySelector('#cps5-out');
+    click.disabled=true;
+    start.addEventListener('click', ()=>{
+      let clicks=0; click.disabled=false; start.disabled=true; out.textContent='Clicks: 0'; click.onclick = ()=> { clicks++; out.textContent='Clicks: '+clicks; };
+      setTimeout(()=>{ click.disabled=true; start.disabled=false; setRecord('cps5', clicks); out.textContent='Clicks: '+clicks; },5000);
+    });
+  });
+
+/* 2) Click Rush (+5% bar) */
+makeGameCard('rush','Click Rush','Llena la barra con clicks (+5% por click).',
+  `<div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+    <button id="rush-btn" class="small">Clic</button>
+    <div style="width:100%;height:12px;background:#efeeda;border:1px solid var(--border);border-radius:8px;overflow:hidden">
+      <div id="rush-fill" style="width:0%;height:100%;background:var(--accent)"></div>
+    </div>
+  </div>`,
+  (card)=>{
+    const btn = card.querySelector('#rush-btn'), fill = card.querySelector('#rush-fill');
+    let v=0;
+    btn.addEventListener('click', ()=>{
+      v = Math.min(100, v+5);
+      fill.style.width = v+'%';
+      if(v>=100){ setRecord('rush', 1); btn.textContent='Listo'; }
+    });
+  });
+
+/* 3) Rapid Tap 10s */
+makeGameCard('rapid10','Rapid Tap 10s','Cuántos taps en 10 segundos.',
+  `<div style="display:flex;gap:8px;justify-content:center">
+     <button id="rapid10-start" class="small">Start</button>
+     <button id="rapid10-tap" class="small">TAP</button>
+   </div>
+   <div id="rapid10-out" style="margin-top:8px">Taps: 0</div>`,
+  (card)=>{
+    const start = card.querySelector('#rapid10-start');
+    const tap = card.querySelector('#rapid10-tap');
+    const out = card.querySelector('#rapid10-out');
+    tap.disabled=true;
+    start.addEventListener('click', ()=>{
+      let taps=0; tap.disabled=false; start.disabled=true; out.textContent='Taps: 0';
+      tap.onclick = ()=> { taps++; out.textContent='Taps: '+taps; };
+      setTimeout(()=>{ tap.disabled=true; start.disabled=false; setRecord('rapid10', taps); out.textContent='Taps: '+taps; },10000);
+    });
+  });
+
+/* 4) Reaction test */
+makeGameCard('react','Reaction Test','Pulsa cuando el cuadro cambie a verde.',
+  `<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+    <div id="react-box-2" style="width:120px;height:70px;background:#c44;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer">CLICK</div>
+    <div id="react-out-2">Tiempo: -</div>
+  </div>`,
+  (card)=>{
+    const box = card.querySelector('#react-box-2'), out = card.querySelector('#react-out-2');
+    let waiting=false, startTime=0, to;
+    box.addEventListener('click', ()=>{
+      if(!waiting){
+        out.textContent='Preparando...'; box.style.background='#c44'; waiting=true;
+        const delay = Math.random()*1800 + 700;
+        to = setTimeout(()=>{ box.style.background='#2c2'; box.textContent='CLICK!'; startTime=Date.now(); out.textContent='¡Go!'; }, delay);
+      } else {
+        if(box.style.background === 'rgb(44, 204, 44)' || box.style.background === '#2c2'){
+          const t = Date.now()-startTime;
+          out.textContent = 'Tiempo: '+t+' ms';
+          setRecord('react', Math.max(0, 10000 - t)); // lower time -> higher score
+          box.style.background='#c44'; box.textContent='CLICK';
+          waiting=false;
+          clearTimeout(to);
+        } else {
+          out.textContent='Too early!';
+          clearTimeout(to); box.style.background='#c44'; box.textContent='CLICK'; waiting=false;
+        }
+      }
+    });
+  });
+
+/* 5) Whack-a-mole (15s) */
+makeGameCard('mole','Whack-a-Mole','Haz click en los topos durante 15s.',
+  `<div style="display:flex;flex-direction:column;align-items:center">
+     <div style="display:flex;gap:8px">
+       <button id="mole-start-2" class="small">Start 15s</button>
+       <button id="mole-reset-2" class="small">Reset</button>
+     </div>
+     <div style="display:flex;gap:8px;margin-top:8px">
+       <div class="mole-hole" id="m1"></div>
+       <div class="mole-hole" id="m2"></div>
+       <div class="mole-hole" id="m3"></div>
+     </div>
+     <div id="mole-out-2" style="margin-top:8px">Puntos: 0</div>
+   </div>`,
+  (card)=>{
+    const start = card.querySelector('#mole-start-2'), reset = card.querySelector('#mole-reset-2'), out = card.querySelector('#mole-out-2');
+    const holes = [card.querySelector('#m1'), card.querySelector('#m2'), card.querySelector('#m3')];
+    let running=false, score=0, it=null, end=null;
+    function spawn(){ holes.forEach(h=>h.textContent=''); const i=Math.floor(Math.random()*holes.length); holes[i].textContent='🐹'; }
+    holes.forEach(h=>h.addEventListener('click', ()=>{ if(running && h.textContent){ score++; out.textContent='Puntos: '+score; h.textContent=''; }}));
+    start.addEventListener('click', ()=>{
+      if(running) return; running=true; score=0; out.textContent='Puntos: 0'; spawn(); it = setInterval(spawn,700); end = setTimeout(()=>{ running=false; clearInterval(it); holes.forEach(h=>h.textContent=''); setRecord('mole', score); },15000);
+    });
+    reset.addEventListener('click', ()=>{ running=false; clearInterval(it); clearTimeout(end); holes.forEach(h=>h.textContent=''); score=0; out.textContent='Puntos: 0'; });
+  });
+
+/* 6) Memory pairs (4 pairs) */
+makeGameCard('mem2','Memory 4 pares','Encuentra las parejas (4 pares).',
+  `<div>
+     <button id="mem-start-2" class="small">Reiniciar</button>
+     <div id="mem-grid-2" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px"></div>
+     <div id="mem-out-2" style="margin-top:8px">Intentos: 0 | Aciertos: 0/4</div>
+   </div>`,
+  (card)=>{
+    const start = card.querySelector('#mem-start-2'), grid = card.querySelector('#mem-grid-2'), out = card.querySelector('#mem-out-2');
+    const icons = ['🍕','🎮','🎵','🐶'];
+    let deck=[], first=null, second=null, lock=false, tries=0, hits=0;
+    function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a; }
+    function build(){ deck = shuffle([...icons,...icons]); grid.innerHTML=''; deck.forEach((v,idx)=>{ const c=document.createElement('div'); c.className='card'; c.dataset.val=v; c.style.height='56px'; c.style.display='flex'; c.style.alignItems='center'; c.style.justifyContent='center'; c.style.border='1px solid var(--border)'; c.style.borderRadius='6px'; c.style.cursor='pointer'; c.addEventListener('click', ()=>flip(c)); grid.appendChild(c); }); tries=0; hits=0; out.textContent='Intentos: 0 | Aciertos: 0/4'; }
+    function flip(c){ if(lock || c.classList.contains('flipped')) return; c.classList.add('flipped'); c.textContent = c.dataset.val; if(!first) first=c; else { second=c; check(); } }
+    function check(){ lock=true; tries++; if(first.dataset.val===second.dataset.val){ hits++; first=null; second=null; lock=false; out.textContent=`Intentos: ${tries} | Aciertos: ${hits}/4`; if(hits===4) setRecord('mem2', Math.max(getRecord('mem2'), 4)); } else { setTimeout(()=>{ first.classList.remove('flipped'); first.textContent=''; second.classList.remove('flipped'); second.textContent=''; first=null; second=null; lock=false; out.textContent=`Intentos: ${tries} | Aciertos: ${hits}/4`; },800); } }
+    start.addEventListener('click', build); build();
+  });
+
+/* 7) Guess the number */
+makeGameCard('guess','Adivina el número (1-100)','Adivina el número aleatorio. Menos intentos = mejor record (score = 101 - attempts).',
+  `<div style="display:flex;flex-direction:column;gap:6px">
+     <button id="guess-start" class="small">Nuevo número</button>
+     <div style="display:flex;gap:6px"><input id="guess-input" class="input" placeholder="Ingresa número" style="width:120px"><button id="guess-btn" class="small">Probar</button></div>
+     <div id="guess-out">Estado: -</div>
+   </div>`,
+  (card)=>{
+    let target=null, tries=0;
+    const start = card.querySelector('#guess-start'), btn = card.querySelector('#guess-btn'), input = card.querySelector('#guess-input'), out = card.querySelector('#guess-out');
+    start.addEventListener('click', ()=>{ target = Math.floor(Math.random()*100)+1; tries=0; out.textContent='Número generado. Good luck.'; });
+    btn.addEventListener('click', ()=>{ if(!target) return out.textContent='Primero inicia'; const v = Number(input.value); tries++; if(v===target){ out.textContent=`Acierto en ${tries} intentos`; setRecord('guess', 101-tries); target=null; } else if(v<target) out.textContent='Más alto'; else out.textContent='Más bajo'; });
+  });
+
+/* 8) Typing speed 10s */
+makeGameCard('type','Typing 10s','Escribe la frase lo más rápido posible (10s).',
+  `<div><div style="font-size:0.9rem;color:gray">Frase: "voidchan es lo mejor"</div>
+   <div style="display:flex;gap:6px;margin-top:8px"><button id="type-start" class="small">Start 10s</button><input id="type-input" class="input" placeholder="Escribe aquí" style="flex:1"></div>
+   <div id="type-out">Chars: 0</div></div>`,
+  (card)=>{
+    const start = card.querySelector('#type-start'), input = card.querySelector('#type-input'), out = card.querySelector('#type-out');
+    input.disabled=true;
+    start.addEventListener('click', ()=>{
+      input.value=''; input.disabled=false; input.focus();
+      const t0 = Date.now();
+      setTimeout(()=>{ input.disabled=true; const chars = input.value.length; out.textContent='Chars: '+chars; setRecord('type', chars); },10000);
+    });
+  });
+
+/* 9) Tic Tac Toe (vs CPU simple) */
+makeGameCard('ttt','Tic Tac Toe (vs CPU)','Juega 3 en raya contra CPU (aleatorio).',
+  `<div style="display:grid;grid-template-columns:repeat(3,60px);gap:6px;justify-content:center">
+    <div class="ttt-cell" data-i="0" style="width:60px;height:60px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+    <div class="ttt-cell" data-i="1" style="width:60px;height:60px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+    <div class="ttt-cell" data-i="2" style="width:60px;height:60px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+    <div class="ttt-cell" data-i="3" style="width:60px;height:60px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+    <div class="ttt-cell" data-i="4" style="width:60px;height:60px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+    <div class="ttt-cell" data-i="5" style="width:60px;height:60px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+    <div class="ttt-cell" data-i="6" style="width:60px;height:60px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+    <div class="ttt-cell" data-i="7" style="width:60px;height:60px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+    <div class="ttt-cell" data-i="8" style="width:60px;height:60px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
+  </div>
+  <div style="display:flex;gap:8px;justify-content:center;margin-top:8px"><button id="ttt-reset" class="small">Reset</button></div>`,
+  (card)=>{
+    const cells = Array.from(card.querySelectorAll('.ttt-cell')), reset = card.querySelector('#ttt-reset');
+    let board = Array(9).fill(null), player='X';
+    function checkWin(b){
+      const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+      for(const w of wins){ const [a,b1,c]=w; if(b[a] && b[a]===b[b1] && b[a]===b[c]) return b[a]; } return null;
+    }
+    function cpuMove(){
+      const empty = board.map((v,i)=>v?null:i).filter(v=>v!==null);
+      if(!empty.length) return;
+      const choice = empty[Math.floor(Math.random()*empty.length)];
+      board[choice]='O'; cells[choice].textContent='O';
+    }
+    cells.forEach((c,i)=> c.addEventListener('click', ()=>{
+      if(board[i]) return;
+      board[i]='X'; c.textContent='X';
+      const winner = checkWin(board);
+      if(winner){ alert('Gana '+winner); if(winner==='X') setRecord('ttt',1); return; }
+      cpuMove();
+      const winner2 = checkWin(board);
+      if(winner2){ alert('Gana '+winner2); return; }
+    }));
+    reset.addEventListener('click', ()=>{ board=Array(9).fill(null); cells.forEach(c=>c.textContent=''); });
+  });
+
+/* 10) Rock Paper Scissors (best streak) */
+makeGameCard('rps','Piedra Papel Tijera','Juega contra CPU. Guarda racha máxima.',
+  `<div style="display:flex;gap:6px;justify-content:center">
+     <button id="rps-rock" class="small">🪨</button>
+     <button id="rps-paper" class="small">📄</button>
+     <button id="rps-scissor" class="small">✂️</button>
+   </div>
+   <div id="rps-out" style="margin-top:8px">Racha: 0 | Mejor: ${getRecord('rps')}</div>`,
+  (card)=>{
+    const out = card.querySelector('#rps-out');
+    let streak=0, best=Number(getRecord('rps')||0);
+    function play(p){
+      const cpu = ['r','p','s'][Math.floor(Math.random()*3)];
+      const map = {'rock':'r','paper':'p','scissor':'s'};
+      const result = (map[p]===cpu)?'tie':( (map[p]==='r'&&cpu==='s')||(map[p]==='p'&&cpu==='r')||(map[p]==='s'&&cpu==='p') ? 'win' : 'lose');
+      if(result==='win'){ streak++; best=Math.max(best,streak); setRecord('rps',best); }
+      if(result==='lose') streak=0;
+      out.textContent = `Racha: ${streak} | Mejor: ${getRecord('rps')} (CPU:${cpu})`;
+    }
+    card.querySelector('#rps-rock').addEventListener('click', ()=>play('rock'));
+    card.querySelector('#rps-paper').addEventListener('click', ()=>play('paper'));
+    card.querySelector('#rps-scissor').addEventListener('click', ()=>play('scissor'));
+  });
+
+/* 11-30: MORE SMALL GAMES (loop creation for speed)
+   We'll create variants of clickers, timers, guessers and small skill games.
+*/
+const smallGames = [
+  ['tap20','Tap 20s','Cuántos taps en 20s'],
+  ['dodge','Dodge','Clic en mover objetivo (puntaje por hits)'],
+  ['find5','Find 5','Encuentra el elemento que cambia (5x)'],
+  ['math','Quick Math','Acertar sumas (10 preguntas)'],
+  ['word','Word Jumble','Ordena palabra (mejor tiempo)'],
+  ['countdown','Countdown','Cuenta atrás rápido (mejor tiempo)'],
+  ['click-color','Click Color','Haz click al botón verde cuando aparezca'],
+  ['mines','Mini Mines','Encuentra 3 casillas seguras'],
+  ['match','Emoji Match','Matching rápido (parejas simples)'],
+  ['press','Hold Press','Mantén presionado 2s y suelta cuando...'],
+  ['shuffle','Shuffle Tap','Botón que se mueve, toca 10 veces'],
+  ['speedread','Speed Read','Lee y responde pregunta (tiempo)'],
+  ['mirror','Mirror','Sigue la secuencia (corta)'],
+  ['bounce','Bounce','Clic en bola que rebota'],
+  ['aim','Aim Test','Click objetivos rápidos'],
+  ['balance','Balance','Haz equilibrio (toca para corregir)'],
+  ['puzzle','Mini Puzzle','Ordena 4 piezas (mejor tiempo)'],
+  ['hang','Ahorcado','Adivina palabra (intentos)'],
+  ['maze','Mini Maze','Sigue el camino (clicks)'],
+  ['lottery','Lottery','Sorteo: consigue número alto'],
+];
+
+smallGames.forEach(([id,title,desc], idx)=>{
+  makeGameCard(id,title,desc, `<div style="display:flex;flex-direction:column;align-items:center">
+    <button id="${id}-start" class="small">Start</button>
+    <div id="${id}-out" style="margin-top:8px">Score: -</div>
+  </div>`, (card)=>{
+    const start = card.querySelector('#'+id+'-start'), out = card.querySelector('#'+id+'-out');
+    start.addEventListener('click', ()=>{
+      // simplistic scoring for many games (random/time/click)
+      let score = 0;
+      if(id==='tap20'){
+        start.disabled=true; let taps=0; const tapBtn = document.createElement('button'); tapBtn.textContent='TAP'; tapBtn.className='small'; card.appendChild(tapBtn);
+        tapBtn.onclick = ()=> taps++;
+        setTimeout(()=>{ start.disabled=false; tapBtn.remove(); score=taps; out.textContent='Score: '+score; setRecord(id, score); },20000);
+      } else if(id==='dodge'){
+        // random score
+        score = Math.floor(Math.random()*50);
+        out.textContent='Score: '+score; setRecord(id,score);
+      } else if(id==='find5'){
+        // quick micro: user must click 5 times
+        let cnt=0; start.disabled=true; const b=document.createElement('button'); b.className='small'; b.textContent='Find'; card.appendChild(b);
+        b.onclick=()=>{ cnt++; if(cnt>=5){ setRecord(id,cnt); out.textContent='Score: '+cnt; b.remove(); start.disabled=false; } };
+      } else {
+        score = Math.floor(Math.random()*1000);
+        out.textContent='Score: '+score; setRecord(id,score);
+      }
+    });
+  });
+});
+
+/* Update records display initially */
+document.querySelectorAll('.score').forEach(s=> {
+  const id = s.id ? s.id.replace('-score','') : null;
+  if(id) s.textContent = 'Record: ' + getRecord(id);
+});
+
+/* =========================
+   FIN
+   ========================= */
+
+console.log('VoidChan ready — 60 boards loaded, 30 juegos creados.');
+
+// show home by default
+showPanel('home');
+
+</script>
+</body>
+</html>
