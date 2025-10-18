@@ -239,6 +239,39 @@ changeBoard(board) {
             this.showMainApp();
         }
     }
+        async init() {
+    console.log('🚀 Iniciando Void Chan...');
+    
+    // INICIAR CARGA INMEDIATA
+    this.startInstantLoading();
+    
+    try {
+        // Configuración básica RÁPIDA
+        this.setupParticles();
+        this.setupEventListeners();
+        this.loadUserPreferences();
+        
+        // SISTEMA DE SCROLL Y NAVEGACIÓN
+        this.setupScrollSystem();
+        this.addQuickNavigation();
+        
+        // Intentar conectar a Supabase (pero no bloquear)
+        this.connectToSupabase();
+        
+        // Cargar posts (modo offline si falla)
+        await this.loadPosts();
+        
+        // Mostrar contenido INMEDIATAMENTE
+        this.showMainApp();
+        
+        console.log('✅ Void Chan listo');
+        
+    } catch (error) {
+        console.error('Error en init:', error);
+        // AUN CON ERROR, MOSTRAR LA APLICACIÓN
+        this.showMainApp();
+    }
+}
 
     startInstantLoading() {
         // Simular progreso rápido
