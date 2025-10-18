@@ -328,12 +328,12 @@
     <!-- Particle Background -->
     <div id="particles-js"></div>
 
-    <!-- Loading Screen - RESTAURADO -->
+    <!-- Loading Screen - CORREGIDO -->
     <div id="loading-screen" class="loading-screen">
         <div class="void-loader">
             <div class="void-spinner"></div>
             <h1>void chan</h1>
-            <p>Inicializando el vacío...</p>
+            <p id="loading-message">Inicializando el vacío...</p>
             <div class="load-progress">
                 <div class="progress-bar">
                     <div class="progress-fill" id="progress-fill"></div>
@@ -708,9 +708,9 @@
         console.log('✅ Supabase configurado');
     </script>
 
-    <!-- Script principal mejorado -->
+    <!-- Script principal CORREGIDO -->
     <script>
-        // Sistema de Void Chan MEJORADO
+        // Sistema de Void Chan CORREGIDO
         class VoidChan {
             constructor() {
                 this.currentBoard = 'global';
@@ -721,10 +721,14 @@
                 this.init();
             }
 
+            generateUserId() {
+                return 'user_' + Math.random().toString(36).substr(2, 9);
+            }
+
             async init() {
                 console.log('🚀 Iniciando Void Chan...');
                 
-                // INICIAR CARGA CON PROGRESO
+                // INICIAR CARGA CON PROGRESO - CORREGIDO
                 this.startLoadingProgress();
                 
                 try {
@@ -754,48 +758,64 @@
 
             startLoadingProgress() {
                 let progress = 0;
+                const progressFill = document.getElementById('progress-fill');
+                const progressText = document.getElementById('progress-text');
+                const loadingMessage = document.getElementById('loading-message');
+                
                 const progressInterval = setInterval(() => {
                     progress += 2;
-                    this.updateProgress(progress, this.getLoadingMessage(progress));
+                    
+                    // ACTUALIZAR PROGRESO VISUAL - CORREGIDO
+                    if (progressFill) {
+                        progressFill.style.width = progress + '%';
+                    }
+                    if (progressText) {
+                        progressText.textContent = progress + '%';
+                    }
+                    
+                    // Actualizar mensaje de estado
+                    const message = this.getLoadingMessage(progress);
+                    if (loadingMessage) {
+                        loadingMessage.textContent = message;
+                    }
+                    
+                    console.log(`Progreso: ${progress}% - ${message}`);
                     
                     if (progress >= 100) {
                         clearInterval(progressInterval);
+                        console.log('✅ Carga completada');
                     }
                 }, 50);
             }
 
-            updateProgress(percent, message) {
-                const progressFill = document.getElementById('progress-fill');
-                const progressText = document.getElementById('progress-text');
-                
-                if (progressFill) progressFill.style.width = percent + '%';
-                if (progressText) progressText.textContent = percent + '%';
-            }
-
             getLoadingMessage(progress) {
-                const messages = [
-                    "Iniciando sistema...",
-                    "Cargando interfaz...", 
-                    "Conectando a la base de datos...",
-                    "Cargando posts...",
-                    "Configurando tiempo real...",
-                    "¡Listo!"
-                ];
-                const index = Math.floor((progress / 100) * (messages.length - 1));
-                return messages[index] || "Cargando...";
+                if (progress < 20) return "Iniciando sistema...";
+                if (progress < 40) return "Cargando interfaz...";
+                if (progress < 60) return "Conectando a la base de datos...";
+                if (progress < 80) return "Cargando posts...";
+                if (progress < 100) return "Configurando tiempo real...";
+                return "¡Listo!";
             }
 
             showWelcomeScreen() {
                 setTimeout(() => {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    document.getElementById('welcome-screen').style.display = 'flex';
+                    const loadingScreen = document.getElementById('loading-screen');
+                    const welcomeScreen = document.getElementById('welcome-screen');
+                    
+                    if (loadingScreen) loadingScreen.style.display = 'none';
+                    if (welcomeScreen) welcomeScreen.style.display = 'flex';
+                    
                     this.updateWelcomeStats();
                 }, 2500);
             }
 
             hideWelcomeScreen() {
-                document.getElementById('welcome-screen').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
+                const welcomeScreen = document.getElementById('welcome-screen');
+                const mainApp = document.getElementById('main-app');
+                
+                if (welcomeScreen) welcomeScreen.style.display = 'none';
+                if (mainApp) mainApp.style.display = 'block';
+                
                 this.renderPosts();
                 this.updateAllStats();
                 this.showMessage('🎉 ¡Bienvenido a Void Chan!', 'success');
@@ -805,7 +825,6 @@
                 return new Promise((resolve) => {
                     setTimeout(async () => {
                         try {
-                            // Crear tabla si no existe
                             await this.createPostsTable();
                             console.log('✅ Conectado a Supabase');
                             resolve();
@@ -873,14 +892,4 @@
                         created_at: new Date().toISOString()
                     },
                     {
-                        name: 'Anónimo',
-                        subject: 'Primer post de la comunidad',
-                        message: '¡Hola a todos! 👋\n\nEste foro está conectado a una base de datos real, así que los posts que publiques se guardarán permanentemente y serán visibles para todos los usuarios.\n\n¡Únete a la conversación!',
-                        board: 'global',
-                        created_at: new Date().toISOString()
-                    },
-                    {
-                        name: 'Dev',
-                        subject: 'Sobre este foro',
-                        message: 'Características:\n✅ 150+ boards diferentes\n✅ Posts permanentes\n✅ Tiempo real\n✅ Sin censura\n✅ Comunidad global\n\n¡Disfruta del void!',
-                        board
+                        name
