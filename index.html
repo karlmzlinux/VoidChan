@@ -16,8 +16,8 @@
     <!-- Particle Background -->
     <div id="particles-js"></div>
     
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen">
+    <!-- Loading Screen ELIMINADO - Solo backup oculto -->
+    <div id="loading-screen" style="display: none;">
         <div class="void-loader">
             <div class="void-spinner"></div>
             <h2>void chan</h2>
@@ -115,11 +115,18 @@
                         </div>
                     </div>
 
-                    <!-- Más categorías... -->
+                    <!-- NSFW Section - OPCIONAL, QUITAR SI CAUSA PROBLEMAS -->
+                    <div class="nav-category" style="display: none;">
+                        <h3 data-i18n="nav_nsfw">NSFW</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link nsfw-trigger" data-board="nsfw">/nsfw/ - Adultos</a>
+                            <a href="#" class="nav-link nsfw-trigger" data-board="hentai">/h/ - Hentai</a>
+                        </div>
+                    </div>
                 </nav>
 
                 <!-- NSFW Warning -->
-                <div id="nsfw-warning" class="nsfw-warning">
+                <div id="nsfw-warning" class="nsfw-warning" style="display: none;">
                     <div class="nsfw-content">
                         <h3>⚠️ Contenido NSFW</h3>
                         <p>Esta sección contiene contenido para adultos. Debes tener 18+ años para acceder.</p>
@@ -164,7 +171,6 @@
                     <button class="quick-board" data-board="art">🎨 Arte</button>
                     <button class="quick-board" data-board="programming">💻 Prog</button>
                     <button class="quick-board" data-board="anime">🇯🇵 Anime</button>
-                    <button class="quick-board nsfw-trigger" data-board="nsfw">🔞 NSFW</button>
                     <button class="quick-board" data-board="music">🎵 Música</button>
                     <button class="quick-board" data-board="games">🎮 Juegos</button>
                 </div>
@@ -213,19 +219,39 @@
 
             <!-- Games Section -->
             <div id="games-container" class="games-container" style="display: none;">
-                <!-- Contenido de juegos -->
-            </div>
-
-            <!-- Posts Container with Animation -->
-            <div id="posts-container" class="posts-container">
-                <div class="welcome-message fade-in">
-                    <h3>👋 Bienvenido al Void</h3>
-                    <p>Este es el canal global. Conversa con anónimos de todo el mundo en tiempo real.</p>
+                <div class="game-header">
+                    <h3 id="game-title">Juego</h3>
+                    <button id="close-game" class="close-btn">✕</button>
+                </div>
+                <div id="game-content" class="game-content">
+                    <div style="text-align: center; padding: 2rem;">
+                        <h4>🎮 Juegos de Void Chan</h4>
+                        <p>Selecciona un juego de la navegación superior</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Loading Animation -->
-            <div id="loading" class="loading">
+            <!-- Posts Container -->
+            <div id="posts-container" class="posts-container">
+                <!-- Posts se cargarán aquí dinámicamente -->
+                <div class="welcome-message fade-in">
+                    <h3>👋 Bienvenido al Void</h3>
+                    <p>Este es el canal global. Conversa con anónimos de todo el mundo en tiempo real.</p>
+                    <div class="post">
+                        <div class="post-header">
+                            <span class="post-name">Sistema</span>
+                            <span class="post-id">#1</span>
+                            <span class="post-date">Ahora</span>
+                        </div>
+                        <div class="post-message">
+                            ¡Void Chan está funcionando! Puedes empezar a publicar mensajes.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading - OCULTO POR DEFECTO -->
+            <div id="loading" class="loading" style="display: none;">
                 <div class="void-spinner large"></div>
                 <p data-i18n="loading_posts">Cargando el vacío...</p>
             </div>
@@ -266,17 +292,93 @@
         </div>
     </footer>
 
+    <!-- Modal para Reglas -->
+    <div id="rules-modal" class="modal" style="display: none;">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h3>📜 Reglas del Void</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <ol>
+                    <li>Respeta el anonimato de los demás</li>
+                    <li>No spam ni flood</li>
+                    <li>Contenido ilegal será eliminado</li>
+                    <li>Disfruta del vacío responsablemente</li>
+                    <li>Los mods tienen la última palabra</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="js/supabase-client.js"></script>
-    <script src="js/language-switcher.js"></script>
-    <script src="js/animations.js"></script>
-    <script src="js/posts-manager.js"></script>
-    <script src="js/ui-manager.js"></script>
-    <script src="js/games/snake-game.js"></script>
-    <script src="js/games/tetris-game.js"></script>
-    <script src="js/games/void-miner.js"></script>
-    <script src="js/app.js"></script>
+    
+    <!-- CONFIGURACIÓN SIMPLE DE SUPABASE - ACTUALIZA TUS CREDENCIALES -->
+    <script>
+        // Configuración básica de Supabase - REEMPLAZA CON TUS DATOS
+        const SUPABASE_URL = 'https://tu-proyecto.supabase.co';
+        const SUPABASE_ANON_KEY = 'tu-anon-key-aqui';
+        
+        // Inicializar Supabase
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('🔧 Supabase configurado');
+    </script>
+    
+    <!-- JavaScript SIMPLE Y FUNCIONAL -->
+    <script src="js/simple-app.js"></script>
+    
+    <!-- Script de emergencia por si algo falla -->
+    <script>
+        // Script de emergencia - Remueve cualquier bloqueo después de 3 segundos
+        setTimeout(() => {
+            const loaders = ['loading-screen', 'loading'];
+            loaders.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.style.display = 'none';
+            });
+            document.body.style.overflow = 'auto';
+        }, 3000);
+        
+        // Inicializar partículas de fondo
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 80, density: { enable: true, value_area: 800 } },
+                        color: { value: "#8a2be2" },
+                        shape: { type: "circle" },
+                        opacity: { value: 0.5, random: true },
+                        size: { value: 3, random: true },
+                        line_linked: {
+                            enable: true,
+                            distance: 150,
+                            color: "#8a2be2",
+                            opacity: 0.4,
+                            width: 1
+                        },
+                        move: {
+                            enable: true,
+                            speed: 2,
+                            direction: "none",
+                            random: true,
+                            straight: false,
+                            out_mode: "out",
+                            bounce: false
+                        }
+                    },
+                    interactivity: {
+                        detect_on: "canvas",
+                        events: {
+                            onhover: { enable: true, mode: "repulse" },
+                            onclick: { enable: true, mode: "push" },
+                            resize: true
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
