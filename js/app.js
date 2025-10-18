@@ -9,7 +9,206 @@ class VoidChan {
         this.userId = this.generateUserId();
         this.translations = this.getTranslations();
         this.init();
+  // En la clase VoidChan, agregar estos métodos:
+
+setupScrollSystem() {
+    // Botón para subir
+    this.createScrollToTopButton();
+    
+    // Indicador de scroll
+    this.createScrollIndicator();
+    
+    // Header compacto al hacer scroll
+    this.setupCompactHeader();
+    
+    // Navegación sticky
+    this.setupStickyNavigation();
+    
+    // Smooth scroll para anclas
+    this.setupSmoothScroll();
+}
+
+createScrollToTopButton() {
+    const scrollBtn = document.createElement('button');
+    scrollBtn.className = 'scroll-to-top';
+    scrollBtn.innerHTML = '↑';
+    scrollBtn.title = 'Subir al inicio';
+    document.body.appendChild(scrollBtn);
+
+    // Mostrar/ocultar botón
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            scrollBtn.style.display = 'flex';
+        } else {
+            scrollBtn.style.display = 'none';
+        }
+    });
+
+    // Click para subir
+    scrollBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+}
+
+createScrollIndicator() {
+    const indicator = document.createElement('div');
+    indicator.className = 'scroll-indicator';
+    document.body.appendChild(indicator);
+
+    window.addEventListener('scroll', () => {
+        const winHeight = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight;
+        const scrollTop = window.pageYOffset;
+        const scrollPercent = scrollTop / (docHeight - winHeight);
+        
+        indicator.style.transform = `scaleX(${scrollPercent})`;
+    });
+}
+
+setupCompactHeader() {
+    const header = document.querySelector('.header');
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > 100) {
+            header.classList.add('compact');
+        } else {
+            header.classList.remove('compact');
+        }
+        
+        lastScroll = currentScroll;
+    });
+}
+
+setupStickyNavigation() {
+    const nav = document.querySelector('.main-nav');
+    const quickBoards = document.querySelector('.quick-boards');
+    
+    // Asegurar que la navegación no tape el contenido
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    quickBoards.style.position = 'sticky';
+                    quickBoards.style.top = '0';
+                }
+            });
+        },
+        { threshold: 0.1 }
+    );
+    
+    // Observar el primer post
+    const postsContainer = document.getElementById('posts-container');
+    if (postsContainer) {
+        observer.observe(postsContainer);
     }
+}
+
+setupSmoothScroll() {
+    // Smooth scroll para anclas internas
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// Método para cambiar de board con scroll suave
+changeBoardWithScroll(board) {
+    // Cambiar el board
+    this.changeBoard(board);
+    
+    // Hacer scroll suave hacia los posts
+    setTimeout(() => {
+        const postsContainer = document.getElementById('posts-container');
+        if (postsContainer) {
+            postsContainer.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }, 100);
+}
+
+// Método para agregar botones de navegación rápida
+addQuickNavigation() {
+    const quickNav = document.createElement('div');
+    quickNav.className = 'quick-navigation';
+    quickNav.innerHTML = `
+        <button class="nav-btn" data-action="scroll-to-posts">📝 Ver Posts</button>
+        <button class="nav-btn" data-action="scroll-to-form">✍️ Nuevo Post</button>
+        <button class="nav-btn" data-action="scroll-to-games">🎮 Juegos</button>
+    `;
+    
+    document.querySelector('.container').insertBefore(quickNav, document.querySelector('.main'));
+    
+    // Event listeners para los botones
+    quickNav.addEventListener('click', (e) => {
+        if (e.target.matches('.nav-btn')) {
+            const action = e.target.getAttribute('data-action');
+            this.handleQuickNavigation(action);
+        }
+    });
+}
+
+handleQuickNavigation(action) {
+    switch(action) {
+        case 'scroll-to-posts':
+            document.getElementById('posts-container').scrollIntoView({ behavior: 'smooth' });
+            break;
+        case 'scroll-to-form':
+            document.querySelector('.post-form-container').scrollIntoView({ behavior: 'smooth' });
+            break;
+        case 'scroll-to-games':
+            document.querySelector('.games-section').scrollIntoView({ behavior: 'smooth' });
+            break;
+    }
+}
+
+// Modificar el método changeBoard para usar scroll suave
+changeBoard(board) {
+    // Actualizar navegación
+    document.querySelectorAll('.nav-link, .quick-board').forEach(el => {
+        el.classList.remove('active');
+    });
+    
+    document.querySelectorAll(`[data-board="${board}"]`).forEach(el => {
+        el.classList.add('active');
+    });
+
+    this.currentBoard = board;
+    this.updateBoardInfo();
+    this.renderPosts();
+    
+    // Scroll suave hacia los posts
+    setTimeout(() => {
+        const postsContainer = document.getElementById('posts-container');
+        if (postsContainer) {
+            const offset = 100; // Offset para no quedar justo debajo de la navegación
+            const elementPosition = postsContainer.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }, 50);
+    
+    this.showMessage(`📁 Cambiado a /${board}/`, 'info');
+}  
 
     async init() {
         console.log('🚀 Iniciando Void Chan...');
