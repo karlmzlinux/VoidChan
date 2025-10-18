@@ -1,56 +1,792 @@
-<!-- En la sección de Main Navigation, reemplaza con esto: -->
-<nav class="main-nav" id="main-nav">
-    <div class="nav-container">
-        <div class="nav-category">
-            <h3 data-category="principal">🌐 Principal</h3>
-            <div class="nav-links">
-                <a href="#" class="nav-link active" data-board="global">/global/</a>
-                <a href="#" class="nav-link" data-board="random">/b/</a>
-                <a href="#" class="nav-link" data-board="void">/void/</a>
-            </div>
-        </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>void chan - donde el vacío habla</title>
+    <link rel="icon" href="assets/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === VARIABLES Y RESET === */
+        :root {
+            --color-bg: #0a0a0a;
+            --color-primary: #1a1a1a;
+            --color-secondary: #2a2a2a;
+            --color-accent: #8a2be2;
+            --color-accent-light: #9d4dff;
+            --color-text: #e0e0e0;
+            --color-text-secondary: #888;
+            --color-border: #333;
+            --color-warning: #ff6b35;
+            --color-success: #00cc88;
+            --color-error: #ff4444;
+        }
 
-        <div class="nav-category">
-            <h3 data-category="creativo">🎨 Creativo</h3>
-            <div class="nav-links">
-                <a href="#" class="nav-link" data-board="art">/art/</a>
-                <a href="#" class="nav-link" data-board="music">/mu/</a>
-                <a href="#" class="nav-link" data-board="writing">/write/</a>
-            </div>
-        </div>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        <div class="nav-category">
-            <h3 data-category="tecnologia">💻 Tech</h3>
-            <div class="nav-links">
-                <a href="#" class="nav-link" data-board="programming">/prog/</a>
-                <a href="#" class="nav-link" data-board="ai">/ai/</a>
-                <a href="#" class="nav-link" data-board="tech">/tech/</a>
-            </div>
-        </div>
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-        <div class="nav-category">
-            <h3 data-category="juegos">🎮 Juegos</h3>
-            <div class="nav-links">
-                <a href="#" class="nav-link" data-board="videogames">/v/</a>
-                <a href="#" class="nav-link" data-board="retro">/retro/</a>
-                <a href="#" class="nav-link" data-board="pc">/pc/</a>
-            </div>
-        </div>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
 
-        <div class="nav-category">
-            <h3 data-category="anime">🇯🇵 Anime</h3>
-            <div class="nav-links">
-                <a href="#" class="nav-link" data-board="anime">/a/</a>
-                <a href="#" class="nav-link" data-board="manga">/m/</a>
-            </div>
-        </div>
+        /* === LOADING SCREEN === */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
 
-        <div class="nav-category">
-            <h3 data-category="nsfw">🔞 NSFW</h3>
-            <div class="nav-links">
-                <a href="#" class="nav-link nsfw-trigger" data-board="nsfw">/nsfw/</a>
-                <a href="#" class="nav-link nsfw-trigger" data-board="hentai">/h/</a>
+        .void-loader {
+            text-align: center;
+        }
+
+        .void-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--color-border);
+            border-top: 3px solid var(--color-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .void-loader h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px var(--color-accent-light);
+        }
+
+        .load-progress {
+            margin-top: 2rem;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 8px;
+            background: var(--color-border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 auto 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-accent);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+        }
+
+        /* === WELCOME SCREEN === */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-bg);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9998;
+        }
+
+        .welcome-content {
+            text-align: center;
+            max-width: 500px;
+            padding: 2rem;
+        }
+
+        .welcome-content h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            color: var(--color-text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .welcome-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            color: var(--color-accent);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+        }
+
+        .enter-btn {
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 2rem;
+        }
+
+        .enter-btn:hover {
+            background: var(--color-accent-light);
+            transform: translateY(-2px);
+        }
+
+        /* === HEADER === */
+        .header {
+            background: var(--color-primary);
+            border-bottom: 1px solid var(--color-border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--color-accent);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .compact-select {
+            background: var(--color-secondary);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .online-users-real {
+            background: var(--color-accent);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        /* === NAVIGATION === */
+        .quick-navigation {
+            background: var(--color-primary);
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: var(--color-secondary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--color-accent);
+        }
+
+        .quick-boards {
+            background: var(--color-primary);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .quick-board {
+            background: var(--color-secondary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .quick-board.active {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        /* === MAIN CONTENT === */
+        .board-header {
+            background: var(--color-primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .board-info h2 {
+            color: var(--color-accent);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .board-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* === POST FORM === */
+        .post-form-container {
+            background: var(--color-primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-row input {
+            background: var(--color-secondary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            padding: 0.8rem;
+            border-radius: 4px;
+        }
+
+        #post-message {
+            width: 100%;
+            height: 150px;
+            background: var(--color-secondary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            padding: 1rem;
+            border-radius: 4px;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        /* === POSTS === */
+        .posts-container {
+            margin: 2rem 0;
+        }
+
+        .post {
+            background: var(--color-secondary);
+            border-radius: 6px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .post-name {
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        .post-date {
+            color: var(--color-text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .post-subject {
+            color: var(--color-warning);
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+        }
+
+        .post-content {
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .no-posts {
+            text-align: center;
+            padding: 3rem;
+            color: var(--color-text-secondary);
+        }
+
+        /* === FOOTER === */
+        .footer {
+            background: var(--color-primary);
+            border-top: 1px solid var(--color-border);
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .header-top { flex-direction: column; gap: 1rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .footer-content { flex-direction: column; gap: 1rem; text-align: center; }
+            .board-header { flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body class="theme-purple">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="void-loader">
+            <div class="void-spinner"></div>
+            <h1>void chan</h1>
+            <p id="loading-message">Inicializando el vacío...</p>
+            <div class="load-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <span class="progress-text" id="progress-text">0%</span>
             </div>
         </div>
     </div>
-</nav>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="welcome-screen">
+        <div class="welcome-content">
+            <h1>void chan</h1>
+            <p class="welcome-subtitle">Donde el vacío habla</p>
+            <div class="welcome-stats">
+                <div class="stat">
+                    <span class="stat-number" id="welcome-online">0</span>
+                    <span class="stat-label">usuarios en línea</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="welcome-posts">0</span>
+                    <span class="stat-label">posts totales</span>
+                </div>
+            </div>
+            <button id="enter-btn" class="enter-btn">🌌 Entrar al Void</button>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="main-app" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-top">
+                    <div class="logo-section">
+                        <h1 class="logo">void chan</h1>
+                    </div>
+                    <div class="header-controls">
+                        <select id="theme-select" class="compact-select">
+                            <option value="purple">Morado</option>
+                            <option value="blue">Azul</option>
+                            <option value="green">Verde</option>
+                        </select>
+                        <div class="online-display">
+                            <span class="online-users-real" id="online-count">1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Quick Navigation -->
+        <div class="quick-navigation">
+            <button class="nav-btn" data-action="scroll-to-posts">📝 Posts</button>
+            <button class="nav-btn" data-action="scroll-to-form">✍️ Nuevo Post</button>
+            <button class="nav-btn" data-action="scroll-to-top">⬆️ Subir</button>
+        </div>
+
+        <!-- Quick Boards -->
+        <div class="quick-boards">
+            <button class="quick-board active" data-board="global">💬 Global</button>
+            <button class="quick-board" data-board="random">🎲 Random</button>
+            <button class="quick-board" data-board="programming">💻 Prog</button>
+            <button class="quick-board" data-board="anime">🇯🇵 Anime</button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Board Header -->
+                <div class="board-header">
+                    <div class="board-info">
+                        <h2 id="board-title">/global/</h2>
+                        <p id="board-description">Canal Global</p>
+                    </div>
+                    <div class="board-stats">
+                        <div class="stat">
+                            <span id="board-online">1</span> en línea
+                        </div>
+                        <div class="stat">
+                            <span id="board-posts">0</span> posts
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Form -->
+                <div class="post-form-container" id="post-form-container">
+                    <form id="post-form" class="post-form">
+                        <div class="form-header">
+                            <h3>📝 Crear Post</h3>
+                            <span class="char-counter">
+                                <span id="char-count">0</span>/2000
+                            </span>
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="post-name" placeholder="Nombre (opcional)" maxlength="50">
+                            <input type="text" id="post-subject" placeholder="Asunto (opcional)" maxlength="100">
+                        </div>
+                        <textarea id="post-message" placeholder="Escribe tu mensaje aquí..." required maxlength="2000"></textarea>
+                        <div class="form-actions">
+                            <button type="button" id="clear-form" class="btn-secondary">Limpiar</button>
+                            <button type="submit" class="btn-primary">Publicar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Posts Container -->
+                <div id="posts-container" class="posts-container">
+                    <!-- Posts se cargan aquí -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <h3>void chan</h3>
+                        <p>Foro anónimo global</p>
+                    </div>
+                    <div class="footer-credits">
+                        <p>Hecho por KarlDev</p>
+                        <p class="footer-stats">
+                            <span id="footer-online">0</span> en línea · 
+                            <span id="footer-posts">0</span> posts
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Configuración Supabase
+        const SUPABASE_URL = 'https://hyoqobgkjmvnjwfpkmyv.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5b3FvYmdram12bmp3ZnBrbXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA3MzQ5MzIsImV4cCI6MjA3NjMxMDkzMn0.iTCBoaZOWF5jAyYa3tas4XjtZLAtPpoBrJEod-xSWC4';
+        
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // VoidChan Class - SIMPLIFICADA Y FUNCIONAL
+        class VoidChan {
+            constructor() {
+                this.currentBoard = 'global';
+                this.posts = {
+                    'global': [
+                        {
+                            name: 'Sistema',
+                            subject: '¡Bienvenido!',
+                            message: 'Este es el foro global. Escribe algo para comenzar.',
+                            created_at: new Date().toISOString()
+                        }
+                    ]
+                };
+                this.init();
+            }
+
+            init() {
+                console.log('🚀 Iniciando Void Chan...');
+                this.startLoadingProgress();
+                this.setupEventListeners();
+            }
+
+            startLoadingProgress() {
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    document.getElementById('progress-fill').style.width = progress + '%';
+                    document.getElementById('progress-text').textContent = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        this.showWelcomeScreen();
+                    }
+                }, 100);
+            }
+
+            showWelcomeScreen() {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('welcome-screen').style.display = 'flex';
+                
+                // Evento del botón entrar
+                document.getElementById('enter-btn').onclick = () => {
+                    document.getElementById('welcome-screen').style.display = 'none';
+                    document.getElementById('main-app').style.display = 'block';
+                    this.renderPosts();
+                };
+            }
+
+            setupEventListeners() {
+                // Boards rápidos
+                document.querySelectorAll('.quick-board').forEach(board => {
+                    board.addEventListener('click', (e) => {
+                        const boardName = e.target.getAttribute('data-board');
+                        this.changeBoard(boardName);
+                    });
+                });
+
+                // Navegación
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const action = e.target.getAttribute('data-action');
+                        this.handleNavAction(action);
+                    });
+                });
+
+                // Formulario
+                document.getElementById('post-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handlePostSubmit();
+                });
+
+                document.getElementById('clear-form').addEventListener('click', () => {
+                    this.clearPostForm();
+                });
+
+                // Tema
+                document.getElementById('theme-select').addEventListener('change', (e) => {
+                    document.body.className = 'theme-' + e.target.value;
+                });
+            }
+
+            changeBoard(boardName) {
+                this.currentBoard = boardName;
+                
+                // Actualizar botones activos
+                document.querySelectorAll('.quick-board').forEach(board => {
+                    board.classList.toggle('active', board.getAttribute('data-board') === boardName);
+                });
+                
+                // Actualizar título
+                document.getElementById('board-title').textContent = `/${boardName}/`;
+                document.getElementById('board-description').textContent = this.getBoardDescription(boardName);
+                
+                this.renderPosts();
+            }
+
+            getBoardDescription(boardName) {
+                const descriptions = {
+                    'global': 'Canal Global',
+                    'random': 'Todo vale',
+                    'programming': 'Programación',
+                    'anime': 'Anime & Manga'
+                };
+                return descriptions[boardName] || 'Board';
+            }
+
+            handleNavAction(action) {
+                if (action === 'scroll-to-posts') {
+                    document.getElementById('posts-container').scrollIntoView({ behavior: 'smooth' });
+                } else if (action === 'scroll-to-form') {
+                    document.getElementById('post-form-container').scrollIntoView({ behavior: 'smooth' });
+                } else if (action === 'scroll-to-top') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+
+            async handlePostSubmit() {
+                const name = document.getElementById('post-name').value || 'Anónimo';
+                const subject = document.getElementById('post-subject').value;
+                const message = document.getElementById('post-message').value;
+
+                if (!message.trim()) {
+                    alert('Escribe un mensaje');
+                    return;
+                }
+
+                const post = {
+                    name: name,
+                    subject: subject,
+                    message: message,
+                    board: this.currentBoard,
+                    created_at: new Date().toISOString()
+                };
+
+                // Guardar en Supabase
+                try {
+                    const { error } = await window.supabase
+                        .from('posts')
+                        .insert([post]);
+                    
+                    if (error) throw error;
+                    console.log('✅ Post guardado en Supabase');
+                } catch (error) {
+                    console.log('⚠️ Guardando localmente:', error);
+                }
+
+                // Agregar localmente
+                if (!this.posts[this.currentBoard]) {
+                    this.posts[this.currentBoard] = [];
+                }
+                this.posts[this.currentBoard].unshift(post);
+
+                this.clearPostForm();
+                this.renderPosts();
+                
+                alert('✅ Post publicado!');
+            }
+
+            clearPostForm() {
+                document.getElementById('post-name').value = '';
+                document.getElementById('post-subject').value = '';
+                document.getElementById('post-message').value = '';
+            }
+
+            renderPosts() {
+                const container = document.getElementById('posts-container');
+                const boardPosts = this.posts[this.currentBoard] || [];
+
+                if (boardPosts.length === 0) {
+                    container.innerHTML = '<div class="no-posts">No hay posts aún</div>';
+                } else {
+                    container.innerHTML = boardPosts.map(post => `
+                        <div class="post">
+                            <div class="post-header">
+                                <span class="post-name">${post.name}</span>
+                                <span class="post-date">${new Date(post.created_at).toLocaleString()}</span>
+                            </div>
+                            ${post.subject ? `<div class="post-subject">${post.subject}</div>` : ''}
+                            <div class="post-content">${post.message}</div>
+                        </div>
+                    `).join('');
+                }
+
+                // Actualizar stats
+                document.getElementById('board-posts').textContent = boardPosts.length;
+                document.getElementById('footer-posts').textContent = Object.values(this.posts).flat().length;
+            }
+        }
+
+        // Inicializar cuando cargue la página
+        window.addEventListener('DOMContentLoaded', () => {
+            window.voidChan = new VoidChan();
+        });
+    </script>
+</body>
+</html>
