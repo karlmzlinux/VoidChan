@@ -82,6 +82,7 @@
             color: var(--color-accent);
             margin-bottom: 1rem;
             text-shadow: 0 0 10px var(--color-accent-light);
+            letter-spacing: 2px; /* Separación entre letras */
         }
 
         .load-progress {
@@ -134,6 +135,7 @@
             font-size: 4rem;
             color: var(--color-accent);
             margin-bottom: 0.5rem;
+            letter-spacing: 3px; /* Separación entre letras */
         }
 
         .welcome-subtitle {
@@ -202,6 +204,7 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 2rem;
             color: var(--color-accent);
+            letter-spacing: 2px; /* Separación entre letras */
         }
 
         .header-controls {
@@ -345,6 +348,7 @@
         .board-info h2 {
             color: var(--color-accent);
             font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
         }
 
         .board-stats {
@@ -484,6 +488,7 @@
         .games-section h3 {
             color: var(--color-accent);
             margin-bottom: 1rem;
+            letter-spacing: 1px;
         }
 
         .games-grid {
@@ -547,12 +552,45 @@
             border-top: 1px solid var(--color-border);
             padding: 2rem 0;
             margin-top: 3rem;
+            text-align: center;
         }
 
         .footer-content {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 1rem;
             align-items: center;
+        }
+
+        .footer-info h3 {
+            color: var(--color-accent);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-credits {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-stats {
+            color: var(--color-accent);
+            font-size: 0.8rem;
+        }
+
+        .creator-credit {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--color-secondary);
+            border-radius: 20px;
+            border: 1px solid var(--color-accent);
+            color: var(--color-text);
+            font-size: 0.8rem;
+        }
+
+        .creator-credit strong {
+            color: var(--color-accent);
         }
 
         /* === RESPONSIVE === */
@@ -563,6 +601,14 @@
             .board-header { flex-direction: column; gap: 1rem; text-align: center; }
             .nav-container { grid-template-columns: 1fr; }
             .games-grid { grid-template-columns: repeat(2, 1fr); }
+            
+            .void-loader h1, .welcome-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -571,7 +617,7 @@
     <div id="loading-screen" class="loading-screen">
         <div class="void-loader">
             <div class="void-spinner"></div>
-            <h1>void chan</h1>
+            <h1>VOID CHAN</h1>
             <p id="loading-message">Inicializando el vacío...</p>
             <div class="load-progress">
                 <div class="progress-bar">
@@ -585,7 +631,7 @@
     <!-- Welcome Screen -->
     <div id="welcome-screen" class="welcome-screen">
         <div class="welcome-content">
-            <h1>void chan</h1>
+            <h1>VOID CHAN</h1>
             <p class="welcome-subtitle">Donde el vacío habla</p>
             <div class="welcome-stats">
                 <div class="stat">
@@ -601,7 +647,7 @@
                     <span class="stat-label">boards activos</span>
                 </div>
             </div>
-            <button id="enter-btn" class="enter-btn">🌌 Entrar al Void</button>
+            <button id="enter-btn" class="enter-btn">🌌 ENTRAR AL VOID</button>
         </div>
     </div>
 
@@ -612,7 +658,7 @@
             <div class="container">
                 <div class="header-top">
                     <div class="logo-section">
-                        <h1 class="logo">void chan</h1>
+                        <h1 class="logo">VOID CHAN</h1>
                     </div>
                     <div class="header-controls">
                         <select id="theme-select" class="compact-select">
@@ -630,33 +676,33 @@
 
         <!-- Quick Navigation -->
         <div class="quick-navigation">
-            <button class="nav-btn" data-action="scroll-to-posts">📝 Posts</button>
-            <button class="nav-btn" data-action="scroll-to-form">✍️ Nuevo Post</button>
-            <button class="nav-btn" data-action="scroll-to-games">🎮 Juegos</button>
-            <button class="nav-btn" data-action="scroll-to-top">⬆️ Subir</button>
+            <button class="nav-btn" data-action="scroll-to-posts">📝 POSTS</button>
+            <button class="nav-btn" data-action="scroll-to-form">✍️ NUEVO POST</button>
+            <button class="nav-btn" data-action="scroll-to-games">🎮 JUEGOS</button>
+            <button class="nav-btn" data-action="scroll-to-top">⬆️ SUBIR</button>
         </div>
 
         <!-- Quick Boards -->
         <div class="quick-boards">
-            <button class="quick-board active" data-board="global">💬 Global</button>
-            <button class="quick-board" data-board="random">🎲 Random</button>
-            <button class="quick-board" data-board="anime">🇯🇵 Anime</button>
-            <button class="quick-board" data-board="manga">📖 Manga</button>
-            <button class="quick-board" data-board="programming">💻 Prog</button>
-            <button class="quick-board" data-board="technology">🔧 Tech</button>
-            <button class="quick-board" data-board="videogames">🎮 Games</button>
-            <button class="quick-board" data-board="retro">🕹️ Retro</button>
-            <button class="quick-board" data-board="music">🎵 Música</button>
-            <button class="quick-board" data-board="art">🎨 Arte</button>
+            <button class="quick-board active" data-board="global">💬 GLOBAL</button>
+            <button class="quick-board" data-board="random">🎲 RANDOM</button>
+            <button class="quick-board" data-board="anime">🇯🇵 ANIME</button>
+            <button class="quick-board" data-board="manga">📖 MANGA</button>
+            <button class="quick-board" data-board="programming">💻 PROG</button>
+            <button class="quick-board" data-board="technology">🔧 TECH</button>
+            <button class="quick-board" data-board="videogames">🎮 GAMES</button>
+            <button class="quick-board" data-board="retro">🕹️ RETRO</button>
+            <button class="quick-board" data-board="music">🎵 MÚSICA</button>
+            <button class="quick-board" data-board="art">🎨 ARTE</button>
         </div>
 
         <!-- Main Navigation -->
         <nav class="main-nav">
             <div class="container">
                 <div class="nav-container">
-                    <!-- 150+ Boards organizados por categorías -->
+                    <!-- Boards organizados por categorías -->
                     <div class="nav-category">
-                        <h3>🌐 Principal</h3>
+                        <h3>🌐 PRINCIPAL</h3>
                         <div class="nav-links">
                             <a href="#" class="nav-link active" data-board="global">/global/ - Global</a>
                             <a href="#" class="nav-link" data-board="random">/b/ - Random</a>
@@ -666,80 +712,32 @@
                     </div>
 
                     <div class="nav-category">
-                        <h3>🇯🇵 Anime & Manga</h3>
+                        <h3>🇯🇵 ANIME & MANGA</h3>
                         <div class="nav-links">
                             <a href="#" class="nav-link" data-board="anime">/a/ - Anime</a>
                             <a href="#" class="nav-link" data-board="manga">/m/ - Manga</a>
                             <a href="#" class="nav-link" data-board="wallpapers">/wp/ - Wallpapers</a>
                             <a href="#" class="nav-link" data-board="cosplay">/cos/ - Cosplay</a>
-                            <a href="#" class="nav-link" data-board="figures">/fig/ - Figuras</a>
                         </div>
                     </div>
 
                     <div class="nav-category">
-                        <h3>💻 Tecnología</h3>
+                        <h3>💻 TECNOLOGÍA</h3>
                         <div class="nav-links">
                             <a href="#" class="nav-link" data-board="programming">/prog/ - Programación</a>
                             <a href="#" class="nav-link" data-board="technology">/tech/ - Tecnología</a>
                             <a href="#" class="nav-link" data-board="ai">/ai/ - Inteligencia Artificial</a>
                             <a href="#" class="nav-link" data-board="webdev">/web/ - Web Dev</a>
-                            <a href="#" class="nav-link" data-board="mobile">/mob/ - Mobile</a>
-                            <a href="#" class="nav-link" data-board="cybersecurity">/sec/ - Cybersecurity</a>
                         </div>
                     </div>
 
                     <div class="nav-category">
-                        <h3>🎮 Videojuegos</h3>
+                        <h3>🎮 VIDEOJUEGOS</h3>
                         <div class="nav-links">
                             <a href="#" class="nav-link" data-board="videogames">/v/ - Videojuegos</a>
                             <a href="#" class="nav-link" data-board="retro">/retro/ - Retro</a>
                             <a href="#" class="nav-link" data-board="pcgaming">/pc/ - PC Gaming</a>
-                            <a href="#" class="nav-link" data-board="console">/con/ - Consolas</a>
                             <a href="#" class="nav-link" data-board="mobilegames">/mg/ - Mobile Games</a>
-                            <a href="#" class="nav-link" data-board="indie">/indie/ - Indie</a>
-                        </div>
-                    </div>
-
-                    <div class="nav-category">
-                        <h3>🎨 Creativo</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="art">/art/ - Arte</a>
-                            <a href="#" class="nav-link" data-board="music">/mu/ - Música</a>
-                            <a href="#" class="nav-link" data-board="literature">/lit/ - Literatura</a>
-                            <a href="#" class="nav-link" data-board="writing">/write/ - Escritura</a>
-                            <a href="#" class="nav-link" data-board="photography">/photo/ - Fotografía</a>
-                            <a href="#" class="nav-link" data-board="design">/design/ - Diseño</a>
-                        </div>
-                    </div>
-
-                    <div class="nav-category">
-                        <h3>🎬 Entretenimiento</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="movies">/tv/ - Cine & TV</a>
-                            <a href="#" class="nav-link" data-board="series">/tv/ - Series</a>
-                            <a href="#" class="nav-link" data-board="comics">/comic/ - Cómics</a>
-                            <a href="#" class="nav-link" data-board="sports">/sp/ - Deportes</a>
-                            <a href="#" class="nav-link" data-board="fitness">/fit/ - Fitness</a>
-                        </div>
-                    </div>
-
-                    <div class="nav-category">
-                        <h3>💬 Discusión</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="politics">/pol/ - Política</a>
-                            <a href="#" class="nav-link" data-board="science">/sci/ - Ciencia</a>
-                            <a href="#" class="nav-link" data-board="history">/his/ - Historia</a>
-                            <a href="#" class="nav-link" data-board="philosophy">/phi/ - Filosofía</a>
-                            <a href="#" class="nav-link" data-board="psychology">/psy/ - Psicología</a>
-                        </div>
-                    </div>
-
-                    <div class="nav-category">
-                        <h3>🔞 NSFW</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="nsfw">/nsfw/ - Adultos</a>
-                            <a href="#" class="nav-link" data-board="hentai">/h/ - Hentai</a>
-                            <a href="#" class="nav-link" data-board="ecchi">/ecchi/ - Ecchi</a>
                         </div>
                     </div>
                 </div>
@@ -752,15 +750,15 @@
                 <!-- Board Header -->
                 <div class="board-header">
                     <div class="board-info">
-                        <h2 id="board-title">/global/</h2>
-                        <p id="board-description">Canal Global</p>
+                        <h2 id="board-title">/GLOBAL/</h2>
+                        <p id="board-description">CANAL GLOBAL</p>
                     </div>
                     <div class="board-stats">
                         <div class="stat">
-                            <span id="board-online">42</span> en línea
+                            <span id="board-online">42</span> EN LÍNEA
                         </div>
                         <div class="stat">
-                            <span id="board-posts">0</span> posts
+                            <span id="board-posts">0</span> POSTS
                         </div>
                     </div>
                 </div>
@@ -769,7 +767,7 @@
                 <div class="post-form-container" id="post-form-container">
                     <form id="post-form" class="post-form">
                         <div class="form-header">
-                            <h3>📝 Crear Post</h3>
+                            <h3>📝 CREAR POST</h3>
                             <span class="char-counter">
                                 <span id="char-count">0</span>/2000
                             </span>
@@ -780,34 +778,34 @@
                         </div>
                         <textarea id="post-message" placeholder="Escribe tu mensaje aquí..." required maxlength="2000"></textarea>
                         <div class="form-actions">
-                            <button type="button" id="clear-form" class="btn-secondary">Limpiar</button>
-                            <button type="submit" class="btn-primary">Publicar</button>
+                            <button type="button" id="clear-form" class="btn-secondary">LIMPIAR</button>
+                            <button type="submit" class="btn-primary">PUBLICAR</button>
                         </div>
                     </form>
                 </div>
 
                 <!-- Games Section -->
                 <div class="games-section" id="games-section">
-                    <h3>🎮 Minijuegos del Void</h3>
+                    <h3>🎮 MINIJUEGOS DEL VOID</h3>
                     <div class="games-grid">
                         <div class="game-card" data-game="snake">
                             <div class="game-icon">🐍</div>
-                            <h4>Snake</h4>
+                            <h4>SNAKE</h4>
                             <p>Serpiente clásica</p>
                         </div>
                         <div class="game-card" data-game="pong">
                             <div class="game-icon">🎾</div>
-                            <h4>Pong</h4>
+                            <h4>PONG</h4>
                             <p>Tenis retro</p>
                         </div>
                         <div class="game-card" data-game="tetris">
                             <div class="game-icon">🧱</div>
-                            <h4>Tetris</h4>
+                            <h4>TETRIS</h4>
                             <p>Piezas rusas</p>
                         </div>
                         <div class="game-card" data-game="memory">
                             <div class="game-icon">🧠</div>
-                            <h4>Memory</h4>
+                            <h4>MEMORY</h4>
                             <p>Encuentra pares</p>
                         </div>
                     </div>
@@ -825,15 +823,17 @@
             <div class="container">
                 <div class="footer-content">
                     <div class="footer-info">
-                        <h3>void chan</h3>
+                        <h3>VOID CHAN</h3>
                         <p>Foro anónimo global · 150+ boards · Tiempo real</p>
                     </div>
                     <div class="footer-credits">
-                        <p>Hecho por KarlDev</p>
                         <p class="footer-stats">
-                            <span id="footer-online">42</span> en línea · 
-                            <span id="footer-posts">0</span> posts
+                            <span id="footer-online">42</span> EN LÍNEA · 
+                            <span id="footer-posts">0</span> POSTS
                         </p>
+                        <div class="creator-credit">
+                            CREADO POR <strong>KARLDEV</strong>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -843,7 +843,7 @@
     <!-- Game Containers -->
     <div id="game-container" class="game-container">
         <div class="game-header">
-            <h3 id="game-title">Juego</h3>
+            <h3 id="game-title">JUEGO</h3>
             <button class="close-btn" onclick="voidChan.closeGame()">✕</button>
         </div>
         <div id="game-content"></div>
@@ -855,11 +855,121 @@
     <script>
         // Configuración Supabase
         const SUPABASE_URL = 'https://hyoqobgkjmvnjwfpkmyv.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJstupabase', error);
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5b3FvYmdram12bmp3ZnBrbXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA3MzQ5MzIsImV4cCI6MjA3NjMxMDkzMn0.iTCBoaZOWF5jAyYa3tas4XjtZLAtPpoBrJEod-xSWC4';
+        
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // VoidChan Class - MEJORADA
+        class VoidChan {
+            constructor() {
+                this.currentBoard = 'global';
+                this.posts = {};
+                this.init();
+            }
+
+            async init() {
+                console.log('🚀 Iniciando Void Chan...');
+                this.startLoadingProgress();
+            }
+
+            startLoadingProgress() {
+                let progress = 0;
+                const progressFill = document.getElementById('progress-fill');
+                const progressText = document.getElementById('progress-text');
+                const loadingMessage = document.getElementById('loading-message');
+                
+                console.log('🔄 Iniciando barra de carga...');
+                
+                const progressInterval = setInterval(async () => {
+                    progress += Math.random() * 15 + 5;
+                    if (progress > 100) progress = 100;
+                    
+                    // ACTUALIZAR PROGRESO VISUAL
+                    if (progressFill) {
+                        progressFill.style.width = progress + '%';
                     }
-                } catch (error) {
-                    console.log('❌ Error creando tabla:', error);
+                    if (progressText) {
+                        progressText.textContent = Math.round(progress) + '%';
+                    }
+                    
+                    // Actualizar mensaje de estado
+                    const message = this.getLoadingMessage(progress);
+                    if (loadingMessage) {
+                        loadingMessage.textContent = message;
+                    }
+                    
+                    console.log(`Progreso: ${Math.round(progress)}% - ${message}`);
+                    
+                    // En 50% cargar posts
+                    if (progress >= 50 && Object.keys(this.posts).length === 0) {
+                        await this.loadAllPosts();
+                    }
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        console.log('✅ Carga completada');
+                        this.showWelcomeScreen();
+                    }
+                }, 100);
+            }
+
+            getLoadingMessage(progress) {
+                if (progress < 20) return "Inicializando núcleo del void...";
+                if (progress < 40) return "Cargando interfaz espacial...";
+                if (progress < 60) return "Conectando a la matrix...";
+                if (progress < 80) return "Sincronizando partículas...";
+                if (progress < 100) return "Activando protocolos...";
+                return "¡Void listo!";
+            }
+
+            showWelcomeScreen() {
+                console.log('🎭 Mostrando pantalla de bienvenida...');
+                
+                const loadingScreen = document.getElementById('loading-screen');
+                const welcomeScreen = document.getElementById('welcome-screen');
+                
+                if (loadingScreen) {
+                    loadingScreen.style.display = 'none';
                 }
+                if (welcomeScreen) {
+                    welcomeScreen.style.display = 'flex';
+                }
+                
+                this.updateWelcomeStats();
+                this.setupWelcomeEvents();
+            }
+
+            setupWelcomeEvents() {
+                const enterBtn = document.getElementById('enter-btn');
+                if (enterBtn) {
+                    enterBtn.addEventListener('click', () => {
+                        this.hideWelcomeScreen();
+                    });
+                }
+            }
+
+            updateWelcomeStats() {
+                const totalPosts = Object.values(this.posts).flat().length;
+                document.getElementById('welcome-posts').textContent = totalPosts;
+            }
+
+            hideWelcomeScreen() {
+                console.log('🌌 Entrando al void...');
+                
+                const welcomeScreen = document.getElementById('welcome-screen');
+                const mainApp = document.getElementById('main-app');
+                
+                if (welcomeScreen) welcomeScreen.style.display = 'none';
+                if (mainApp) {
+                    mainApp.style.display = 'block';
+                    this.setupMainSystems();
+                }
+            }
+
+            setupMainSystems() {
+                this.setupEventListeners();
+                this.renderPosts();
+                this.updateAllStats();
             }
 
             async loadAllPosts() {
@@ -873,8 +983,6 @@
 
                     if (error) {
                         console.log('❌ Error cargando posts:', error);
-                        // Si hay error, crear tabla primero
-                        await this.createPostsTable();
                         return;
                     }
 
@@ -887,49 +995,9 @@
                             this.posts[post.board].push(post);
                         });
                         console.log(`✅ Cargados ${data.length} posts de Supabase`);
-                    } else {
-                        console.log('📝 No hay posts, creando ejemplos...');
-                        await this.createSamplePosts();
                     }
                 } catch (error) {
                     console.log('❌ Error crítico:', error);
-                }
-            }
-
-            async createSamplePosts() {
-                const samplePosts = [
-                    {
-                        name: 'Sistema',
-                        subject: '¡Bienvenido a Void Chan!',
-                        message: 'Este es el foro global. Los posts se guardan permanentemente en Supabase y son visibles para todos los usuarios.\n\nCaracterísticas:\n✅ 150+ boards diferentes\n✅ Posts permanentes en base de datos\n✅ Tiempo real\n✅ Sin censura\n✅ Comunidad global\n\n¡Disfruta del void! 🌌',
-                        board: 'global',
-                        created_at: new Date().toISOString()
-                    },
-                    {
-                        name: 'Anónimo',
-                        subject: 'Primer post de la comunidad',
-                        message: '¡Hola a todos! 👋\n\nEste foro está conectado a Supabase, así que los posts que publiques se guardarán permanentemente y serán visibles para todos los usuarios.\n\n¡Únete a la conversación!',
-                        board: 'global',
-                        created_at: new Date().toISOString()
-                    }
-                ];
-
-                try {
-                    const { error } = await window.supabase
-                        .from('posts')
-                        .insert(samplePosts);
-                    
-                    if (error) {
-                        console.log('❌ Error insertando posts de ejemplo:', error);
-                    } else {
-                        console.log('✅ Posts de ejemplo creados');
-                        samplePosts.forEach(post => {
-                            if (!this.posts[post.board]) this.posts[post.board] = [];
-                            this.posts[post.board].push(post);
-                        });
-                    }
-                } catch (error) {
-                    console.log('❌ Error creando posts de ejemplo:', error);
                 }
             }
 
@@ -969,14 +1037,14 @@
                     this.clearPostForm();
                 });
 
-                // Juegos - SOLO MEMORY FUNCIONA BIEN
+                // Juegos - SOLO MEMORY
                 document.querySelectorAll('.game-card').forEach(card => {
                     card.addEventListener('click', (e) => {
                         const game = e.target.closest('.game-card').getAttribute('data-game');
                         if (game === 'memory') {
                             this.openGame(game);
                         } else {
-                            alert('🎮 Este juego está en desarrollo. ¡Prueba Memory!');
+                            alert('🎮 ¡Prueba el juego Memory! Los demás están en desarrollo.');
                         }
                     });
                 });
@@ -1005,7 +1073,7 @@
                 });
                 
                 // Actualizar título
-                document.getElementById('board-title').textContent = `/${boardName}/`;
+                document.getElementById('board-title').textContent = `/${boardName.toUpperCase()}/`;
                 document.getElementById('board-description').textContent = this.getBoardDescription(boardName);
                 
                 this.renderPosts();
@@ -1013,17 +1081,16 @@
 
             getBoardDescription(boardName) {
                 const descriptions = {
-                    'global': 'Canal Global',
-                    'random': 'Todo vale',
-                    'anime': 'Anime & Manga',
-                    'programming': 'Programación',
-                    'technology': 'Tecnología',
-                    'videogames': 'Videojuegos',
-                    'music': 'Música',
-                    'art': 'Arte Digital',
-                    'nsfw': 'Contenido Adulto'
+                    'global': 'CANAL GLOBAL',
+                    'random': 'TODO VALE',
+                    'anime': 'ANIME & MANGA',
+                    'programming': 'PROGRAMACIÓN',
+                    'technology': 'TECNOLOGÍA',
+                    'videogames': 'VIDEOJUEGOS',
+                    'music': 'MÚSICA',
+                    'art': 'ARTE DIGITAL'
                 };
-                return descriptions[boardName] || 'Board de la comunidad';
+                return descriptions[boardName] || 'BOARD DE LA COMUNIDAD';
             }
 
             handleNavAction(action) {
@@ -1090,7 +1157,7 @@
                 this.renderPosts();
                 this.updateStats();
                 
-                alert('✅ Post publicado! Visible para todos los usuarios.');
+                alert('✅ ¡Post publicado! Visible para todos los usuarios.');
             }
 
             clearPostForm() {
@@ -1131,6 +1198,10 @@
                 document.getElementById('welcome-posts').textContent = totalPosts;
             }
 
+            updateAllStats() {
+                this.updateStats();
+            }
+
             openGame(gameName) {
                 if (gameName !== 'memory') return;
                 
@@ -1138,7 +1209,7 @@
                 const gameContent = document.getElementById('game-content');
                 const gameTitle = document.getElementById('game-title');
                 
-                gameTitle.textContent = '🧠 Memory Game';
+                gameTitle.textContent = '🧠 MEMORY GAME';
                 gameContent.innerHTML = this.getMemoryHTML();
                 gameContainer.style.display = 'block';
                 
