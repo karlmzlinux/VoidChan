@@ -121,4 +121,16 @@
     color: var(--void-accent);
     padding: 8px 12px;
     border-radius: 5px;
+    .safety-message {
+    margin-top: 1rem;
+    color: var(--void-text-secondary);
+    font-size: 0.7rem;
+    opacity: 0.6;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+}
    
