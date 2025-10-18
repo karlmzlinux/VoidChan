@@ -1,375 +1,190 @@
-// js/app-fixed.js - VERSIÓN 3.0
-class VoidChanApp {
+// js/app.js - Versión simple y funcional
+
+class VoidChan {
     constructor() {
         this.currentBoard = 'global';
-        this.posts = [];
-        this.isInitialized = false;
+        this.posts = this.loadPostsFromStorage();
+        this.onlineUsers = 1;
+        this.currentTheme = 'purple';
+        this.currentLanguage = 'es';
+        this.translations = this.getTranslations();
         this.init();
     }
 
-    async init() {
+    init() {
         console.log('🚀 Iniciando Void Chan...');
         
-        try {
-            // Configurar partículas
-            this.setupParticles();
-            
-            // Configurar todos los event listeners
-            this.setupEventListeners();
-            
-            // Inicializar sistema de posts
-            await this.initializePosts();
-            
-            // Ocultar loading y mostrar contenido
-            this.hideLoadingScreen();
-            
-            // Cargar posts iniciales
-            await this.loadBoardPosts(this.currentBoard);
-            
-            this.isInitialized = true;
-            console.log('✅ Void Chan iniciado correctamente');
-            
-        } catch (error) {
-            console.error('❌ Error iniciando Void Chan:', error);
-            this.showError('Error al iniciar la aplicación');
-            this.hideLoadingScreen(); // Asegurar que no se quede bloqueado
+        // Ocultar loading después de 2 segundos
+        setTimeout(() => {
+            this.hideLoading();
+            this.showWelcomeMessage();
+        }, 2000);
+
+        this.setupEventListeners();
+        this.loadUserPreferences();
+        this.updateOnlineUsers();
+        this.renderPosts();
+        this.updateStats();
+    }
+
+    hideLoading() {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
         }
     }
 
-    setupParticles() {
-        if (typeof particlesJS !== 'undefined') {
-            particlesJS('particles-js', {
-                particles: {
-                    number: { value: 60, density: { enable: true, value_area: 800 } },
-                    color: { value: "#8a2be2" },
-                    shape: { type: "circle" },
-                    opacity: { value: 0.3, random: true },
-                    size: { value: 2, random: true },
-                    line_linked: {
-                        enable: true,
-                        distance: 120,
-                        color: "#8a2be2",
-                        opacity: 0.2,
-                        width: 1
-                    },
-                    move: {
-                        enable: true,
-                        speed: 1.5,
-                        direction: "none",
-                        random: true,
-                        straight: false,
-                        out_mode: "out",
-                        bounce: false
-                    }
-                },
-                interactivity: {
-                    detect_on: "canvas",
-                    events: {
-                        onhover: { enable: true, mode: "repulse" },
-                        onclick: { enable: true, mode: "push" },
-                        resize: true
-                    }
-                }
-            });
-        }
+    showWelcomeMessage() {
+        this.showMessage('🎉 ¡Bienvenido a Void Chan!', 'success');
     }
 
     setupEventListeners() {
-        // 🎯 FORMULARIO DE POSTS
+        // Formulario de posts
         const postForm = document.getElementById('post-form');
         if (postForm) {
             postForm.addEventListener('submit', (e) => this.handlePostSubmit(e));
         }
 
-        // 🧹 BOTÓN LIMPIAR FORMULARIO
-        const clearBtn = document.getElementById('clear-form');
-        if (clearBtn) {
-            clearBtn.addEventListener('click', () => this.clearForm());
+        // Contador de caracteres
+        const messageInput = document.getElementById('post-message');
+        if (messageInput) {
+            messageInput.addEventListener('input', (e) => {
+                this.updateCharCounter(e.target.value.length);
+            });
         }
 
-        // 🌐 NAVEGACIÓN PRINCIPAL
+        // Navegación
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const board = e.target.getAttribute('data-board');
-                this.changeBoard(board);
-            });
-        });
-
-        // ⚡ QUICK BOARDS
-        document.querySelectorAll('.quick-board').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const board = e.target.getAttribute('data-board');
                 if (board === 'nsfw') {
-                    this.showNSFWWarning(board);
+                    this.showNSFWWarning();
                 } else {
                     this.changeBoard(board);
                 }
             });
         });
 
-        // 🈲 NSFW WARNING
-        const nsfwConfirm = document.getElementById('nsfw-confirm');
-        const nsfwDeny = document.getElementById('nsfw-deny');
-        if (nsfwConfirm) {
-            nsfwConfirm.addEventListener('click', () => this.confirmNSFW());
-        }
-        if (nsfwDeny) {
-            nsfwDeny.addEventListener('click', () => this.hideNSFWWarning());
-        }
-
-        // 🔤 CONTADOR DE CARACTERES
-        const messageTextarea = document.getElementById('message');
-        if (messageTextarea) {
-            messageTextarea.addEventListener('input', (e) => {
-                this.updateCharCounter(e.target.value.length);
-            });
-        }
-
-        // 📜 MODAL DE REGLAS
-        const rulesBtn = document.getElementById('rules-btn');
-        const closeModal = document.querySelector('.close-modal');
-        const rulesModal = document.getElementById('rules-modal');
-        
-        if (rulesBtn && rulesModal) {
-            rulesBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                rulesModal.style.display = 'block';
-            });
-        }
-        
-        if (closeModal && rulesModal) {
-            closeModal.addEventListener('click', () => {
-                rulesModal.style.display = 'none';
-            });
-        }
-
-        // 🎨 CAMBIO DE TEMA
-        const themeToggle = document.getElementById('theme-toggle');
-        if (themeToggle) {
-            themeToggle.addEventListener('click', () => this.toggleTheme());
-        }
-
-        // 🌍 CAMBIO DE IDIOMA - FUNCIONAL
-        document.querySelectorAll('.lang-btn').forEach(btn => {
+        // Quick boards
+        document.querySelectorAll('.quick-board').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const lang = e.target.getAttribute('data-lang');
-                this.changeLanguage(lang);
+                const board = e.target.getAttribute('data-board');
+                if (board === 'nsfw') {
+                    this.showNSFWWarning();
+                } else {
+                    this.changeBoard(board);
+                }
             });
         });
 
-        // 📁 MANEJO DE ARCHIVOS
-        const fileInput = document.getElementById('image');
-        if (fileInput) {
-            fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+        // Juegos
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                const game = e.currentTarget.getAttribute('data-game');
+                this.loadGame(game);
+            });
+        });
+
+        // Selector de tema
+        const themeSelect = document.getElementById('theme-select');
+        if (themeSelect) {
+            themeSelect.addEventListener('change', (e) => {
+                this.changeTheme(e.target.value);
+            });
         }
 
-        // Cerrar modal al hacer click fuera
-        window.addEventListener('click', (e) => {
-            const rulesModal = document.getElementById('rules-modal');
-            if (e.target === rulesModal) {
-                rulesModal.style.display = 'none';
-            }
-            
-            const nsfwWarning = document.getElementById('nsfw-warning');
-            if (e.target === nsfwWarning) {
-                this.hideNSFWWarning();
-            }
-        });
+        // Selector de idioma
+        const languageSelect = document.getElementById('language-select');
+        if (languageSelect) {
+            languageSelect.addEventListener('change', (e) => {
+                this.changeLanguage(e.target.value);
+            });
+        }
+
+        // NSFW
+        const nsfwConfirm = document.getElementById('nsfw-confirm');
+        const nsfwCancel = document.getElementById('nsfw-cancel');
+        if (nsfwConfirm) nsfwConfirm.addEventListener('click', () => this.confirmNSFW());
+        if (nsfwCancel) nsfwCancel.addEventListener('click', () => this.hideNSFWWarning());
     }
 
-    async initializePosts() {
-        // Posts de ejemplo para demostración
-        this.posts = {
-            'global': [
-                {
-                    id: 1,
-                    name: 'Sistema',
-                    subject: '¡Bienvenido!',
-                    message: 'Bienvenido a Void Chan. Este es el canal global donde puedes conversar con todos.',
-                    date: 'Ahora mismo',
-                    board: 'global'
-                },
-                {
-                    id: 2,
-                    name: 'Anónimo',
-                    subject: '',
-                    message: '¡Hola a todos! ¿Cómo están? El foro se ve increíble 👻',
-                    date: 'Hace 2 min',
-                    board: 'global'
-                }
-            ],
-            'random': [
-                {
-                    id: 3,
-                    name: 'Anónimo',
-                    subject: 'Random post',
-                    message: '¿Alguien más piensa que los gatos son los mejores animales? 🐱',
-                    date: 'Hace 5 min',
-                    board: 'random'
-                }
-            ],
-            'art': [
-                {
-                    id: 4,
-                    name: 'Artista',
-                    subject: 'Mi último dibujo',
-                    message: 'Acabo de terminar este dibujo digital. ¿Qué opinan? 🎨',
-                    date: 'Hace 10 min',
-                    board: 'art'
-                }
-            ]
-        };
-
-        // Inicializar posts vacíos para otros boards
-        const boards = ['programming', 'anime', 'games', 'void', 'music', 'literature', 'ai', 'tech', 'nsfw'];
-        boards.forEach(board => {
-            if (!this.posts[board]) {
-                this.posts[board] = [
-                    {
-                        id: Date.now(),
-                        name: 'Sistema',
-                        subject: 'Board vacío',
-                        message: `Este es el board /${board}/. Sé el primero en publicar aquí!`,
-                        date: 'Ahora mismo',
-                        board: board
-                    }
-                ];
-            }
-        });
-    }
-
-    async handlePostSubmit(e) {
+    handlePostSubmit(e) {
         e.preventDefault();
         
-        const formData = new FormData(e.target);
-        const message = formData.get('message');
-        const name = formData.get('name') || 'Anónimo';
-        const subject = formData.get('subject') || '';
+        const name = document.getElementById('post-name').value || 'Anónimo';
+        const subject = document.getElementById('post-subject').value || '';
+        const message = document.getElementById('post-message').value;
 
         if (!message.trim()) {
             this.showMessage('❌ El mensaje no puede estar vacío', 'error');
             return;
         }
 
-        try {
-            const newPost = {
-                id: Date.now(),
-                name: name,
-                subject: subject,
-                message: message,
-                date: 'Ahora mismo',
-                board: this.currentBoard
-            };
+        const newPost = {
+            id: Date.now(),
+            name: name,
+            subject: subject,
+            message: message,
+            board: this.currentBoard,
+            timestamp: new Date().toLocaleString()
+        };
 
-            // Agregar post localmente
-            this.posts[this.currentBoard].unshift(newPost);
-            
-            // Renderizar posts
-            this.renderPosts();
-            
-            // Limpiar formulario
-            this.clearForm();
-            
-            // Mostrar mensaje de éxito
-            this.showMessage('✅ Post publicado correctamente', 'success');
-            
-            // Actualizar estadísticas
-            this.updateStats();
+        // Agregar post
+        if (!this.posts[this.currentBoard]) {
+            this.posts[this.currentBoard] = [];
+        }
+        this.posts[this.currentBoard].unshift(newPost);
 
-        } catch (error) {
-            console.error('Error publicando post:', error);
-            this.showMessage('❌ Error al publicar el post', 'error');
+        // Guardar y actualizar
+        this.savePostsToStorage();
+        this.renderPosts();
+        this.clearForm();
+        this.updateStats();
+        
+        this.showMessage('✅ Post publicado correctamente', 'success');
+    }
+
+    clearForm() {
+        document.getElementById('post-form').reset();
+        this.updateCharCounter(0);
+    }
+
+    updateCharCounter(count) {
+        const counter = document.getElementById('char-count');
+        if (counter) {
+            counter.textContent = count;
         }
     }
 
-    renderPosts() {
-        const container = document.getElementById('posts-container');
-        const boardPosts = this.posts[this.currentBoard] || [];
+    changeBoard(board) {
+        // Actualizar navegación
+        document.querySelectorAll('.nav-link, .quick-board').forEach(el => {
+            el.classList.remove('active');
+        });
         
-        if (boardPosts.length === 0) {
-            container.innerHTML = `
-                <div class="post">
-                    <div class="post-message" style="text-align: center; color: var(--void-text-secondary);">
-                        No hay posts en este board. Sé el primero en publicar.
-                    </div>
-                </div>
-            `;
-            return;
-        }
+        document.querySelectorAll(`[data-board="${board}"]`).forEach(el => {
+            el.classList.add('active');
+        });
 
-        container.innerHTML = boardPosts.map(post => `
-            <div class="post fade-in">
-                <div class="post-header">
-                    <span class="post-name">${this.escapeHTML(post.name)}</span>
-                    <span class="post-id">#${post.id}</span>
-                    <span class="post-date">${post.date}</span>
-                </div>
-                ${post.subject ? `<div class="post-subject">${this.escapeHTML(post.subject)}</div>` : ''}
-                <div class="post-message">${this.formatMessage(post.message)}</div>
-            </div>
-        `).join('');
-    }
-
-    formatMessage(text) {
-        return this.escapeHTML(text)
-            .replace(/\n/g, '<br>')
-            .replace(/>>(\d+)/g, '<a href="#post-$1" class="quote">>>$1</a>');
-    }
-
-    escapeHTML(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    async changeBoard(board) {
-        console.log(`🔄 Cambiando a board: /${board}/`);
-        
-        // Actualizar navegación activa
-        this.updateActiveNavigation(board);
-        
-        // Actualizar UI
+        // Cambiar board
         this.currentBoard = board;
-        this.updateBoardInfo(board);
+        this.updateBoardInfo();
+        this.renderPosts();
         
-        // Mostrar loading
-        this.showLoading();
-        
-        // Simular carga
-        setTimeout(() => {
-            this.renderPosts();
-            this.hideLoading();
-            this.showMessage(`📁 Cambiado a /${board}/`, 'info');
-        }, 500);
+        this.showMessage(`📁 Cambiado a /${board}/`, 'info');
     }
 
-    updateActiveNavigation(board) {
-        // Actualizar nav links
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('data-board') === board) {
-                link.classList.add('active');
-            }
-        });
-
-        // Actualizar quick boards
-        document.querySelectorAll('.quick-board').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.getAttribute('data-board') === board) {
-                btn.classList.add('active');
-            }
-        });
-    }
-
-    updateBoardInfo(board) {
+    updateBoardInfo() {
         const boardNames = {
-            'global': 'Global',
+            'global': 'Canal Global',
             'random': 'Random',
             'void': 'Void',
             'art': 'Arte',
             'music': 'Música',
-            'literature': 'Literatura',
             'programming': 'Programación',
             'ai': 'Inteligencia Artificial',
             'tech': 'Tecnología',
@@ -378,244 +193,247 @@ class VoidChanApp {
             'nsfw': 'NSFW - Adultos'
         };
 
-        const descriptions = {
-            'global': 'Conversaciones globales en tiempo real',
-            'random': 'Todo vale en el vacío',
-            'void': 'El vacío absoluto',
-            'art': 'Arte y creatividad visual',
-            'music': 'Música y sonido',
-            'programming': 'Código y desarrollo',
-            'anime': 'Anime y cultura japonesa',
-            'games': 'Videojuegos y gaming',
-            'nsfw': 'Contenido para adultos +18'
-        };
-
-        const titleElement = document.getElementById('board-title');
-        const descElement = document.getElementById('board-description');
-
-        if (titleElement) {
-            titleElement.textContent = `/${board}/ - ${boardNames[board] || board}`;
-        }
-        if (descElement) {
-            descElement.textContent = descriptions[board] || `Board /${board}/`;
+        const title = document.getElementById('board-title');
+        if (title) {
+            title.textContent = `/${this.currentBoard}/ - ${boardNames[this.currentBoard]}`;
         }
     }
 
-    showNSFWWarning(board) {
-        const warning = document.getElementById('nsfw-warning');
-        if (warning) {
-            warning.style.display = 'flex';
-            warning.setAttribute('data-target-board', board);
+    renderPosts() {
+        const container = document.getElementById('posts-container');
+        const boardPosts = this.posts[this.currentBoard] || [];
+
+        if (boardPosts.length === 0) {
+            container.innerHTML = `
+                <div class="post">
+                    <div class="post-content">
+                        <p>No hay posts en este board. ¡Sé el primero en publicar!</p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = boardPosts.map(post => `
+            <div class="post">
+                <div class="post-header">
+                    <span class="post-name">${this.escapeHTML(post.name)}</span>
+                    <span class="post-id">#${post.id}</span>
+                    <span class="post-date">${post.timestamp}</span>
+                </div>
+                ${post.subject ? `<div class="post-subject">${this.escapeHTML(post.subject)}</div>` : ''}
+                <div class="post-content">
+                    ${this.formatMessage(post.message)}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    formatMessage(text) {
+        return this.escapeHTML(text).replace(/\n/g, '<br>');
+    }
+
+    escapeHTML(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    showNSFWWarning() {
+        const modal = document.getElementById('nsfw-warning');
+        if (modal) {
+            modal.style.display = 'flex';
         }
     }
 
     hideNSFWWarning() {
-        const warning = document.getElementById('nsfw-warning');
-        if (warning) {
-            warning.style.display = 'none';
+        const modal = document.getElementById('nsfw-warning');
+        if (modal) {
+            modal.style.display = 'none';
         }
     }
 
     confirmNSFW() {
-        const warning = document.getElementById('nsfw-warning');
-        const board = warning.getAttribute('data-target-board');
         this.hideNSFWWarning();
-        this.changeBoard(board);
+        this.changeBoard('nsfw');
+    }
+
+    changeTheme(theme) {
+        // Remover todos los temas
+        document.body.classList.remove('theme-purple', 'theme-blue', 'theme-green', 'theme-red', 
+                                    'theme-orange', 'theme-pink', 'theme-cyber', 'theme-matrix');
+        
+        // Agregar nuevo tema
+        document.body.classList.add(`theme-${theme}`);
+        this.currentTheme = theme;
+        
+        // Guardar preferencia
+        localStorage.setItem('voidchan_theme', theme);
+        
+        this.showMessage(`🎨 Tema cambiado a ${theme}`, 'info');
     }
 
     changeLanguage(lang) {
-        console.log(`🌍 Cambiando idioma a: ${lang}`);
-        
-        // Actualizar botones activos
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.getAttribute('data-lang') === lang) {
-                btn.classList.add('active');
-            }
-        });
-
-        // Aquí iría la lógica de traducción
-        this.showMessage(`🌐 Idioma cambiado a ${lang.toUpperCase()}`, 'info');
+        this.currentLanguage = lang;
         
         // Guardar preferencia
         localStorage.setItem('voidchan_language', lang);
-    }
-
-    toggleTheme() {
-        const body = document.body;
-        const isDark = body.classList.contains('theme-dark');
         
-        if (isDark) {
-            body.classList.remove('theme-dark');
-            body.classList.add('theme-light');
-            this.showMessage('☀️ Tema claro activado', 'info');
-        } else {
-            body.classList.remove('theme-light');
-            body.classList.add('theme-dark');
-            this.showMessage('🌙 Tema oscuro activado', 'info');
-        }
+        // Aquí irían las traducciones
+        this.showMessage(`🌐 Idioma cambiado a ${this.getLanguageName(lang)}`, 'info');
     }
 
-    updateCharCounter(count) {
-        const counter = document.getElementById('char-count');
-        if (counter) {
-            counter.textContent = count;
-            counter.style.color = count > 1800 ? '#ff4444' : '#a0a0a0';
-        }
+    getLanguageName(lang) {
+        const names = {
+            'es': 'Español',
+            'en': 'English',
+            'jp': '日本語',
+            'fr': 'Français'
+        };
+        return names[lang] || lang;
     }
 
-    clearForm() {
-        const form = document.getElementById('post-form');
-        if (form) {
-            form.reset();
-            this.updateCharCounter(0);
-            
-            const fileName = document.getElementById('file-name');
-            if (fileName) fileName.textContent = '';
-        }
-    }
-
-    handleFileSelect(e) {
-        const file = e.target.files[0];
-        const fileName = document.getElementById('file-name');
+    loadGame(game) {
+        const games = {
+            'snake': '🐍 Snake Game',
+            'pong': '🎾 Pong Game', 
+            'memory': '🧠 Memory Game',
+            'miner': '⛏️ Void Miner'
+        };
         
-        if (file && fileName) {
-            fileName.textContent = `📎 ${file.name}`;
-        }
+        this.showMessage(`🎮 Cargando ${games[game]}...`, 'info');
+        
+        // Aquí cargarías el juego
+        setTimeout(() => {
+            this.showMessage('❌ Los juegos estarán disponibles pronto!', 'warning');
+        }, 1000);
     }
 
-    hideLoadingScreen() {
-        const loadingScreen = document.getElementById('loading-screen');
-        const mainContent = document.querySelector('.main');
+    updateOnlineUsers() {
+        // Simular usuarios en línea
+        setInterval(() => {
+            this.onlineUsers = Math.max(1, Math.floor(Math.random() * 50) + 1);
+            this.updateStats();
+        }, 30000);
+    }
+
+    updateStats() {
+        const onlineElement = document.getElementById('online-count');
+        const postElement = document.getElementById('post-count');
         
-        if (loadingScreen) {
-            loadingScreen.style.opacity = '0';
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 500);
+        if (onlineElement) {
+            onlineElement.textContent = this.onlineUsers;
         }
         
-        if (mainContent) {
-            mainContent.style.display = 'block';
+        if (postElement) {
+            const totalPosts = Object.values(this.posts).flat().length;
+            postElement.textContent = totalPosts;
         }
     }
 
-    showLoading() {
-        const loading = document.getElementById('loading');
-        if (loading) {
-            loading.style.display = 'block';
+    loadPostsFromStorage() {
+        try {
+            const saved = localStorage.getItem('voidchan_posts');
+            return saved ? JSON.parse(saved) : this.getDefaultPosts();
+        } catch {
+            return this.getDefaultPosts();
         }
     }
 
-    hideLoading() {
-        const loading = document.getElementById('loading');
-        if (loading) {
-            loading.style.display = 'none';
+    getDefaultPosts() {
+        return {
+            'global': [
+                {
+                    id: 1,
+                    name: 'Sistema',
+                    subject: '¡Bienvenido!',
+                    message: 'Bienvenido a Void Chan. Puedes publicar mensajes y navegar entre los diferentes boards.',
+                    timestamp: new Date().toLocaleString(),
+                    board: 'global'
+                }
+            ]
+        };
+    }
+
+    savePostsToStorage() {
+        try {
+            localStorage.setItem('voidchan_posts', JSON.stringify(this.posts));
+        } catch (error) {
+            console.warn('No se pudieron guardar los posts:', error);
+        }
+    }
+
+    loadUserPreferences() {
+        // Cargar tema
+        const savedTheme = localStorage.getItem('voidchan_theme');
+        if (savedTheme) {
+            this.changeTheme(savedTheme);
+            document.getElementById('theme-select').value = savedTheme;
+        }
+
+        // Cargar idioma
+        const savedLang = localStorage.getItem('voidchan_language');
+        if (savedLang) {
+            this.currentLanguage = savedLang;
+            document.getElementById('language-select').value = savedLang;
         }
     }
 
     showMessage(text, type = 'info') {
-        // Remover mensajes existentes
-        document.querySelectorAll('.flash-message').forEach(msg => msg.remove());
-        
-        const colors = {
-            'success': '#00ff88',
-            'error': '#ff4444',
-            'info': '#8a2be2',
-            'warning': '#ffaa00'
-        };
-        
+        // Crear elemento de mensaje
         const message = document.createElement('div');
-        message.className = 'flash-message';
+        message.className = `flash-message flash-${type}`;
         message.textContent = text;
+        
+        // Estilos
         message.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: ${colors[type] || '#8a2be2'};
+            background: ${this.getMessageColor(type)};
             color: white;
-            padding: 12px 24px;
+            padding: 12px 20px;
             border-radius: 8px;
-            z-index: 10000;
-            font-family: 'Share Tech Mono', monospace;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            animation: slideInFromRight 0.3s ease-out;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         `;
         
         document.body.appendChild(message);
         
+        // Remover después de 3 segundos
         setTimeout(() => {
-            message.style.animation = 'slideOutToRight 0.3s ease-in';
+            message.style.opacity = '0';
+            message.style.transition = 'opacity 0.3s ease';
             setTimeout(() => message.remove(), 300);
         }, 3000);
     }
 
-    showError(message) {
-        this.showMessage(`❌ ${message}`, 'error');
+    getMessageColor(type) {
+        const colors = {
+            'success': '#00cc66',
+            'error': '#ff4444',
+            'info': 'var(--color-accent)',
+            'warning': '#ffaa00'
+        };
+        return colors[type] || colors.info;
     }
 
-    updateStats() {
-        const onlineNumber = document.getElementById('online-number');
-        const postNumber = document.getElementById('post-number');
-        const speedNumber = document.getElementById('speed-number');
-        
-        if (onlineNumber) onlineNumber.textContent = Math.floor(Math.random() * 50) + 1;
-        if (postNumber) postNumber.textContent = Object.values(this.posts).flat().length;
-        if (speedNumber) speedNumber.textContent = Math.floor(Math.random() * 10) + 1;
-    }
-
-    async loadBoardPosts(board) {
-        this.showLoading();
-        
-        try {
-            // Simular carga de posts
-            await new Promise(resolve => setTimeout(resolve, 800));
-            
-            if (!this.posts[board]) {
-                this.posts[board] = [
-                    {
-                        id: Date.now(),
-                        name: 'Sistema',
-                        subject: 'Nuevo board',
-                        message: `Bienvenido al board /${board}/. Sé el primero en publicar!`,
-                        date: 'Ahora mismo',
-                        board: board
-                    }
-                ];
+    getTranslations() {
+        return {
+            'es': {
+                'welcome': '¡Bienvenido!',
+                'post_published': 'Post publicado correctamente'
+            },
+            'en': {
+                'welcome': 'Welcome!',
+                'post_published': 'Post published successfully'
             }
-            
-            this.renderPosts();
-            this.hideLoading();
-            
-        } catch (error) {
-            console.error('Error cargando posts:', error);
-            this.showError('Error cargando posts');
-            this.hideLoading();
-        }
+            // Agregar más traducciones...
+        };
     }
 }
 
-// Inicializar la aplicación
+// Inicializar cuando la página cargue
 document.addEventListener('DOMContentLoaded', () => {
-    window.voidChanApp = new VoidChanApp();
+    window.voidChan = new VoidChan();
 });
-
-// CSS para animaciones de mensajes
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInFromRight {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    @keyframes slideOutToRight {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-    
-    .flash-message {
-        animation: slideInFromRight 0.3s ease-out;
-    }
-`;
-document.head.appendChild(style);
