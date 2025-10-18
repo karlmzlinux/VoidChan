@@ -6,19 +6,48 @@
     <title>void chan - donde el vacío habla</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="styles/games.css">
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+
     <!-- Header -->
     <header class="header">
         <div class="container">
-            <h1 class="logo">void chan</h1>
-            <nav class="nav">
-                <a href="#" class="nav-link active" data-board="random">/b/</a>
-                <a href="#" class="nav-link" data-board="anime">/a/</a>
-                <a href="#" class="nav-link" data-board="video">/v/</a>
-                <a href="#" class="nav-link" data-board="void">/void/</a>
-            </nav>
+            <div class="header-content">
+                <h1 class="logo">
+                    <span class="logo-text">void chan</span>
+                    <span class="logo-subtitle">donde el vacío habla</span>
+                </h1>
+                <nav class="nav">
+                    <div class="nav-section">
+                        <span class="nav-title">Principal</span>
+                        <a href="#" class="nav-link active" data-board="random">/b/ - Random</a>
+                        <a href="#" class="nav-link" data-board="void">/void/ - Void</a>
+                    </div>
+                    <div class="nav-section">
+                        <span class="nav-title">Temáticos</span>
+                        <a href="#" class="nav-link" data-board="anime">/a/ - Anime</a>
+                        <a href="#" class="nav-link" data-board="video">/v/ - Video</a>
+                        <a href="#" class="nav-link" data-board="tech">/g/ - Tech</a>
+                    </div>
+                    <div class="nav-section">
+                        <span class="nav-title">Creativo</span>
+                        <a href="#" class="nav-link" data-board="art">/art/ - Arte</a>
+                        <a href="#" class="nav-link" data-board="music">/mu/ - Música</a>
+                        <a href="#" class="nav-link" data-board="literature">/lit/ - Literatura</a>
+                    </div>
+                    <div class="nav-section">
+                        <span class="nav-title">Juegos</span>
+                        <a href="#" class="nav-link game-link" data-game="snake">Snake</a>
+                        <a href="#" class="nav-link game-link" data-game="tetris">Tetris</a>
+                        <a href="#" class="nav-link game-link" data-game="miner">Void Miner</a>
+                    </div>
+                </nav>
+            </div>
         </div>
     </header>
 
@@ -29,21 +58,51 @@
             <div class="board-info">
                 <h2 id="board-title">/b/ - Random</h2>
                 <p id="board-description">El vacío espera tus pensamientos...</p>
+                <div class="board-stats">
+                    <span id="online-count">🌐 1 usuario en línea</span>
+                    <span id="post-count">📝 0 posts totales</span>
+                </div>
             </div>
 
             <!-- Post Form -->
-            <div class="post-form-container">
+            <div class="post-form-container glass-effect">
                 <form id="post-form" class="post-form">
-                    <div class="form-row">
-                        <input type="text" id="name" name="name" placeholder="Nombre (opcional)" maxlength="50">
-                        <input type="text" id="subject" name="subject" placeholder="Asunto (opcional)" maxlength="100">
+                    <div class="form-header">
+                        <h3>Nuevo Post</h3>
+                        <div class="char-counter">
+                            <span id="char-count">0</span>/2000
+                        </div>
                     </div>
-                    <textarea id="message" name="message" placeholder="Escribe tu mensaje aquí..." required maxlength="2000"></textarea>
+                    <div class="form-row">
+                        <input type="text" id="name" name="name" placeholder="🕶️ Nombre (opcional)" maxlength="50">
+                        <input type="text" id="subject" name="subject" placeholder="📌 Asunto (opcional)" maxlength="100">
+                    </div>
+                    <textarea id="message" name="message" placeholder="💭 Escribe tu mensaje aquí..." required maxlength="2000"></textarea>
                     <div class="form-actions">
-                        <input type="file" id="image" name="image" accept="image/*" class="file-input">
-                        <button type="submit" class="submit-btn">Publicar</button>
+                        <div class="file-upload">
+                            <label for="image" class="file-label">
+                                🖼️ Subir imagen
+                            </label>
+                            <input type="file" id="image" name="image" accept="image/*" class="file-input">
+                            <span id="file-name" class="file-name"></span>
+                        </div>
+                        <button type="submit" class="submit-btn neon-btn">
+                            <span class="btn-text">🚀 Publicar</span>
+                            <div class="btn-glow"></div>
+                        </button>
                     </div>
                 </form>
+            </div>
+
+            <!-- Games Container -->
+            <div id="games-container" class="games-container" style="display: none;">
+                <div class="game-header">
+                    <h3 id="game-title">Juego</h3>
+                    <button id="close-game" class="close-btn">✕</button>
+                </div>
+                <div id="game-content" class="game-content">
+                    <!-- Los juegos se cargan aquí -->
+                </div>
             </div>
 
             <!-- Posts Container -->
@@ -54,7 +113,7 @@
             <!-- Loading -->
             <div id="loading" class="loading">
                 <div class="spinner"></div>
-                <p>Cargando el vacío...</p>
+                <p>🔄 Cargando el vacío...</p>
             </div>
         </div>
     </main>
@@ -62,17 +121,64 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>void chan - donde las ideas se pierden en el vacío</p>
-            <p>Total de posts: <span id="post-count">0</span></p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>void chan</h4>
+                    <p>Un foro anónimo en la profundidad del vacío digital</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Navegación</h4>
+                    <a href="#" data-board="random">Random</a>
+                    <a href="#" data-board="void">Void</a>
+                    <a href="#" data-board="tech">Tech</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Juegos</h4>
+                    <a href="#" data-game="snake">Snake</a>
+                    <a href="#" data-game="tetris">Tetris</a>
+                    <a href="#" data-game="miner">Void Miner</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="#" id="rules-btn">Reglas</a>
+                    <a href="#" id="privacy-btn">Privacidad</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 <strong>Hecho por KarlDev</strong>. Todos los derechos reservados.</p>
+                <p class="version">v4.2.0 | Void Chan</p>
+            </div>
         </div>
     </footer>
 
+    <!-- Modal para Reglas -->
+    <div id="rules-modal" class="modal">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h3>📜 Reglas del Void</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <ol>
+                    <li>Respeta el anonimato de los demás</li>
+                    <li>No spam ni flood</li>
+                    <li>Contenido ilegal será eliminado</li>
+                    <li>Disfruta del vacío responsablemente</li>
+                    <li>Los mods tienen la última palabra</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="js/supabase-client.js"></script>
     <script src="js/posts-manager.js"></script>
     <script src="js/ui-manager.js"></script>
+    <script src="js/games/snake-game.js"></script>
+    <script src="js/games/tetris-game.js"></script>
+    <script src="js/games/void-miner.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
-
