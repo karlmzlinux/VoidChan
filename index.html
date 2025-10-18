@@ -5,268 +5,207 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>void chan - donde el vacío habla</title>
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/animations.css">
-    <link rel="stylesheet" href="styles/dark-theme.css">
-    <link rel="stylesheet" href="styles/responsive.css">
-    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/themes.css">
+    <link rel="icon" href="assets/favicon.ico">
 </head>
-    <script src="js/online-users.js"></script>
-<script src="js/games/game-loader.js"></script>
-
-    <body class="theme-dark">
-    <!-- Particle Background -->
-    <div id="particles-js"></div>
-    
-    <!-- Loading Screen MEJORADO -->
+<body class="theme-purple">
+    <!-- Loading Screen Simple -->
     <div id="loading-screen" class="loading-screen">
-        <div class="void-loader">
-            <div class="void-spinner"></div>
-            <h2>void chan</h2>
-            <p>Inicializando el vacío...</p>
+        <div class="loader">
+            <div class="spinner"></div>
+            <h1>void chan</h1>
+            <p>Cargando el foro...</p>
         </div>
-    </div>
-
-    <!-- Language Switcher FUNCIONAL -->
-    <div class="language-switcher">
-        <button class="lang-btn active" data-lang="es">🇪🇸 ES</button>
-        <button class="lang-btn" data-lang="en">🇺🇸 EN</button>
-        <button class="lang-btn" data-lang="jp">🇯🇵 JP</button>
-        <button class="lang-btn" data-lang="fr">🇫🇷 FR</button>
     </div>
 
     <!-- Header -->
     <header class="header">
         <div class="container">
-            <div class="header-content">
-                <div class="logo-section">
-                    <h1 class="logo">
-                        <span class="logo-text">void chan</span>
-                        <span class="logo-subtitle">donde el vacío habla</span>
-                    </h1>
-                    <div class="header-actions">
-                        <button id="search-toggle" class="header-btn" title="Buscar">🔍</button>
-                        <button id="focus-mode" class="header-btn" title="Modo focus">🎯</button>
-                        <button id="theme-toggle" class="header-btn" title="Cambiar tema">🌙</button>
+            <div class="header-top">
+                <h1 class="logo">void chan</h1>
+                <div class="header-controls">
+                    <!-- Selector de Temas -->
+                    <div class="theme-selector">
+                        <select id="theme-select">
+                            <option value="purple">🟣 Morado</option>
+                            <option value="blue">🔵 Azul</option>
+                            <option value="green">🟢 Verde</option>
+                            <option value="red">🔴 Rojo</option>
+                            <option value="orange">🟠 Naranja</option>
+                            <option value="pink">🩷 Rosa</option>
+                            <option value="cyber">👾 Cyber</option>
+                            <option value="matrix">💚 Matrix</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Selector de Idioma -->
+                    <div class="language-selector">
+                        <select id="language-select">
+                            <option value="es">🇪🇸 Español</option>
+                            <option value="en">🇺🇸 English</option>
+                            <option value="jp">🇯🇵 日本語</option>
+                            <option value="fr">🇫🇷 Français</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navegación Principal -->
+            <nav class="main-nav">
+                <div class="nav-section">
+                    <h3>🌐 Principal</h3>
+                    <div class="nav-links">
+                        <a href="#" class="nav-link active" data-board="global">💬 Global</a>
+                        <a href="#" class="nav-link" data-board="random">🎲 Random</a>
+                        <a href="#" class="nav-link" data-board="void">🌌 Void</a>
                     </div>
                 </div>
 
-                <!-- Main Navigation MEJORADA -->
-                <nav class="main-nav">
-                    <div class="nav-category">
-                        <h3>Principal</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link active" data-board="global">💬 /chat/ - Global</a>
-                            <a href="#" class="nav-link" data-board="random">🎲 /b/ - Random</a>
-                            <a href="#" class="nav-link" data-board="void">🌌 /void/ - Void</a>
-                        </div>
+                <div class="nav-section">
+                    <h3>🎨 Creativo</h3>
+                    <div class="nav-links">
+                        <a href="#" class="nav-link" data-board="art">🎨 Arte</a>
+                        <a href="#" class="nav-link" data-board="music">🎵 Música</a>
+                        <a href="#" class="nav-link" data-board="literature">📚 Literatura</a>
                     </div>
+                </div>
 
-                    <div class="nav-category">
-                        <h3>Creativo</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="art">🎨 /art/ - Arte</a>
-                            <a href="#" class="nav-link" data-board="music">🎵 /mu/ - Música</a>
-                            <a href="#" class="nav-link" data-board="literature">📚 /lit/ - Literatura</a>
-                        </div>
+                <div class="nav-section">
+                    <h3>💻 Tecnología</h3>
+                    <div class="nav-links">
+                        <a href="#" class="nav-link" data-board="programming">💻 Programación</a>
+                        <a href="#" class="nav-link" data-board="ai">🤖 IA</a>
+                        <a href="#" class="nav-link" data-board="tech">🔧 Tech</a>
                     </div>
+                </div>
 
-                    <div class="nav-category">
-                        <h3>Tecnología</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="programming">💻 /prog/ - Programación</a>
-                            <a href="#" class="nav-link" data-board="ai">🤖 /ai/ - IA</a>
-                            <a href="#" class="nav-link" data-board="tech">🔧 /tech/ - Tecnología</a>
-                        </div>
+                <div class="nav-section">
+                    <h3>🎮 Entretenimiento</h3>
+                    <div class="nav-links">
+                        <a href="#" class="nav-link" data-board="anime">🇯🇵 Anime</a>
+                        <a href="#" class="nav-link" data-board="games">🎮 Juegos</a>
+                        <a href="#" class="nav-link nsfw-trigger" data-board="nsfw">🔞 NSFW</a>
                     </div>
-
-                    <div class="nav-category">
-                        <h3>Entretenimiento</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="anime">🇯🇵 /a/ - Anime</a>
-                            <a href="#" class="nav-link" data-board="games">🎮 /games/ - Juegos</a>
-                            <a href="#" class="nav-link nsfw-trigger" data-board="nsfw">🔞 /nsfw/ - Adultos</a>
-                        </div>
-                    </div>
-                </nav>
-            </div>
+                </div>
+            </nav>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="main" style="display: none;">
+    <main class="main">
         <div class="container">
             <!-- Board Header -->
             <div class="board-header">
-                <div class="board-title-container">
-                    <h2 id="board-title" class="board-title">/chat/ - Global</h2>
-                    <div class="board-animation">
-                        <div class="floating-shapes">
-                            <div class="shape shape-1"></div>
-                            <div class="shape shape-2"></div>
-                            <div class="shape shape-3"></div>
-                        </div>
-                    </div>
+                <div class="board-info">
+                    <h2 id="board-title">/global/ - Canal Global</h2>
+                    <p id="board-description">Conversaciones en tiempo real con todos los usuarios</p>
                 </div>
-                <p id="board-description" class="board-description">Conversaciones globales en tiempo real</p>
                 <div class="board-stats">
-                    <span id="online-count" class="stat">🌐 <span id="online-number">1</span> en línea</span>
-                    <span id="post-count" class="stat">📝 <span id="post-number">0</span> posts</span>
-                    <span id="board-speed" class="stat">⚡ <span id="speed-number">0</span>/min</span>
+                    <div class="stat">
+                        <span class="stat-icon">👥</span>
+                        <span id="online-count">1</span> en línea
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">💬</span>
+                        <span id="post-count">0</span> posts
+                    </div>
                 </div>
             </div>
 
-            <!-- Quick Board Access MEJORADO -->
+            <!-- Quick Boards -->
             <div class="quick-boards">
-                <div class="quick-scroll">
-                    <button class="quick-board active" data-board="global">💬 Global</button>
-                    <button class="quick-board" data-board="random">🎲 Random</button>
-                    <button class="quick-board" data-board="art">🎨 Arte</button>
-                    <button class="quick-board" data-board="programming">💻 Prog</button>
-                    <button class="quick-board" data-board="anime">🇯🇵 Anime</button>
-                    <button class="quick-board" data-board="games">🎮 Juegos</button>
-                    <button class="quick-board nsfw-trigger" data-board="nsfw">🔞 NSFW</button>
-                </div>
+                <button class="quick-board active" data-board="global">💬 Global</button>
+                <button class="quick-board" data-board="random">🎲 Random</button>
+                <button class="quick-board" data-board="art">🎨 Arte</button>
+                <button class="quick-board" data-board="programming">💻 Prog</button>
+                <button class="quick-board" data-board="anime">🇯🇵 Anime</button>
+                <button class="quick-board" data-board="games">🎮 Juegos</button>
+                <button class="quick-board nsfw-trigger" data-board="nsfw">🔞 NSFW</button>
             </div>
 
-            <!-- Post Form COMPLETAMENTE FUNCIONAL -->
-            <div class="post-form-container glass-effect">
-                <form id="post-form" class="post-form">
-                    <div class="form-header">
-                        <h3>✨ Nuevo Post</h3>
-                        <div class="form-meta">
-                            <span class="char-counter">
-                                <span id="char-count">0</span>/2000
-                            </span>
-                        </div>
-                    </div>
-                    
+            <!-- Post Form -->
+            <div class="post-form">
+                <h3>📝 Crear Post</h3>
+                <form id="post-form">
                     <div class="form-row">
-                        <input type="text" id="name" name="name" placeholder="🕶️ Nombre (opcional)" maxlength="50">
-                        <input type="text" id="subject" name="subject" placeholder="📌 Asunto (opcional)" maxlength="100">
+                        <input type="text" id="post-name" placeholder="Nombre (opcional)" maxlength="50">
+                        <input type="text" id="post-subject" placeholder="Asunto (opcional)" maxlength="100">
                     </div>
-                    
-                    <textarea id="message" name="message" placeholder="💭 Escribe tu mensaje aquí..." required maxlength="2000"></textarea>
-                    
-                    <div class="form-actions">
-                        <div class="file-section">
-                            <label for="image" class="file-label">
-                                🖼️ Subir imagen
-                            </label>
-                            <input type="file" id="image" name="image" accept="image/*" class="file-input">
-                            <span id="file-name" class="file-name"></span>
+                    <textarea id="post-message" placeholder="Escribe tu mensaje aquí..." required maxlength="2000"></textarea>
+                    <div class="form-footer">
+                        <div class="char-counter">
+                            <span id="char-count">0</span>/2000
                         </div>
-                        
-                        <div class="action-buttons">
-                            <button type="button" id="clear-form" class="clear-btn" title="Limpiar formulario">🗑️</button>
-                            <button type="submit" class="submit-btn neon-btn">
-                                <span class="btn-text">🚀 Publicar</span>
-                                <div class="btn-glow"></div>
-                            </button>
-                        </div>
+                        <button type="submit" class="submit-btn">🚀 Publicar</button>
                     </div>
                 </form>
             </div>
 
-            <!-- Posts Container -->
-            <div id="posts-container" class="posts-container">
-                <!-- Los posts se cargan aquí -->
+            <!-- Games Section -->
+            <div id="games-section" class="games-section">
+                <h3>🎮 Minijuegos</h3>
+                <div class="games-grid">
+                    <div class="game-card" data-game="snake">
+                        <div class="game-icon">🐍</div>
+                        <h4>Snake</h4>
+                        <p>Juego clásico de la serpiente</p>
+                    </div>
+                    <div class="game-card" data-game="pong">
+                        <div class="game-icon">🎾</div>
+                        <h4>Pong</h4>
+                        <p>Juego clásico de tenis</p>
+                    </div>
+                    <div class="game-card" data-game="memory">
+                        <div class="game-icon">🧠</div>
+                        <h4>Memory</h4>
+                        <p>Juego de memoria</p>
+                    </div>
+                    <div class="game-card" data-game="miner">
+                        <div class="game-icon">⛏️</div>
+                        <h4>Void Miner</h4>
+                        <p>Mineria en el vacío</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- Loading -->
-            <div id="loading" class="loading" style="display: none;">
-                <div class="void-spinner large"></div>
-                <p>Cargando posts...</p>
+            <!-- Posts Container -->
+            <div id="posts-container" class="posts-container">
+                <!-- Los posts aparecerán aquí -->
             </div>
         </div>
     </main>
 
-    <!-- Footer MEJORADO -->
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section">
-                    <h4>void chan</h4>
-                    <p>Un foro anónimo en la profundidad del vacío digital</p>
+                <div class="footer-info">
+                    <h3>void chan</h3>
+                    <p>Foro anónimo - Sin censura, con responsabilidad</p>
                 </div>
-                <div class="footer-section">
-                    <h4>Navegación</h4>
-                    <a href="#" data-board="global">Global</a>
-                    <a href="#" data-board="random">Random</a>
-                    <a href="#" data-board="void">Void</a>
+                <div class="footer-credits">
+                    <p>&copy; 2025 <strong>Hecho por KarlDev</strong>. Todos los derechos reservados.</p>
                 </div>
-                <div class="footer-section">
-                    <h4>Comunidad</h4>
-                    <a href="#" id="rules-btn">Reglas</a>
-                    <a href="#" id="help-btn">Ayuda</a>
-                    <a href="#" id="contact-btn">Contacto</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Desarrollador</h4>
-                    <a href="#" id="dev-info">KarlDev</a>
-                    <a href="#" id="version-info">v5.0.0</a>
-                    <a href="#" id="source-code">Código Fuente</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 <strong>Hecho por KarlDev</strong>. Todos los derechos reservados.</p>
-                <p class="version">Void Chan Universe - Sin censura, con responsabilidad</p>
             </div>
         </div>
     </footer>
 
-    <!-- NSFW Warning - SOLO PARA NSFW -->
-    <div id="nsfw-warning" class="nsfw-warning" style="display: none;">
-        <div class="nsfw-content glass-effect">
-            <div class="nsfw-header">
-                <h3>⚠️ Zona NSFW - Solo Mayores de 18+</h3>
-            </div>
-            <div class="nsfw-body">
-                <p>Este contenido está restringido para mayores de 18 años. Contiene material para adultos.</p>
-                <div class="nsfw-actions">
-                    <button id="nsfw-confirm" class="nsfw-btn confirm">✅ Soy mayor de edad</button>
-                    <button id="nsfw-deny" class="nsfw-btn deny">❌ Salir</button>
-                </div>
+    <!-- NSFW Warning -->
+    <div id="nsfw-warning" class="nsfw-modal">
+        <div class="nsfw-content">
+            <h3>⚠️ Contenido para Adultos</h3>
+            <p>Debes ser mayor de 18 años para acceder a este contenido.</p>
+            <div class="nsfw-buttons">
+                <button id="nsfw-confirm" class="btn-primary">✅ Soy mayor de edad</button>
+                <button id="nsfw-cancel" class="btn-secondary">❌ Salir</button>
             </div>
         </div>
     </div>
 
-    <!-- Rules Modal -->
-    <div id="rules-modal" class="modal" style="display: none;">
-        <div class="modal-content glass-effect">
-            <div class="modal-header">
-                <h3>📜 Reglas del Void</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <ol>
-                    <li>🛡️ Respeta el anonimato de los demás</li>
-                    <li>🚫 No spam ni flood de mensajes</li>
-                    <li>⚖️ Contenido ilegal será eliminado</li>
-                    <li>💜 Disfruta del vacío responsablemente</li>
-                    <li>👑 Los moderadores tienen la última palabra</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts ACTUALIZADOS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    
-    <!-- Configuración SIMPLE de Supabase -->
-    <script>
-        // CONFIGURA TUS CREDENCIALES AQUÍ
-        const SUPABASE_URL = 'https://hyoqobgkjmvnjwfpkmyv.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5b3FvYmdram12bmp3ZnBrbXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA3MzQ5MzIsImV4cCI6MjA3NjMxMDkzMn0.iTCBoaZOWF5jAyYa3tas4XjtZLAtPpoBrJEod-xSWC4';
-        
-        // Si no hay credenciales, usar modo demo
-        window.supabaseConfig = {
-            url: SUPABASE_URL,
-            key: SUPABASE_ANON_KEY,
-            demoMode: SUPABASE_URL.includes('tu-proyecto')
-        };
-    </script>
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>
     
     <script src="js/app-fixed.js"></script>
 </body>
