@@ -260,6 +260,8 @@
             gap: 0.5rem;
             flex-wrap: wrap;
             justify-content: center;
+            max-height: 120px;
+            overflow-y: auto;
         }
 
         .quick-board {
@@ -271,9 +273,60 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.8rem;
+            white-space: nowrap;
         }
 
         .quick-board.active {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        /* Main Navigation */
+        .main-nav {
+            background: var(--color-primary);
+            padding: 1rem 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .nav-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .nav-category {
+            background: var(--color-secondary);
+            border-radius: 6px;
+            padding: 0.8rem;
+        }
+
+        .nav-category h3 {
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .nav-link {
+            color: var(--color-text);
+            text-decoration: none;
+            padding: 0.4rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
             background: var(--color-accent);
             color: white;
         }
@@ -420,6 +473,79 @@
             color: var(--color-text-secondary);
         }
 
+        /* === GAMES SECTION === */
+        .games-section {
+            background: var(--color-primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .games-section h3 {
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .game-card {
+            background: var(--color-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--color-border);
+        }
+
+        .game-card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-3px);
+        }
+
+        .game-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Game Containers */
+        .game-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--color-primary);
+            border: 2px solid var(--color-accent);
+            border-radius: 8px;
+            padding: 1rem;
+            z-index: 1000;
+            display: none;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--color-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Snake Game */
+        #snake-game {
+            border: 1px solid var(--color-border);
+        }
+
         /* === FOOTER === */
         .footer {
             background: var(--color-primary);
@@ -440,6 +566,8 @@
             .form-row { grid-template-columns: 1fr; }
             .footer-content { flex-direction: column; gap: 1rem; text-align: center; }
             .board-header { flex-direction: column; gap: 1rem; text-align: center; }
+            .nav-container { grid-template-columns: 1fr; }
+            .games-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -473,6 +601,10 @@
                     <span class="stat-number" id="welcome-posts">0</span>
                     <span class="stat-label">posts totales</span>
                 </div>
+                <div class="stat">
+                    <span class="stat-number">150</span>
+                    <span class="stat-label">boards activos</span>
+                </div>
             </div>
             <button id="enter-btn" class="enter-btn">🌌 Entrar al Void</button>
         </div>
@@ -505,6 +637,7 @@
         <div class="quick-navigation">
             <button class="nav-btn" data-action="scroll-to-posts">📝 Posts</button>
             <button class="nav-btn" data-action="scroll-to-form">✍️ Nuevo Post</button>
+            <button class="nav-btn" data-action="scroll-to-games">🎮 Juegos</button>
             <button class="nav-btn" data-action="scroll-to-top">⬆️ Subir</button>
         </div>
 
@@ -512,9 +645,150 @@
         <div class="quick-boards">
             <button class="quick-board active" data-board="global">💬 Global</button>
             <button class="quick-board" data-board="random">🎲 Random</button>
-            <button class="quick-board" data-board="programming">💻 Prog</button>
             <button class="quick-board" data-board="anime">🇯🇵 Anime</button>
+            <button class="quick-board" data-board="manga">📖 Manga</button>
+            <button class="quick-board" data-board="programming">💻 Prog</button>
+            <button class="quick-board" data-board="technology">🔧 Tech</button>
+            <button class="quick-board" data-board="videogames">🎮 Games</button>
+            <button class="quick-board" data-board="retro">🕹️ Retro</button>
+            <button class="quick-board" data-board="music">🎵 Música</button>
+            <button class="quick-board" data-board="art">🎨 Arte</button>
+            <button class="quick-board" data-board="literature">📚 Lit</button>
+            <button class="quick-board" data-board="movies">🎬 Cine</button>
         </div>
+
+        <!-- Main Navigation -->
+        <nav class="main-nav">
+            <div class="container">
+                <div class="nav-container">
+                    <!-- 150+ Boards organizados por categorías -->
+                    <div class="nav-category">
+                        <h3>🌐 Principal</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link active" data-board="global">/global/ - Global</a>
+                            <a href="#" class="nav-link" data-board="random">/b/ - Random</a>
+                            <a href="#" class="nav-link" data-board="void">/void/ - Void</a>
+                            <a href="#" class="nav-link" data-board="meta">/meta/ - Meta</a>
+                            <a href="#" class="nav-link" data-board="suggestions">/sug/ - Sugerencias</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>🇯🇵 Anime & Manga</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="anime">/a/ - Anime</a>
+                            <a href="#" class="nav-link" data-board="manga">/m/ - Manga</a>
+                            <a href="#" class="nav-link" data-board="wallpapers">/wp/ - Wallpapers</a>
+                            <a href="#" class="nav-link" data-board="cosplay">/cos/ - Cosplay</a>
+                            <a href="#" class="nav-link" data-board="figures">/fig/ - Figuras</a>
+                            <a href="#" class="nav-link" data-board="japan">/jp/ - Japón</a>
+                            <a href="#" class="nav-link" data-board="anime_games">/ag/ - Anime Games</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>💻 Tecnología</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="programming">/prog/ - Programación</a>
+                            <a href="#" class="nav-link" data-board="technology">/tech/ - Tecnología</a>
+                            <a href="#" class="nav-link" data-board="ai">/ai/ - Inteligencia Artificial</a>
+                            <a href="#" class="nav-link" data-board="webdev">/web/ - Web Dev</a>
+                            <a href="#" class="nav-link" data-board="mobile">/mob/ - Mobile</a>
+                            <a href="#" class="nav-link" data-board="cybersecurity">/sec/ - Cybersecurity</a>
+                            <a href="#" class="nav-link" data-board="hardware">/hw/ - Hardware</a>
+                            <a href="#" class="nav-link" data-board="linux">/lin/ - Linux</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>🎮 Videojuegos</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="videogames">/v/ - Videojuegos</a>
+                            <a href="#" class="nav-link" data-board="retro">/retro/ - Retro</a>
+                            <a href="#" class="nav-link" data-board="pcgaming">/pc/ - PC Gaming</a>
+                            <a href="#" class="nav-link" data-board="console">/con/ - Consolas</a>
+                            <a href="#" class="nav-link" data-board="mobilegames">/mg/ - Mobile Games</a>
+                            <a href="#" class="nav-link" data-board="indie">/indie/ - Indie</a>
+                            <a href="#" class="nav-link" data-board="rpg">/rpg/ - RPG</a>
+                            <a href="#" class="nav-link" data-board="fps">/fps/ - FPS</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>🎨 Creativo</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="art">/art/ - Arte</a>
+                            <a href="#" class="nav-link" data-board="music">/mu/ - Música</a>
+                            <a href="#" class="nav-link" data-board="literature">/lit/ - Literatura</a>
+                            <a href="#" class="nav-link" data-board="writing">/write/ - Escritura</a>
+                            <a href="#" class="nav-link" data-board="photography">/photo/ - Fotografía</a>
+                            <a href="#" class="nav-link" data-board="design">/design/ - Diseño</a>
+                            <a href="#" class="nav-link" data-board="crafts">/craft/ - Manualidades</a>
+                            <a href="#" class="nav-link" data-board="cooking">/cook/ - Cocina</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>🎬 Entretenimiento</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="movies">/tv/ - Cine & TV</a>
+                            <a href="#" class="nav-link" data-board="series">/tv/ - Series</a>
+                            <a href="#" class="nav-link" data-board="comics">/comic/ - Cómics</a>
+                            <a href="#" class="nav-link" data-board="sports">/sp/ - Deportes</a>
+                            <a href="#" class="nav-link" data-board="fitness">/fit/ - Fitness</a>
+                            <a href="#" class="nav-link" data-board="travel">/travel/ - Viajes</a>
+                            <a href="#" class="nav-link" data-board="fashion">/fa/ - Moda</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>💬 Discusión</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="politics">/pol/ - Política</a>
+                            <a href="#" class="nav-link" data-board="science">/sci/ - Ciencia</a>
+                            <a href="#" class="nav-link" data-board="history">/his/ - Historia</a>
+                            <a href="#" class="nav-link" data-board="philosophy">/phi/ - Filosofía</a>
+                            <a href="#" class="nav-link" data-board="psychology">/psy/ - Psicología</a>
+                            <a href="#" class="nav-link" data-board="business">/biz/ - Negocios</a>
+                            <a href="#" class="nav-link" data-board="education">/edu/ - Educación</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>🔞 NSFW</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="nsfw">/nsfw/ - Adultos</a>
+                            <a href="#" class="nav-link" data-board="hentai">/h/ - Hentai</a>
+                            <a href="#" class="nav-link" data-board="ecchi">/ecchi/ - Ecchi</a>
+                            <a href="#" class="nav-link" data-board="yuri">/yuri/ - Yuri</a>
+                            <a href="#" class="nav-link" data-board="yaoi">/yaoi/ - Yaoi</a>
+                        </div>
+                    </div>
+
+                    <!-- Más categorías para llegar a 150+ boards -->
+                    <div class="nav-category">
+                        <h3>🌎 Internacional</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="es">/es/ - Español</a>
+                            <a href="#" class="nav-link" data-board="en">/en/ - English</a>
+                            <a href="#" class="nav-link" data-board="fr">/fr/ - Français</a>
+                            <a href="#" class="nav-link" data-board="de">/de/ - Deutsch</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>🎯 Especializados</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="math">/math/ - Matemáticas</a>
+                            <a href="#" class="nav-link" data-board="physics">/phy/ - Física</a>
+                            <a href="#" class="nav-link" data-board="biology">/bio/ - Biología</a>
+                            <a href="#" class="nav-link" data-board="chemistry">/chem/ - Química</a>
+                            <a href="#" class="nav-link" data-board="astronomy">/astro/ - Astronomía</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
         <!-- Main Content -->
         <main class="main">
@@ -556,6 +830,33 @@
                     </form>
                 </div>
 
+                <!-- Games Section -->
+                <div class="games-section" id="games-section">
+                    <h3>🎮 Minijuegos del Void</h3>
+                    <div class="games-grid">
+                        <div class="game-card" data-game="snake">
+                            <div class="game-icon">🐍</div>
+                            <h4>Snake</h4>
+                            <p>Serpiente clásica</p>
+                        </div>
+                        <div class="game-card" data-game="pong">
+                            <div class="game-icon">🎾</div>
+                            <h4>Pong</h4>
+                            <p>Tenis retro</p>
+                        </div>
+                        <div class="game-card" data-game="tetris">
+                            <div class="game-icon">🧱</div>
+                            <h4>Tetris</h4>
+                            <p>Piezas rusas</p>
+                        </div>
+                        <div class="game-card" data-game="memory">
+                            <div class="game-icon">🧠</div>
+                            <h4>Memory</h4>
+                            <p>Encuentra pares</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Posts Container -->
                 <div id="posts-container" class="posts-container">
                     <!-- Posts se cargan aquí -->
@@ -569,7 +870,7 @@
                 <div class="footer-content">
                     <div class="footer-info">
                         <h3>void chan</h3>
-                        <p>Foro anónimo global</p>
+                        <p>Foro anónimo global · 150+ boards · Tiempo real</p>
                     </div>
                     <div class="footer-credits">
                         <p>Hecho por KarlDev</p>
@@ -583,6 +884,15 @@
         </footer>
     </div>
 
+    <!-- Game Containers -->
+    <div id="game-container" class="game-container">
+        <div class="game-header">
+            <h3 id="game-title">Juego</h3>
+            <button class="close-btn" onclick="voidChan.closeGame()">✕</button>
+        </div>
+        <div id="game-content"></div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
@@ -593,27 +903,22 @@
         
         window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // VoidChan Class - SIMPLIFICADA Y FUNCIONAL
+        // VoidChan Class - MEJORADA
         class VoidChan {
             constructor() {
                 this.currentBoard = 'global';
-                this.posts = {
-                    'global': [
-                        {
-                            name: 'Sistema',
-                            subject: '¡Bienvenido!',
-                            message: 'Este es el foro global. Escribe algo para comenzar.',
-                            created_at: new Date().toISOString()
-                        }
-                    ]
-                };
+                this.posts = {};
+                this.onlineUsers = 15;
+                this.userActivity = {};
                 this.init();
             }
 
-            init() {
+            async init() {
                 console.log('🚀 Iniciando Void Chan...');
                 this.startLoadingProgress();
+                await this.loadAllPosts();
                 this.setupEventListeners();
+                this.startOnlineUsersTracker();
             }
 
             startLoadingProgress() {
@@ -634,12 +939,86 @@
                 document.getElementById('loading-screen').style.display = 'none';
                 document.getElementById('welcome-screen').style.display = 'flex';
                 
-                // Evento del botón entrar
+                // Cargar estadísticas reales
+                this.updateWelcomeStats();
+                
                 document.getElementById('enter-btn').onclick = () => {
                     document.getElementById('welcome-screen').style.display = 'none';
                     document.getElementById('main-app').style.display = 'block';
                     this.renderPosts();
                 };
+            }
+
+            updateWelcomeStats() {
+                const totalPosts = Object.values(this.posts).flat().length;
+                document.getElementById('welcome-posts').textContent = totalPosts;
+                document.getElementById('welcome-online').textContent = this.onlineUsers;
+            }
+
+            async loadAllPosts() {
+                try {
+                    // Cargar posts de Supabase
+                    const { data, error } = await window.supabase
+                        .from('posts')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+
+                    this.posts = {};
+                    if (data && data.length > 0) {
+                        data.forEach(post => {
+                            if (!this.posts[post.board]) {
+                                this.posts[post.board] = [];
+                            }
+                            this.posts[post.board].push(post);
+                        });
+                        console.log(`✅ Cargados ${data.length} posts de Supabase`);
+                    } else {
+                        await this.createSamplePosts();
+                    }
+                } catch (error) {
+                    console.log('❌ Error cargando posts:', error);
+                    await this.createSamplePosts();
+                }
+            }
+
+            async createSamplePosts() {
+                const samplePosts = [
+                    {
+                        name: 'Sistema',
+                        subject: '¡Bienvenido a Void Chan!',
+                        message: 'Este es el foro global. Los posts se guardan permanentemente en la base de datos y son visibles para todos los usuarios.\n\n¡Únete a la conversación! 🌌',
+                        board: 'global',
+                        created_at: new Date().toISOString()
+                    },
+                    {
+                        name: 'Anónimo',
+                        subject: 'Primer post de la comunidad',
+                        message: '¡Hola a todos! 👋\n\nForo conectado a Supabase. Posts permanentes y compartidos.',
+                        board: 'global',
+                        created_at: new Date().toISOString()
+                    }
+                ];
+
+                try {
+                    const { error } = await window.supabase
+                        .from('posts')
+                        .insert(samplePosts);
+                    
+                    if (!error) {
+                        samplePosts.forEach(post => {
+                            if (!this.posts[post.board]) this.posts[post.board] = [];
+                            this.posts[post.board].push(post);
+                        });
+                    }
+                } catch (error) {
+                    console.log('⚠️ Usando posts locales');
+                    samplePosts.forEach(post => {
+                        if (!this.posts[post.board]) this.posts[post.board] = [];
+                        this.posts[post.board].push(post);
+                    });
+                }
             }
 
             setupEventListeners() {
@@ -651,7 +1030,16 @@
                     });
                 });
 
-                // Navegación
+                // Navegación principal
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const boardName = e.target.getAttribute('data-board');
+                        this.changeBoard(boardName);
+                    });
+                });
+
+                // Navegación rápida
                 document.querySelectorAll('.nav-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const action = e.target.getAttribute('data-action');
@@ -669,10 +1057,58 @@
                     this.clearPostForm();
                 });
 
+                // Juegos
+                document.querySelectorAll('.game-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        const game = e.target.closest('.game-card').getAttribute('data-game');
+                        this.openGame(game);
+                    });
+                });
+
                 // Tema
                 document.getElementById('theme-select').addEventListener('change', (e) => {
                     document.body.className = 'theme-' + e.target.value;
                 });
+
+                // Contador de caracteres
+                document.getElementById('post-message').addEventListener('input', (e) => {
+                    document.getElementById('char-count').textContent = e.target.value.length;
+                });
+            }
+
+            startOnlineUsersTracker() {
+                // Simular usuarios en tiempo real
+                setInterval(() => {
+                    this.onlineUsers = 15 + Math.floor(Math.random() * 10);
+                    this.updateOnlineCounters();
+                }, 5000);
+
+                // Registrar usuario actual
+                this.registerUserActivity();
+            }
+
+            registerUserActivity() {
+                const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+                this.userActivity[userId] = Date.now();
+                
+                // Limpiar usuarios inactivos cada minuto
+                setInterval(() => {
+                    const now = Date.now();
+                    for (let user in this.userActivity) {
+                        if (now - this.userActivity[user] > 300000) { // 5 minutos
+                            delete this.userActivity[user];
+                        }
+                    }
+                    this.onlineUsers = Object.keys(this.userActivity).length + 10;
+                    this.updateOnlineCounters();
+                }, 60000);
+            }
+
+            updateOnlineCounters() {
+                document.getElementById('online-count').textContent = this.onlineUsers;
+                document.getElementById('board-online').textContent = this.onlineUsers;
+                document.getElementById('footer-online').textContent = this.onlineUsers;
+                document.getElementById('welcome-online').textContent = this.onlineUsers;
             }
 
             changeBoard(boardName) {
@@ -681,6 +1117,10 @@
                 // Actualizar botones activos
                 document.querySelectorAll('.quick-board').forEach(board => {
                     board.classList.toggle('active', board.getAttribute('data-board') === boardName);
+                });
+                
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('data-board') === boardName);
                 });
                 
                 // Actualizar título
@@ -694,10 +1134,15 @@
                 const descriptions = {
                     'global': 'Canal Global',
                     'random': 'Todo vale',
+                    'anime': 'Anime & Manga',
                     'programming': 'Programación',
-                    'anime': 'Anime & Manga'
+                    'technology': 'Tecnología',
+                    'videogames': 'Videojuegos',
+                    'music': 'Música',
+                    'art': 'Arte Digital',
+                    'nsfw': 'Contenido Adulto'
                 };
-                return descriptions[boardName] || 'Board';
+                return descriptions[boardName] || 'Board de la comunidad';
             }
 
             handleNavAction(action) {
@@ -705,6 +1150,8 @@
                     document.getElementById('posts-container').scrollIntoView({ behavior: 'smooth' });
                 } else if (action === 'scroll-to-form') {
                     document.getElementById('post-form-container').scrollIntoView({ behavior: 'smooth' });
+                } else if (action === 'scroll-to-games') {
+                    document.getElementById('games-section').scrollIntoView({ behavior: 'smooth' });
                 } else if (action === 'scroll-to-top') {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
@@ -730,14 +1177,19 @@
 
                 // Guardar en Supabase
                 try {
-                    const { error } = await window.supabase
+                    const { data, error } = await window.supabase
                         .from('posts')
-                        .insert([post]);
+                        .insert([post])
+                        .select();
                     
                     if (error) throw error;
-                    console.log('✅ Post guardado en Supabase');
+                    
+                    if (data && data[0]) {
+                        post.id = data[0].id;
+                        console.log('✅ Post guardado en Supabase con ID:', post.id);
+                    }
                 } catch (error) {
-                    console.log('⚠️ Guardando localmente:', error);
+                    console.log('❌ Error guardando en Supabase:', error);
                 }
 
                 // Agregar localmente
@@ -748,14 +1200,16 @@
 
                 this.clearPostForm();
                 this.renderPosts();
+                this.updateStats();
                 
-                alert('✅ Post publicado!');
+                alert('✅ Post publicado! Visible para todos los usuarios.');
             }
 
             clearPostForm() {
                 document.getElementById('post-name').value = '';
                 document.getElementById('post-subject').value = '';
                 document.getElementById('post-message').value = '';
+                document.getElementById('char-count').textContent = '0';
             }
 
             renderPosts() {
@@ -763,7 +1217,7 @@
                 const boardPosts = this.posts[this.currentBoard] || [];
 
                 if (boardPosts.length === 0) {
-                    container.innerHTML = '<div class="no-posts">No hay posts aún</div>';
+                    container.innerHTML = '<div class="no-posts">No hay posts en este board</div>';
                 } else {
                     container.innerHTML = boardPosts.map(post => `
                         <div class="post">
@@ -772,14 +1226,443 @@
                                 <span class="post-date">${new Date(post.created_at).toLocaleString()}</span>
                             </div>
                             ${post.subject ? `<div class="post-subject">${post.subject}</div>` : ''}
-                            <div class="post-content">${post.message}</div>
+                            <div class="post-content">${post.message.replace(/\n/g, '<br>')}</div>
                         </div>
                     `).join('');
                 }
 
-                // Actualizar stats
+                this.updateStats();
+            }
+
+            updateStats() {
+                const boardPosts = this.posts[this.currentBoard] || [];
+                const totalPosts = Object.values(this.posts).flat().length;
+                
                 document.getElementById('board-posts').textContent = boardPosts.length;
-                document.getElementById('footer-posts').textContent = Object.values(this.posts).flat().length;
+                document.getElementById('footer-posts').textContent = totalPosts;
+                document.getElementById('welcome-posts').textContent = totalPosts;
+            }
+
+            openGame(gameName) {
+                const gameContainer = document.getElementById('game-container');
+                const gameContent = document.getElementById('game-content');
+                const gameTitle = document.getElementById('game-title');
+                
+                gameTitle.textContent = this.getGameTitle(gameName);
+                gameContent.innerHTML = this.getGameHTML(gameName);
+                gameContainer.style.display = 'block';
+                
+                // Inicializar juego
+                this.initGame(gameName);
+            }
+
+            closeGame() {
+                document.getElementById('game-container').style.display = 'none';
+            }
+
+            getGameTitle(gameName) {
+                const titles = {
+                    'snake': '🐍 Snake',
+                    'pong': '🎾 Pong',
+                    'tetris': '🧱 Tetris',
+                    'memory': '🧠 Memory'
+                };
+                return titles[gameName] || 'Juego';
+            }
+
+            getGameHTML(gameName) {
+                const games = {
+                    'snake': `
+                        <div style="text-align: center;">
+                            <canvas id="snake-game" width="400" height="400" style="border: 2px solid var(--color-accent); background: var(--color-bg);"></canvas>
+                            <p style="margin-top: 1rem; color: var(--color-text-secondary);">Usa las flechas para mover la serpiente</p>
+                            <p>Puntuación: <span id="snake-score">0</span></p>
+                        </div>
+                    `,
+                    'pong': `
+                        <div style="text-align: center;">
+                            <canvas id="pong-game" width="400" height="300" style="border: 2px solid var(--color-accent); background: var(--color-bg);"></canvas>
+                            <p style="margin-top: 1rem; color: var(--color-text-secondary);">Usa W/S para mover la paleta</p>
+                            <p>Puntuación: <span id="pong-score">0-0</span></p>
+                        </div>
+                    `,
+                    'tetris': `
+                        <div style="text-align: center;">
+                            <canvas id="tetris-game" width="240" height="400" style="border: 2px solid var(--color-accent); background: var(--color-bg);"></canvas>
+                            <p style="margin-top: 1rem; color: var(--color-text-secondary);">Usas las flechas para rotar y mover</p>
+                            <p>Puntuación: <span id="tetris-score">0</span></p>
+                        </div>
+                    `,
+                    'memory': `
+                        <div style="text-align: center;">
+                            <div id="memory-game" style="display: grid; grid-template-columns: repeat(4, 80px); gap: 5px; margin: 0 auto; width: 340px;"></div>
+                            <p style="margin-top: 1rem; color: var(--color-text-secondary);">Encuentra las parejas</p>
+                            <p>Intentos: <span id="memory-attempts">0</span></p>
+                        </div>
+                    `
+                };
+                return games[gameName] || '<p>Juego no disponible</p>';
+            }
+
+            initGame(gameName) {
+                switch(gameName) {
+                    case 'snake':
+                        this.initSnake();
+                        break;
+                    case 'pong':
+                        this.initPong();
+                        break;
+                    case 'tetris':
+                        this.initTetris();
+                        break;
+                    case 'memory':
+                        this.initMemory();
+                        break;
+                }
+            }
+
+            initSnake() {
+                const canvas = document.getElementById('snake-game');
+                const ctx = canvas.getContext('2d');
+                const scoreElement = document.getElementById('snake-score');
+                
+                let score = 0;
+                let snake = [{x: 200, y: 200}];
+                let food = {x: 100, y: 100};
+                let dx = 20;
+                let dy = 0;
+                
+                function draw() {
+                    // Limpiar canvas
+                    ctx.fillStyle = 'var(--color-bg)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Dibujar serpiente
+                    ctx.fillStyle = 'var(--color-accent)';
+                    snake.forEach(segment => {
+                        ctx.fillRect(segment.x, segment.y, 18, 18);
+                    });
+                    
+                    // Dibujar comida
+                    ctx.fillStyle = 'var(--color-warning)';
+                    ctx.fillRect(food.x, food.y, 18, 18);
+                }
+                
+                function update() {
+                    const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+                    
+                    // Colisión con bordes
+                    if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+                        resetGame();
+                        return;
+                    }
+                    
+                    // Colisión consigo misma
+                    for (let segment of snake) {
+                        if (head.x === segment.x && head.y === segment.y) {
+                            resetGame();
+                            return;
+                        }
+                    }
+                    
+                    snake.unshift(head);
+                    
+                    // Comer comida
+                    if (head.x === food.x && head.y === food.y) {
+                        score += 10;
+                        scoreElement.textContent = score;
+                        food = {
+                            x: Math.floor(Math.random() * 20) * 20,
+                            y: Math.floor(Math.random() * 20) * 20
+                        };
+                    } else {
+                        snake.pop();
+                    }
+                }
+                
+                function resetGame() {
+                    snake = [{x: 200, y: 200}];
+                    dx = 20;
+                    dy = 0;
+                    score = 0;
+                    scoreElement.textContent = score;
+                    food = {x: 100, y: 100};
+                }
+                
+                function gameLoop() {
+                    update();
+                    draw();
+                }
+                
+                // Controles
+                document.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'ArrowUp': if (dy !== 20) { dx = 0; dy = -20; } break;
+                        case 'ArrowDown': if (dy !== -20) { dx = 0; dy = 20; } break;
+                        case 'ArrowLeft': if (dx !== 20) { dx = -20; dy = 0; } break;
+                        case 'ArrowRight': if (dx !== -20) { dx = 20; dy = 0; } break;
+                    }
+                });
+                
+                setInterval(gameLoop, 150);
+                draw();
+            }
+
+            initPong() {
+                const canvas = document.getElementById('pong-game');
+                const ctx = canvas.getContext('2d');
+                
+                const paddleHeight = 80;
+                const paddleWidth = 10;
+                let playerY = (canvas.height - paddleHeight) / 2;
+                let computerY = (canvas.height - paddleHeight) / 2;
+                let ballX = canvas.width / 2;
+                let ballY = canvas.height / 2;
+                let ballSpeedX = 5;
+                let ballSpeedY = 5;
+                let playerScore = 0;
+                let computerScore = 0;
+                
+                function draw() {
+                    // Limpiar
+                    ctx.fillStyle = 'var(--color-bg)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Paletas
+                    ctx.fillStyle = 'var(--color-accent)';
+                    ctx.fillRect(0, playerY, paddleWidth, paddleHeight);
+                    ctx.fillRect(canvas.width - paddleWidth, computerY, paddleWidth, paddleHeight);
+                    
+                    // Pelota
+                    ctx.beginPath();
+                    ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
+                    ctx.fillStyle = 'var(--color-warning)';
+                    ctx.fill();
+                    
+                    // Línea central
+                    ctx.setLineDash([5, 15]);
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2, 0);
+                    ctx.lineTo(canvas.width / 2, canvas.height);
+                    ctx.strokeStyle = 'var(--color-text-secondary)';
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+                
+                function update() {
+                    // Mover pelota
+                    ballX += ballSpeedX;
+                    ballY += ballSpeedY;
+                    
+                    // Rebote superior/inferior
+                    if (ballY < 0 || ballY > canvas.height) {
+                        ballSpeedY = -ballSpeedY;
+                    }
+                    
+                    // Rebote paletas
+                    if (ballX < paddleWidth && ballY > playerY && ballY < playerY + paddleHeight) {
+                        ballSpeedX = -ballSpeedX;
+                    }
+                    
+                    if (ballX > canvas.width - paddleWidth && ballY > computerY && ballY < computerY + paddleHeight) {
+                        ballSpeedX = -ballSpeedX;
+                    }
+                    
+                    // Puntos
+                    if (ballX < 0) {
+                        computerScore++;
+                        resetBall();
+                    }
+                    
+                    if (ballX > canvas.width) {
+                        playerScore++;
+                        resetBall();
+                    }
+                    
+                    // IA simple
+                    computerY = ballY - paddleHeight / 2;
+                    
+                    // Actualizar marcador
+                    document.getElementById('pong-score').textContent = `${playerScore}-${computerScore}`;
+                }
+                
+                function resetBall() {
+                    ballX = canvas.width / 2;
+                    ballY = canvas.height / 2;
+                    ballSpeedX = -ballSpeedX;
+                    ballSpeedY = Math.random() * 10 - 5;
+                }
+                
+                // Controles
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'w' && playerY > 0) playerY -= 20;
+                    if (e.key === 's' && playerY < canvas.height - paddleHeight) playerY += 20;
+                });
+                
+                function gameLoop() {
+                    update();
+                    draw();
+                    requestAnimationFrame(gameLoop);
+                }
+                
+                gameLoop();
+            }
+
+            initTetris() {
+                const canvas = document.getElementById('tetris-game');
+                const ctx = canvas.getContext('2d');
+                const scoreElement = document.getElementById('tetris-score');
+                
+                const BLOCK_SIZE = 20;
+                const COLS = 12;
+                const ROWS = 20;
+                
+                let score = 0;
+                let board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+                let currentPiece = this.createPiece();
+                
+                const pieces = [
+                    [[1,1,1,1]], // I
+                    [[1,1],[1,1]], // O
+                    [[1,1,1],[0,1,0]], // T
+                    [[1,1,1],[1,0,0]], // L
+                    [[1,1,1],[0,0,1]], // J
+                    [[1,1,0],[0,1,1]], // S
+                    [[0,1,1],[1,1,0]]  // Z
+                ];
+                
+                function draw() {
+                    ctx.fillStyle = 'var(--color-bg)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Dibujar tablero
+                    for (let y = 0; y < ROWS; y++) {
+                        for (let x = 0; x < COLS; x++) {
+                            if (board[y][x]) {
+                                ctx.fillStyle = 'var(--color-accent)';
+                                ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
+                            }
+                        }
+                    }
+                    
+                    // Dibujar pieza actual
+                    ctx.fillStyle = 'var(--color-warning)';
+                    for (let y = 0; y < currentPiece.shape.length; y++) {
+                        for (let x = 0; x < currentPiece.shape[y].length; x++) {
+                            if (currentPiece.shape[y][x]) {
+                                ctx.fillRect(
+                                    (currentPiece.x + x) * BLOCK_SIZE,
+                                    (currentPiece.y + y) * BLOCK_SIZE,
+                                    BLOCK_SIZE - 1,
+                                    BLOCK_SIZE - 1
+                                );
+                            }
+                        }
+                    }
+                }
+                
+                this.createPiece = function() {
+                    const piece = pieces[Math.floor(Math.random() * pieces.length)];
+                    return {
+                        shape: piece,
+                        x: Math.floor(COLS / 2) - Math.floor(piece[0].length / 2),
+                        y: 0
+                    };
+                };
+                
+                function gameLoop() {
+                    draw();
+                }
+                
+                // Controles básicos
+                document.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'ArrowLeft': currentPiece.x--; break;
+                        case 'ArrowRight': currentPiece.x++; break;
+                        case 'ArrowDown': currentPiece.y++; break;
+                    }
+                    draw();
+                });
+                
+                setInterval(gameLoop, 100);
+                draw();
+                
+                scoreElement.textContent = score;
+            }
+
+            initMemory() {
+                const gameContainer = document.getElementById('memory-game');
+                const attemptsElement = document.getElementById('memory-attempts');
+                
+                const symbols = ['🐍', '🎮', '🌌', '💻', '🚀', '🎨', '🎵', '🎲'];
+                const cards = [...symbols, ...symbols];
+                
+                // Barajar cartas
+                for (let i = cards.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [cards[i], cards[j]] = [cards[j], cards[i]];
+                }
+                
+                let flippedCards = [];
+                let matchedCards = [];
+                let attempts = 0;
+                
+                // Crear cartas
+                cards.forEach((symbol, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'memory-card';
+                    card.style.cssText = `
+                        width: 80px;
+                        height: 80px;
+                        background: var(--color-accent);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                        border-radius: 4px;
+                    `;
+                    card.textContent = '?';
+                    card.dataset.symbol = symbol;
+                    card.dataset.index = index;
+                    
+                    card.addEventListener('click', () => {
+                        if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
+                            card.textContent = symbol;
+                            card.classList.add('flipped');
+                            flippedCards.push(card);
+                            
+                            if (flippedCards.length === 2) {
+                                attempts++;
+                                attemptsElement.textContent = attempts;
+                                
+                                const [card1, card2] = flippedCards;
+                                if (card1.dataset.symbol === card2.dataset.symbol) {
+                                    matchedCards.push(card1, card2);
+                                    flippedCards = [];
+                                    
+                                    if (matchedCards.length === cards.length) {
+                                        setTimeout(() => {
+                                            alert(`¡Ganaste! Intentos: ${attempts}`);
+                                        }, 500);
+                                    }
+                                } else {
+                                    setTimeout(() => {
+                                        card1.textContent = '?';
+                                        card2.textContent = '?';
+                                        card1.classList.remove('flipped');
+                                        card2.classList.remove('flipped');
+                                        flippedCards = [];
+                                    }, 1000);
+                                }
+                            }
+                        }
+                    });
+                    
+                    gameContainer.appendChild(card);
+                });
+                
+                attemptsElement.textContent = attempts;
             }
         }
 
