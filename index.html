@@ -1,213 +1,687 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KarlBoard</title>
-  <style>
-    /* ==========================
-       ESTILO GENERAL
-    ===========================*/
-    body {
-      background-color: #f0efe9;
-      font-family: "Courier New", monospace;
-      color: #222;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VOIDCHAN — Boards & Games</title>
+<meta name="description" content="VOIDCHAN — community boards, threads and browser minigames. Hecho por KarlDev © 2025">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%2300b04a%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Verdana%22>V</text></svg>">
+<style>
+/* =========================
+   VOIDCHAN Stylesheet (All-in-one)
+   - Modern, slightly retro, accessible
+   - Lots of variables for easy tuning
+   ========================= */
+:root{
+  --bg: #0f1720;            /* outer background */
+  --panel: #0b1220;         /* panels */
+  --card: #0f1724;          /* cards */
+  --muted: #93a0ad;
+  --text: #e6eef6;
+  --accent: #18d18c;        /* green */
+  --accent-2: #6affc3;
+  --glass: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.06);
+  --radius: 12px;
+  --mono: "Courier New", monospace;
+  --ui-space: 12px;
+  --shadow: 0 8px 24px rgba(0,0,0,0.55);
+}
 
-    header {
-      background-color: #d6d3c9;
-      padding: 15px;
-      text-align: center;
-      border-bottom: 3px solid #b5b2a4;
-    }
+/* Light theme fallback (user toggle) */
+[data-theme="light"]{
+  --bg:#f3f6f8; --panel:#ffffff; --card:#ffffff; --muted:#6b7280; --text:#07111a; --accent:#119a56; --glass:rgba(0,0,0,0.03); --border:rgba(0,0,0,0.06);
+}
 
-    header h1 {
-      margin: 0;
-      font-size: 2em;
-    }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(180deg,#07101a 0%, rgba(5,10,15,0.9) 60%), var(--bg);
+  color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
 
-    nav {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      background-color: #e9e6dc;
-      border-bottom: 1px solid #b5b2a4;
-    }
+/* PAGE LAYOUT */
+.app{
+  max-width:1200px;margin:20px auto;padding:18px;
+}
+.header{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;
+}
+.brand{
+  display:flex;gap:12px;align-items:center;
+}
+.logo{
+  width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,0.4);font-weight:900;
+  font-family:var(--mono); font-size:26px;color:#012;letter-spacing:1px;
+}
+.title{
+  line-height:1;
+}
+.title h1{margin:0;font-size:1.1rem}
+.title p{margin:0;color:var(--muted);font-size:0.85rem}
 
-    nav a {
-      padding: 10px 15px;
-      text-decoration: none;
-      color: #333;
-      font-weight: bold;
-      transition: 0.3s;
-    }
+/* Controls */
+.controls{display:flex;gap:8px;align-items:center}
+.btn{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid var(--border);padding:8px 12px;border-radius:10px;color:var(--text);cursor:pointer;backdrop-filter: blur(4px);}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#04241a;border:none;box-shadow:0 10px 30px rgba(20,120,70,0.12);font-weight:700}
+.select{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px;border-radius:10px}
 
-    nav a:hover {
-      background-color: #cfcabb;
-      border-radius: 6px;
-    }
+/* MAIN AREA */
+.shell{display:grid;grid-template-columns: 360px 1fr;gap:18px}
+@media (max-width:980px){ .shell{grid-template-columns:1fr} }
 
-    /* ==========================
-       CONTENIDO
-    ===========================*/
-    .board-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
+/* SIDEBAR */
+.sidebar{background:var(--panel);border-radius:var(--radius);padding:12px;border:1px solid var(--border);box-shadow:var(--shadow)}
+.searchbar{display:flex;gap:8px;margin-bottom:12px}
+.searchbar input{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text)}
+.small-note{font-size:0.85rem;color:var(--muted)}
 
-    .board {
-      background: #fffdf7;
-      border: 2px solid #cfcabb;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
-    }
+/* BOARDS GRID */
+.boards{display:grid;grid-template-columns:1fr;gap:10px;max-height:70vh;overflow:auto;padding-right:6px}
+.board-card{
+  display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:linear-gradient(135deg,rgba(255,255,255,0.02),transparent);
+  border:1px solid var(--border);cursor:pointer;transition:transform .12s,box-shadow .12s;min-height:64px;
+}
+.board-card:hover{transform:translateY(-6px);box-shadow:0 8px 30px rgba(0,0,0,0.5)}
+.board-icon{width:48px;height:48;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#012;background:linear-gradient(135deg,#8fffb3,#00b06b)}
+.board-meta{flex:1}
+.board-meta .short{font-weight:900}
+.board-meta .long{font-size:0.95rem;color:var(--text);font-weight:700}
+.board-meta .desc{font-size:0.82rem;color:var(--muted)}
 
-    .board:hover {
-      transform: translateY(-5px);
-    }
+/* MAIN CONTENT */
+.main{min-height:70vh}
+.panel{display:none}
+.panel.active{display:block}
 
-    .board img {
-      width: 100%;
-      border-radius: 8px;
-    }
+/* HOME - boards summary & featured */
+.hero{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:14px;border-radius:12px;border:1px solid var(--border);margin-bottom:12px}
+.hero h2{margin:0;font-size:1.1rem}
+.hero p{margin:4px 0 0;color:var(--muted)}
 
-    .board h2 {
-      margin-top: 10px;
-      font-size: 1.2em;
-      color: #3a3a3a;
-    }
+/* THREADS LIST */
+.threads{display:grid;gap:10px}
+.thread-card{background:var(--card);padding:12px;border-radius:10px;border:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.thread-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.thread-title{font-weight:800}
+.thread-meta{font-size:0.85rem;color:var(--muted)}
 
-    .board p {
-      font-size: 0.9em;
-      color: #555;
-    }
+/* THREAD VIEW */
+.post{background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:10px;border-radius:10px;border:1px solid var(--border)}
+.post .who{font-weight:800;color:var(--accent)}
+.post .time{font-size:0.8rem;color:var(--muted)}
 
-    /* ==========================
-       MINI JUEGO
-    ===========================*/
-    #game-section {
-      background-color: #e9e6dc;
-      text-align: center;
-      padding: 40px 20px;
-      border-top: 3px solid #b5b2a4;
-      margin-top: 30px;
-    }
+/* FORM STYLES */
+.form{background:var(--panel);padding:12px;border-radius:10px;border:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.input, textarea{padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);resize:vertical}
 
-    #game-section h3 {
-      font-size: 1.5em;
-    }
+/* GAMES AREA */
+.games{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:10px}
+.game{background:var(--card);padding:12px;border-radius:10px;border:1px solid var(--border);min-height:120px;display:flex;flex-direction:column;justify-content:space-between}
 
-    #click-btn {
-      background-color: #b5b2a4;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1.2em;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 15px;
-      transition: 0.2s;
-    }
+/* FOOTER */
+.footer{margin-top:18px;padding:12px;text-align:center;color:var(--muted);font-size:0.9rem}
 
-    #click-btn:hover {
-      background-color: #8e8a7a;
-    }
-
-    #score {
-      font-size: 1.4em;
-      margin-top: 10px;
-    }
-
-    /* ==========================
-       FOOTER
-    ===========================*/
-    footer {
-      background-color: #d6d3c9;
-      text-align: center;
-      padding: 15px;
-      margin-top: 30px;
-      border-top: 3px solid #b5b2a4;
-      font-weight: bold;
-    }
-  </style>
+/* Tiny helpers */
+.row{display:flex;gap:8px;align-items:center}
+.kv{font-weight:700;color:var(--accent)}
+.center{display:flex;align-items:center;justify-content:center}
+.code{font-family:var(--mono);font-size:0.9rem;background:rgba(255,255,255,0.02);padding:6px;border-radius:6px}
+hr{border:none;height:1px;background:var(--border);margin:8px 0}
+</style>
 </head>
 <body>
+<div class="app" id="app">
 
-  <header>
-    <h1>KarlBoard</h1>
-    <p>Un rincón del internet al estilo clásico — inspirado en 4chan</p>
-  </header>
+<header class="header">
+  <div class="brand">
+    <div class="logo" aria-hidden>V</div>
+    <div class="title">
+      <h1>VOIDCHAN</h1>
+      <p>Boards • Threads • Minigames — Hecho por KarlDev © 2025</p>
+    </div>
+  </div>
 
-  <nav>
-    <a href="#">/tech/</a>
-    <a href="#">/games/</a>
-    <a href="#">/random/</a>
-    <a href="#">/anime/</a>
-    <a href="#">/music/</a>
-  </nav>
+  <div class="controls">
+    <select id="langSelect" class="select" title="Language"></select>
+    <button id="themeToggle" class="btn" title="Toggle theme">Theme</button>
+    <button id="homeBtn" class="btn">Home</button>
+  </div>
+</header>
 
-  <main class="board-container">
-    <div class="board">
-      <img src="https://i.imgur.com/ZF6s192.jpeg" alt="Tech" />
-      <h2>/tech/ — Tecnología</h2>
-      <p>Discute sobre hardware, software y proyectos geek. 💻</p>
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" aria-label="Boards sidebar">
+    <div class="searchbar">
+      <input id="query" placeholder="Search threads / posts..." aria-label="Search">
+      <button id="clearQuery" class="btn">Clear</button>
     </div>
 
-    <div class="board">
-      <img src="https://i.imgur.com/oE4lQhF.jpeg" alt="Games" />
-      <h2>/games/ — Videojuegos</h2>
-      <p>Comparte tus logros, bugs y memes gamer. 🎮</p>
-    </div>
+    <div class="small-note">Boards</div>
+    <div class="boards" id="boardsList" role="list" aria-label="Boards list"></div>
 
-    <div class="board">
-      <img src="https://i.imgur.com/aZOlX4n.jpeg" alt="Random" />
-      <h2>/random/ — Random</h2>
-      <p>Publica lo que sea, desde teorías locas hasta memes cursed.</p>
+    <hr>
+    <div class="small-note">Quick</div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button id="newThreadQuick" class="btn primary">New Thread</button>
+      <button id="globalFeedBtn" class="btn">Global</button>
     </div>
+  </aside>
 
-    <div class="board">
-      <img src="https://i.imgur.com/nfDT1Wf.jpeg" alt="Anime" />
-      <h2>/anime/ — Anime</h2>
-      <p>Comparte tus animes favoritos o debates waifus sin miedo. 😳</p>
-    </div>
+  <!-- MAIN -->
+  <main class="main">
 
-    <div class="board">
-      <img src="https://i.imgur.com/RfFxQ7H.jpeg" alt="Music" />
-      <h2>/music/ — Música</h2>
-      <p>Habla de tus bandas favoritas o comparte tus playlists. 🎧</p>
-    </div>
+    <!-- HOME PANEL -->
+    <section id="homePanel" class="panel active">
+      <div class="hero">
+        <h2 id="heroTitle">Explore the boards</h2>
+        <p id="heroDesc">Pick a board on the left, open threads and post — everything is saved locally by default.</p>
+      </div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:320px">
+          <h3>Featured Boards</h3>
+          <div id="featured" class="threads"></div>
+        </div>
+        <div style="width:320px;min-width:260px">
+          <h3>Minigames</h3>
+          <div id="miniGames" class="games"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOARD PANEL -->
+    <section id="boardPanel" class="panel">
+      <div id="boardHeader" class="hero"></div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px">
+        <div style="flex:1;min-width:300px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3 id="boardTitle">Board</h3>
+            <div class="small-note" id="boardThreadsCount">0 threads</div>
+          </div>
+
+          <div id="threadsList" class="threads" aria-live="polite"></div>
+
+          <div style="margin-top:12px" class="form" aria-label="Create new thread">
+            <strong id="createThreadLabel">Create thread</strong>
+            <input id="threadTitle" class="input" placeholder="Thread title" />
+            <textarea id="threadBody" class="input" placeholder="Thread body"></textarea>
+            <div class="row">
+              <input id="threadName" class="input" placeholder="Name (optional)" style="flex:1" />
+              <button id="createThreadBtn" class="btn primary">Post</button>
+            </div>
+          </div>
+        </div>
+
+        <aside style="width:320px;min-width:260px">
+          <div class="form">
+            <div><strong id="boardInfoTitle">Board Info</strong></div>
+            <div id="boardDesc" class="small-note"></div>
+            <hr>
+            <div class="small-note">Tip: Press <span class="code">F2</span> to set a local display name.</div>
+            <div style="margin-top:8px"><button id="backHome" class="btn">Back to home</button></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- THREAD PANEL -->
+    <section id="threadPanel" class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div id="threadBread" class="small-note">/g/ › Thread</div>
+          <h3 id="threadTitleView">Thread Title</h3>
+        </div>
+        <div>
+          <button id="backToBoard" class="btn">Back</button>
+        </div>
+      </div>
+
+      <div id="postsContainer" style="margin-top:12px"></div>
+
+      <div style="margin-top:12px" class="form">
+        <strong>Reply</strong>
+        <input id="replyName" placeholder="Name (optional)" class="input" />
+        <textarea id="replyBody" placeholder="Write reply..." class="input"></textarea>
+        <div style="display:flex;gap:8px">
+          <button id="replyBtn" class="btn primary">Send</button>
+          <button id="quoteBtn" class="btn">Quote last</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- GLOBAL FEED -->
+    <section id="globalPanel" class="panel">
+      <h3>Global Feed</h3>
+      <div id="globalFeed" class="threads"></div>
+    </section>
+
   </main>
+</div>
 
-  <section id="game-section">
-    <h3>Mini-juego: ¡Haz clic lo más rápido posible!</h3>
-    <p>Haz clic en el botón para aumentar tu puntaje:</p>
-    <button id="click-btn">¡Click!</button>
-    <p id="score">Puntos: 0</p>
-  </section>
+<div class="footer">
+  <div>VOIDCHAN — Hecho por <span class="kv">KarlDev</span> © 2025</div>
+  <div style="font-size:0.85rem;color:var(--muted);margin-top:6px">Frontend-only demo with local persistence. Backend hooks available for Netlify Functions / Supabase.</div>
+</div>
 
-  <footer>
-    Web by Karl © 2025
-  </footer>
+<!-- ============================
+     JavaScript: UI + Storage + i18n + Games
+     ============================ -->
+<script>
+/* =========================
+   CONFIG & HELPERS
+   ========================= */
+const APP_NAME = 'VOIDCHAN';
+const AUTHOR = 'KarlDev © 2025';
 
-  <script>
-    // Mini juego básico de clicks
-    let score = 0;
-    const btn = document.getElementById("click-btn");
-    const scoreDisplay = document.getElementById("score");
+/* Optional: If you later add Netlify Functions endpoints, set BASE_API to your site */
+const BASE_API = ''; // e.g. '/.netlify/functions' or 'https://your-api.example.com'
 
-    btn.addEventListener("click", () => {
-      score++;
-      scoreDisplay.textContent = "Puntos: " + score;
-      btn.style.transform = "scale(1.1)";
-      setTimeout(() => btn.style.transform = "scale(1)", 100);
+/* Storage keys */
+const LS_BOARDS = 'vc_boards_v1';
+const LS_THREADS = 'vc_threads_v1';   // map boardSlug -> [threads]
+const LS_POSTS = 'vc_posts_v1';       // map threadId -> [posts]
+const LS_NAME = 'vc_name_v1';
+const LS_GAMES = 'vc_games_v1';
+
+/* Simple DOM helper */
+const $ = id => document.getElementById(id);
+
+/* Escape helper */
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* Timestamp helper */
+function fmt(ts){ const d=new Date(ts); return d.toLocaleString(); }
+
+/* =========================
+   Internationalization
+   Keep translations for UI labels in many languages
+   (Not "all languages" but many main ones)
+   ========================= */
+const TRANSLATIONS = {
+  en: { explore:'Explore the boards', featured:'Featured Boards', games:'Minigames', create_thread:'Create thread', reply:'Reply', global_feed:'Global Feed', back:'Back', post:'Post', send:'Send', name:'Name (optional)', search:'Search threads / posts...', home:'Home' },
+  es: { explore:'Explora los boards', featured:'Boards destacados', games:'Minijuegos', create_thread:'Crear tema', reply:'Responder', global_feed:'Feed Global', back:'Volver', post:'Publicar', send:'Enviar', name:'Nombre (opcional)', search:'Buscar hilos / posts...', home:'Inicio' },
+  fr: { explore:'Explorez les boards', featured:'Boards en vedette', games:'Mini-jeux', create_thread:'Créer un fil', reply:'Répondre', global_feed:'Flux global', back:'Retour', post:'Poster', send:'Envoyer', name:'Nom (optionnel)', search:'Rechercher...', home:'Accueil' },
+  de: { explore:'Boards entdecken', featured:'Empfohlene Boards', games:'Minispiele', create_thread:'Neuen Thread', reply:'Antworten', global_feed:'Globaler Feed', back:'Zurück', post:'Posten', send:'Senden', name:'Name (optional)', search:'Suchen...', home:'Start' },
+  pt: { explore:'Explore os boards', featured:'Boards em destaque', games:'Minijogos', create_thread:'Criar tópico', reply:'Responder', global_feed:'Feed Global', back:'Voltar', post:'Publicar', send:'Enviar', name:'Nome (opcional)', search:'Pesquisar...', home:'Início' },
+  ru: { explore:'Исследовать доски', featured:'Избранные доски', games:'Мини-игры', create_thread:'Создать тред', reply:'Ответить', global_feed:'Глобальная лента', back:'Назад', post:'Опубликовать', send:'Отправить', name:'Имя (необязательно)', search:'Поиск...', home:'Главная' },
+  zh: { explore:'浏览版面', featured:'精选版面', games:'小游戏', create_thread:'创建主题', reply:'回复', global_feed:'全站动态', back:'返回', post:'发布', send:'发送', name:'姓名（可选）', search:'搜索...', home:'主页' },
+  ja: { explore:'ボードを探索', featured:'注目ボード', games:'ミニゲーム', create_thread:'スレッド作成', reply:'返信', global_feed:'全体フィード', back:'戻る', post:'投稿する', send:'送信', name:'名前（任意）', search:'検索...' },
+  ko: { explore:'보드 탐색', featured:'추천 보드', games:'미니게임', create_thread:'스레드 생성', reply:'답글', global_feed:'글로벌 피드', back:'뒤로', post:'게시', send:'보내기', name:'이름 (선택)', search:'검색...' },
+  ar: { explore:'تصفح الأقسام', featured:'الأقسام المميزة', games:'ألعاب صغيرة', create_thread:'إنشاء موضوع', reply:'رد', global_feed:'الموجز العام', back:'رجوع', post:'نشر', send:'إرسال', name:'الاسم (اختياري)', search:'بحث...' },
+  it: { explore:'Esplora le board', featured:'Board in evidenza', games:'Minigiochi', create_thread:'Crea thread', reply:'Rispondi', global_feed:'Feed globale', back:'Indietro', post:'Pubblica', send:'Invia', name:'Nome (opzionale)', search:'Cerca...' }
+};
+
+/* Build language select */
+const LANGS = Object.keys(TRANSLATIONS);
+function populateLang(){ const sel = $('langSelect'); LANGS.forEach(l=>{ const o=document.createElement('option'); o.value=l; o.textContent = l.toUpperCase(); sel.appendChild(o); }); const saved = localStorage.getItem('vc_lang') || navigator.language.slice(0,2) || 'en'; if(LANGS.includes(saved)) sel.value = saved; applyLang(sel.value); sel.addEventListener('change', ()=>{ localStorage.setItem('vc_lang', sel.value); applyLang(sel.value); }); }
+function t(key){ const lang = $('langSelect').value || 'en'; return (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) || TRANSLATIONS['en'][key] || key; }
+function applyLang(lang){
+  // update UI labels
+  $('heroTitle').textContent = t('explore');
+  $('heroDesc').textContent = t('featured');
+  $('createThreadLabel').textContent = t('create_thread');
+  $('replyBtn') && ($('replyBtn').textContent = t('send'));
+  $('globalFeed') && ($('globalFeed').previousElementSibling && ($('globalFeed').previousElementSibling.textContent = t('global_feed')));
+  $('query').placeholder = t('search');
+  document.querySelectorAll('.btn').forEach(b=>{ /* keep visual */ });
+}
+
+/* =========================
+   Boards, Threads & Posts (localStorage core)
+   - Data structures stored as JSON in localStorage
+   - Boards: array of {slug,name,desc}
+   - Threads: object { boardSlug: [ {id,title,author,created_at,bumped_at} ] }
+   - Posts: object { threadId: [ {id,author,content,created_at} ] }
+   ========================= */
+
+/* Default boards (60) */
+const DEFAULT_BOARDS = [
+  ['/g/','Technology','Hardware, software, hacks and code.'],
+  ['/v/','Video Games','Consoles, PC, indie and retro.'],
+  ['/a/','Anime','Discussion and fanart.'],
+  ['/b/','Random','The chaos corner.'],
+  ['/mu/','Music','Tracks, production and sharing.'],
+  ['/fit/','Fitness','Workouts and routines.'],
+  ['/x/','Paranormal','Weird stuff and mysteries.'],
+  ['/ck/','Cooking','Recipes and kitchen chaos.'],
+  ['/art/','Art','OC, WIPs and critiques.'],
+  ['/travel/','Travel','Photos and tips.'],
+  ['/memes/','Memes','Just memes.'],
+  ['/pets/','Pets','Cute and dumb animals.'],
+  ['/dev/','Development','APIs, servers, and bugs.'],
+  ['/cars/','Cars','Tuning and speed.'],
+  ['/sci/','Science','Papers and discoveries.'],
+  ['/lit/','Literature','Books and microfiction.'],
+  ['/edu/','Education','Homework help.'],
+  ['/film/','Film','Movies and analysis.'],
+  ['/photo/','Photography','ISO and composition.'],
+  ['/finance/','Finance','Markets and tips.'],
+  ['/health/','Health','Advice and experiences.'],
+  ['/fashion/','Fashion','Fits and drops.'],
+  ['/job/','Jobs','Hiring and resumes.'],
+  ['/home/','Home','DIY and repairs.'],
+  ['/parent/','Parents','Stories and tips.'],
+  ['/relationships/','Relationships','Drama and advice.'],
+  ['/language/','Languages','Practice & help.'],
+  ['/recipes/','Recipes','Step-by-step dishes.'],
+  ['/gardening/','Gardening','Plants and compost.'],
+  ['/history/','History','Events and debates.'],
+  ['/philosophy/','Philosophy','Questions and thoughts.'],
+  ['/boardgames/','Board Games','Meeples & sessions.'],
+  ['/card/','Card Games','MTG, Pokemon, etc.'],
+  ['/crypto/','Crypto','HODL and memes.'],
+  ['/technews/','Tech News','Leaks and rumors.'],
+  ['/startup/','Startups','Pitches and pivots.'],
+  ['/design/','Design','UI/UX and mockups.'],
+  ['/comics/','Comics','Panels and sketches.'],
+  ['/poetry/','Poetry','Verses and rhymes.'],
+  ['/sports/','Sports','Scores and trash talk.'],
+  ['/outdoors/','Outdoors','Hiking and camping.'],
+  ['/phototech/','PhotoTech','Cameras & edits.'],
+  ['/hobbies/','Hobbies','Collections & crafts.'],
+  ['/music-prod/','Music Prod','DAWs & gear.'],
+  ['/theatre/','Theatre','Plays and auditions.'],
+  ['/language-exchange/','Language Exchange','Practice partners.'],
+  ['/support/','Support','Help & advice.'],
+  ['/crafts/','Crafts','Glue & patience.'],
+  ['/politics/','Politics','Debates (careful).'],
+  ['/retro/','Retro','Nostalgia & oldschool.'],
+  ['/mods/','Mods','Modding community.'],
+  ['/ai/','AI','Projects & ethics.'],
+  ['/fun/','Fun','Random fun stuff.']
+];
+
+/* Utilities to read/write storage */
+function readJSON(key, fallback){ try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }catch(e){ return fallback; } }
+function writeJSON(key, obj){ localStorage.setItem(key, JSON.stringify(obj)); }
+
+function ensureInit(){
+  if(!readJSON(LS_BOARDS, null)){
+    writeJSON(LS_BOARDS, DEFAULT_BOARDS);
+  }
+  if(!readJSON(LS_THREADS, null)){
+    writeJSON(LS_THREADS, {});
+  }
+  if(!readJSON(LS_POSTS, null)){
+    writeJSON(LS_POSTS, {});
+  }
+}
+ensureInit();
+
+/* Load boards into UI */
+function renderBoards(){
+  const boards = readJSON(LS_BOARDS, DEFAULT_BOARDS);
+  const container = $('boardsList');
+  container.innerHTML = '';
+  boards.forEach((b, i)=>{
+    const [slug,name,desc] = b;
+    const el = document.createElement('div');
+    el.className = 'board-card';
+    el.innerHTML = `<div class="board-icon" aria-hidden>${(name[0]||'V').toUpperCase()}</div>
+                    <div class="board-meta">
+                      <div class="short">${escapeHtml(slug)}</div>
+                      <div class="long">${escapeHtml(name)}</div>
+                      <div class="desc">${escapeHtml(desc)}</div>
+                    </div>`;
+    el.addEventListener('click', ()=> openBoard(slug,name,desc));
+    container.appendChild(el);
+  });
+
+  // featured and mini games
+  const featured = $('featured'); featured.innerHTML = '';
+  boards.slice(0,6).forEach(b=>{
+    const [slug,name,desc] = b;
+    const card = document.createElement('div'); card.className='thread-card';
+    card.innerHTML = `<div class="thread-top"><div class="thread-title">${escapeHtml(name)}</div><div class="thread-meta">${escapeHtml(slug)}</div></div><div class="small-note">${escapeHtml(desc)}</div>`;
+    featured.appendChild(card);
+  });
+}
+renderBoards();
+
+/* =========================
+   Thread / Post CRUD (local-mode + hooks for remote API)
+   - thread id: numeric timestamp
+   - post id: numeric timestamp + counter
+   ========================= */
+
+function getThreadsMap(){ return readJSON(LS_THREADS, {}); }
+function getPostsMap(){ return readJSON(LS_POSTS, {}); }
+
+/* List threads for board */
+function listThreads(boardSlug){
+  const map = getThreadsMap();
+  return map[boardSlug] ? map[boardSlug].slice().sort((a,b)=> new Date(b.bumped_at)-new Date(a.bumped_at)) : [];
+}
+
+/* Save thread locally */
+function saveThreadLocal(boardSlug, thread){
+  const map = getThreadsMap();
+  map[boardSlug] = map[boardSlug] || [];
+  map[boardSlug].unshift(thread); // newest first
+  writeJSON(LS_THREADS, map);
+}
+
+/* Save post locally */
+function savePostLocal(threadId, post){
+  const map = getPostsMap();
+  map[threadId] = map[threadId] || [];
+  map[threadId].push(post);
+  writeJSON(LS_POSTS, map);
+}
+
+/* Create thread (local) */
+function createThreadLocal(boardSlug, title, author, body){
+  const id = Date.now();
+  const thread = { id, title, author, created_at: new Date().toISOString(), bumped_at: new Date().toISOString() };
+  saveThreadLocal(boardSlug, thread);
+  // first post
+  const post = { id: Date.now()+1, author, content: body, created_at: new Date().toISOString() };
+  savePostLocal(id, post);
+  return id;
+}
+
+/* Create reply local */
+function replyLocal(threadId, author, body){
+  const post = { id: Date.now(), author, content: body, created_at: new Date().toISOString() };
+  savePostLocal(threadId, post);
+  // bump thread
+  const map = getThreadsMap();
+  for(const board in map){
+    const arr = map[board];
+    const t = arr.find(x=>x.id === threadId);
+    if(t){ t.bumped_at = new Date().toISOString(); writeJSON(LS_THREADS, map); break; }
+  }
+}
+
+/* Read posts for thread local */
+function readPostsLocal(threadId){ const map = getPostsMap(); return map[threadId] ? map[threadId].slice() : []; }
+
+/* =========================
+   UI Actions: open board, show threads, open thread, etc.
+   ========================= */
+
+let CURRENT = { board: null, thread: null };
+
+function openBoard(slug, name, desc){
+  CURRENT.board = slug; CURRENT.thread = null;
+  // header
+  $('boardHeader').innerHTML = `<h2>${escapeHtml(name)} <span class="small-note">${escapeHtml(slug)}</span></h2><p class="small-note">${escapeHtml(desc)}</p>`;
+  $('boardTitle').textContent = name;
+  $('boardDesc').textContent = desc;
+  // load threads
+  renderThreads(slug);
+  // switch panels
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  $('boardPanel').classList.add('active');
+}
+
+/* Render threads in board */
+function renderThreads(slug){
+  const list = $('threadsList');
+  list.innerHTML = '';
+  const threads = listThreads(slug);
+  if(!threads.length){ list.innerHTML = `<div class="small-note">No threads yet. Be the first!</div>`; $('boardThreadsCount').textContent = '0 threads'; return; }
+  threads.forEach(t=>{
+    const el = document.createElement('div'); el.className='thread-card';
+    el.innerHTML = `<div class="thread-top"><div class="thread-title">${escapeHtml(t.title)}</div><div class="thread-meta">${escapeHtml(t.author)} · ${fmt(t.created_at)}</div></div>
+                    <div class="small-note">Thread ID: <span class="code">${t.id}</span></div>`;
+    el.addEventListener('click', ()=> openThread(t.id, t.title));
+    list.appendChild(el);
+  });
+  $('boardThreadsCount').textContent = threads.length + ' threads';
+}
+
+/* Open thread (local) */
+function openThread(threadId, title){
+  CURRENT.thread = threadId;
+  // bread
+  $('threadBread').textContent = `${CURRENT.board} › ${title}`;
+  $('threadTitleView').textContent = title;
+  // show posts
+  renderPosts(threadId);
+  // switch panels
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  $('threadPanel').classList.add('active');
+}
+
+/* Render posts list */
+function renderPosts(threadId){
+  const container = $('postsContainer');
+  container.innerHTML = '';
+  const posts = readPostsLocal(threadId);
+  if(!posts.length) container.innerHTML = '<div class="small-note">No replies yet.</div>';
+  posts.forEach(p=>{
+    const el = document.createElement('div'); el.className='post';
+    el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div class="who">${escapeHtml(p.author)}</div><div class="time">${fmt(p.created_at)}</div></div><div style="margin-top:8px">${escapeHtml(p.content)}</div>`;
+    container.appendChild(el);
+  });
+}
+
+/* Global feed: collate recent posts */
+function renderGlobalFeed(){
+  const container = $('globalFeed');
+  container.innerHTML = '';
+  const postsMap = readPostsLocal(); // not used, use readJSON
+  const postsObj = getPostsMap();
+  const items = [];
+  for(const k in postsObj){
+    (postsObj[k] || []).forEach(p => items.push({ threadId: k, ...p }));
+  }
+  items.sort((a,b)=> new Date(b.created_at) - new Date(a.created_at));
+  items.slice(0,100).forEach(it=>{
+    const el = document.createElement('div'); el.className='thread-card';
+    el.innerHTML = `<div class="thread-top"><div class="thread-title">${escapeHtml(it.author)}</div><div class="thread-meta">${fmt(it.created_at)}</div></div><div style="margin-top:6px">${escapeHtml(it.content)}</div>`;
+    container.appendChild(el);
+  });
+}
+
+/* =========================
+   Events: create thread, reply, navigation
+   ========================= */
+
+$('createThreadBtn').addEventListener('click', ()=>{
+  const title = $('threadTitle').value.trim();
+  const body = $('threadBody').value.trim();
+  const author = $('threadName').value.trim() || localStorage.getItem(LS_NAME) || 'Anonymous';
+  if(!title || !body){ alert('Title and body required'); return; }
+  const id = createThreadLocal(CURRENT.board, title, author, body);
+  $('threadTitle').value=''; $('threadBody').value=''; $('threadName').value='';
+  renderThreads(CURRENT.board);
+  openThread(id, title);
+});
+
+$('replyBtn').addEventListener('click', ()=>{
+  const body = $('replyBody').value.trim();
+  const author = $('replyName').value.trim() || localStorage.getItem(LS_NAME) || 'Anonymous';
+  if(!body) return alert('Write something');
+  replyLocal(CURRENT.thread, author, body);
+  $('replyBody').value='';
+  renderPosts(CURRENT.thread);
+});
+
+$('homeBtn').addEventListener('click', ()=>{ document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); $('homePanel').classList.add('active'); });
+$('backHome').addEventListener('click', ()=>{ document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); $('homePanel').classList.add('active'); });
+
+$('globalFeedBtn').addEventListener('click', ()=>{ renderGlobalFeed(); document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); $('globalPanel').classList.add('active'); });
+
+$('newThreadQuick').addEventListener('click', ()=>{
+  // quick create on current board or first board
+  const boards = readJSON(LS_BOARDS, DEFAULT_BOARDS);
+  const first = boards[0][0];
+  openBoard(first, boards[0][1], boards[0][2]);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* Quick search */
+$('query').addEventListener('input', (e)=>{
+  const q = e.target.value.toLowerCase();
+  if(!q){ renderBoards(); return; }
+  // search threads titles & posts
+  const threadsMap = getThreadsMap();
+  const results = [];
+  for(const board in threadsMap){
+    threadsMap[board].forEach(t=>{
+      if(t.title.toLowerCase().includes(q)) results.push({type:'thread', board, id:t.id, title:t.title});
     });
-  </script>
+  }
+  // display results
+  const featured = $('featured'); featured.innerHTML = '<div class="small-note">Search results</div>';
+  results.slice(0,30).forEach(r=>{
+    const el = document.createElement('div'); el.className='thread-card';
+    el.innerHTML = `<div class="thread-top"><div class="thread-title">${escapeHtml(r.title)}</div><div class="thread-meta">${escapeHtml(r.board)}</div></div>`;
+    el.addEventListener('click', ()=> { openBoard(r.board, r.board, '',); setTimeout(()=>{ openThread(r.id, r.title); }, 200); });
+    featured.appendChild(el);
+  });
+});
 
+/* Keyboard: F2 to set local name */
+document.addEventListener('keyup', (e)=>{ if(e.key === 'F2'){ const name = prompt('Set local display name (stored locally):', localStorage.getItem(LS_NAME)||''); if(name!==null){ localStorage.setItem(LS_NAME, name); alert('Name set: '+(name||'Anonymous')); } } });
+
+/* Theme toggle */
+const themeToggle = $('themeToggle');
+themeToggle.addEventListener('click', ()=>{
+  if(document.documentElement.hasAttribute('data-theme')){ document.documentElement.removeAttribute('data-theme'); localStorage.removeItem('vc_theme'); themeToggle.textContent='Theme'; }
+  else{ document.documentElement.setAttribute('data-theme','light'); localStorage.setItem('vc_theme','light'); themeToggle.textContent='Theme'; }
+});
+if(localStorage.getItem('vc_theme')){ document.documentElement.setAttribute('data-theme','light'); themeToggle.textContent='Theme'; }
+
+/* Initialize language select and set translations */
+populateLang();
+
+/* Init page */
+(function boot(){
+  renderBoards();
+  // populate mini games placeholders
+  const mg = $('miniGames'); mg.innerHTML='';
+  for(let i=0;i<8;i++){ const g=document.createElement('div'); g.className='game'; g.innerHTML = `<div><strong>Game ${(i+1)}</strong><div class="small-note">Click to play</div></div><div class="center"><button class="btn" onclick="alert('This is a placeholder mini-game. Implementation in JS.')">Play</button></div>`; mg.appendChild(g); }
+})();
+
+/* =========================
+   Backend hooks (Netlify / external)
+   - optional: functions to push local data to remote
+   - Example functions would be in /netlify/functions/pushThread.js etc.
+   - Here we expose lightweight helpers that, if BASE_API configured,
+     will attempt to POST to endpoints. If not configured, operate local-only.
+   ========================= */
+
+async function pushThreadRemote(boardSlug, threadObj, firstPost){
+  if(!BASE_API) return {ok:false, reason:'no_api'};
+  try{
+    const res = await fetch(BASE_API + '/createThread', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ boardSlug, thread:threadObj, post:firstPost }) });
+    return await res.json();
+  }catch(e){ console.error('pushThreadRemote error', e); return {ok:false, reason:e.message}; }
+}
+
+/* =========================
+   End of script
+   ========================= */
+</script>
+
+</div>
 </body>
 </html>
+
