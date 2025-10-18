@@ -50,7 +50,7 @@ Built entirely from scratch by **KarlDev (2025)**, VoidChan mixes nostalgia with
 ## 🌐 Live Website
 
 👉 **[https://voidchan.org](https://voidchan.org)**  
-Hosted on [Netlify](https://www.netlify.com) and registered via [Spaceship.com](https://www.spaceship.com).
+Hosted on [vercel](https://www.vercel.com) and registered via [Spaceship.com](https://www.spaceship.com).
 
 ---
 
