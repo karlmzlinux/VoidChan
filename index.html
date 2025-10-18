@@ -9,6 +9,202 @@
     <link rel="stylesheet" href="styles/animations.css">
     <link rel="icon" href="assets/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estilos para la navegación mejorada */
+        .main-nav {
+            position: sticky;
+            top: 0;
+            background: var(--color-secondary);
+            z-index: 100;
+            max-height: 60vh;
+            overflow-y: auto;
+            border-bottom: 2px solid var(--color-accent);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+
+        .nav-category {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid var(--color-border);
+        }
+
+        .nav-category h3 {
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .quick-boards {
+            position: sticky;
+            top: 0;
+            background: var(--color-secondary);
+            padding: 1rem 0;
+            z-index: 99;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .quick-board {
+            background: var(--color-primary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .quick-board:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .quick-board.active {
+            background: var(--color-accent);
+            color: white;
+            border-color: var(--color-accent);
+        }
+
+        /* Botón para subir */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .scroll-to-top:hover {
+            background: var(--color-accent-light);
+            transform: translateY(-3px);
+        }
+
+        /* Indicador de scroll */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--color-accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        /* Navegación rápida */
+        .quick-navigation {
+            position: sticky;
+            top: 0;
+            background: var(--color-secondary);
+            padding: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            z-index: 98;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .nav-btn {
+            background: var(--color-primary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            padding: 6px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-1px);
+        }
+
+        /* Header compacto */
+        .header.compact {
+            padding: 0.5rem 0;
+        }
+
+        .header.compact .logo {
+            font-size: 1.5rem;
+        }
+
+        .header.compact .main-nav {
+            max-height: 40vh;
+        }
+
+        /* Scroll personalizado */
+        .main-nav::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .main-nav::-webkit-scrollbar-track {
+            background: var(--color-primary);
+        }
+
+        .main-nav::-webkit-scrollbar-thumb {
+            background: var(--color-accent);
+            border-radius: 3px;
+        }
+
+        .main-nav::-webkit-scrollbar-thumb:hover {
+            background: var(--color-accent-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-boards, .quick-navigation {
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding: 0.5rem;
+            }
+            
+            .quick-board, .nav-btn {
+                flex-shrink: 0;
+            }
+        }
+    </style>
 </head>
 <body class="theme-purple">
     <!-- Particle Background -->
@@ -57,8 +253,14 @@
 
     <!-- Main App (hidden initially) -->
     <div id="main-app" class="main-app" style="display: none;">
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator" id="scroll-indicator"></div>
+
+        <!-- Scroll to Top Button -->
+        <button class="scroll-to-top" id="scroll-to-top" title="Subir al inicio">↑</button>
+
         <!-- Header -->
-        <header class="header">
+        <header class="header" id="main-header">
             <div class="container">
                 <div class="header-top">
                     <div class="logo-section">
@@ -105,135 +307,134 @@
                     </div>
                 </div>
 
+                <!-- Quick Navigation -->
+                <div class="quick-navigation">
+                    <button class="nav-btn" data-action="scroll-to-posts">📝 Ver Posts</button>
+                    <button class="nav-btn" data-action="scroll-to-form">✍️ Nuevo Post</button>
+                    <button class="nav-btn" data-action="scroll-to-games">🎮 Juegos</button>
+                    <button class="nav-btn" data-action="scroll-to-top">⬆️ Subir</button>
+                </div>
+
+                <!-- Quick Boards -->
+                <div class="quick-boards">
+                    <button class="quick-board active" data-board="global">💬 Global</button>
+                    <button class="quick-board" data-board="random">🎲 Random</button>
+                    <button class="quick-board" data-board="art">🎨 Arte</button>
+                    <button class="quick-board" data-board="programming">💻 Prog</button>
+                    <button class="quick-board" data-board="anime">🇯🇵 Anime</button>
+                    <button class="quick-board" data-board="videogames">🎮 Juegos</button>
+                    <button class="quick-board nsfw-trigger" data-board="nsfw">🔞 NSFW</button>
+                    <button class="quick-board" data-board="music">🎵 Música</button>
+                    <button class="quick-board" data-board="movies">🎬 Cine</button>
+                </div>
+
                 <!-- Main Navigation with 150+ Boards -->
-                <nav class="main-nav">
-                    <div class="nav-category">
-                        <h3>🌐 Principal</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link active" data-board="global">💬 /global/ - Global</a>
-                            <a href="#" class="nav-link" data-board="random">🎲 /b/ - Random</a>
-                            <a href="#" class="nav-link" data-board="void">🌌 /void/ - Void</a>
-                            <a href="#" class="nav-link" data-board="meta">💭 /meta/ - Meta</a>
+                <nav class="main-nav" id="main-nav">
+                    <div class="nav-container">
+                        <div class="nav-category">
+                            <h3>🌐 Principal</h3>
+                            <div class="nav-links">
+                                <a href="#" class="nav-link active" data-board="global">💬 /global/ - Global</a>
+                                <a href="#" class="nav-link" data-board="random">🎲 /b/ - Random</a>
+                                <a href="#" class="nav-link" data-board="void">🌌 /void/ - Void</a>
+                                <a href="#" class="nav-link" data-board="meta">💭 /meta/ - Meta</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-category">
+                            <h3>🎨 Creativo</h3>
+                            <div class="nav-links">
+                                <a href="#" class="nav-link" data-board="art">🎨 /art/ - Arte</a>
+                                <a href="#" class="nav-link" data-board="music">🎵 /mu/ - Música</a>
+                                <a href="#" class="nav-link" data-board="literature">📚 /lit/ - Literatura</a>
+                                <a href="#" class="nav-link" data-board="design">🎭 /design/ - Diseño</a>
+                                <a href="#" class="nav-link" data-board="photography">📸 /photo/ - Fotografía</a>
+                                <a href="#" class="nav-link" data-board="writing">✍️ /write/ - Escritura</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-category">
+                            <h3>💻 Tecnología</h3>
+                            <div class="nav-links">
+                                <a href="#" class="nav-link" data-board="programming">💻 /prog/ - Programación</a>
+                                <a href="#" class="nav-link" data-board="ai">🤖 /ai/ - IA</a>
+                                <a href="#" class="nav-link" data-board="tech">🔧 /tech/ - Tecnología</a>
+                                <a href="#" class="nav-link" data-board="hardware">💾 /hw/ - Hardware</a>
+                                <a href="#" class="nav-link" data-board="cyber">🛡️ /cyber/ - Cybersecurity</a>
+                                <a href="#" class="nav-link" data-board="webdev">🌐 /web/ - Web Dev</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-category">
+                            <h3>🎮 Juegos</h3>
+                            <div class="nav-links">
+                                <a href="#" class="nav-link" data-board="videogames">🎮 /v/ - Videojuegos</a>
+                                <a href="#" class="nav-link" data-board="retro">🕹️ /retro/ - Retro</a>
+                                <a href="#" class="nav-link" data-board="mmo">⚔️ /mmo/ - MMO</a>
+                                <a href="#" class="nav-link" data-board="mobile">📱 /mobile/ - Mobile</a>
+                                <a href="#" class="nav-link" data-board="pc">🖥️ /pc/ - PC Gaming</a>
+                                <a href="#" class="nav-link" data-board="console">🎯 /console/ - Consolas</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-category">
+                            <h3>🇯🇵 Anime & Manga</h3>
+                            <div class="nav-links">
+                                <a href="#" class="nav-link" data-board="anime">🇯🇵 /a/ - Anime</a>
+                                <a href="#" class="nav-link" data-board="manga">📖 /m/ - Manga</a>
+                                <a href="#" class="nav-link" data-board="cosplay">👘 /cos/ - Cosplay</a>
+                                <a href="#" class="nav-link" data-board="figures">🗿 /fig/ - Figuras</a>
+                                <a href="#" class="nav-link" data-board="japan">🗾 /jp/ - Japón</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-category">
+                            <h3>🎬 Entretenimiento</h3>
+                            <div class="nav-links">
+                                <a href="#" class="nav-link" data-board="movies">🎬 /tv/ - Cine & TV</a>
+                                <a href="#" class="nav-link" data-board="comics">🦸 /comic/ - Cómics</a>
+                                <a href="#" class="nav-link" data-board="sports">⚽ /sports/ - Deportes</a>
+                                <a href="#" class="nav-link" data-board="fitness">💪 /fit/ - Fitness</a>
+                                <a href="#" class="nav-link" data-board="food">🍕 /food/ - Comida</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-category">
+                            <h3>💬 Discusión</h3>
+                            <div class="nav-links">
+                                <a href="#" class="nav-link" data-board="politics">🏛️ /pol/ - Política</a>
+                                <a href="#" class="nav-link" data-board="science">🔬 /sci/ - Ciencia</a>
+                                <a href="#" class="nav-link" data-board="history">📜 /his/ - Historia</a>
+                                <a href="#" class="nav-link" data-board="philosophy">🧠 /phi/ - Filosofía</a>
+                                <a href="#" class="nav-link" data-board="psychology">💫 /psy/ - Psicología</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-category">
+                            <h3>🔞 NSFW</h3>
+                            <div class="nav-links">
+                                <a href="#" class="nav-link nsfw-trigger" data-board="nsfw">🔞 /nsfw/ - Adultos</a>
+                                <a href="#" class="nav-link nsfw-trigger" data-board="hentai">💗 /h/ - Hentai</a>
+                                <a href="#" class="nav-link nsfw-trigger" data-board="ecchi">😳 /ecchi/ - Ecchi</a>
+                                <a href="#" class="nav-link nsfw-trigger" data-board="yuri">🌷 /yuri/ - Yuri</a>
+                                <a href="#" class="nav-link nsfw-trigger" data-board="yaoi">🎎 /yaoi/ - Yaoi</a>
+                            </div>
+                        </div>
+
+                        <!-- Navegación Rápida en el Menú -->
+                        <div class="nav-category">
+                            <h3>🚀 Accesos Directos</h3>
+                            <div class="nav-links">
+                                <a href="#posts-container" class="nav-link">📝 Ir a Posts</a>
+                                <a href="#post-form-container" class="nav-link">✍️ Nuevo Post</a>
+                                <a href="#games-section" class="nav-link">🎮 Minijuegos</a>
+                                <button class="nav-link" onclick="window.voidChan.scrollToTop()" style="background: none; border: none; color: inherit; text-align: left; font: inherit; cursor: pointer;">⬆️ Subir al Inicio</button>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="nav-category">
-                        <h3>🎨 Creativo</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="art">🎨 /art/ - Arte</a>
-                            <a href="#" class="nav-link" data-board="music">🎵 /mu/ - Música</a>
-                            <a href="#" class="nav-link" data-board="literature">📚 /lit/ - Literatura</a>
-                            <a href="#" class="nav-link" data-board="design">🎭 /design/ - Diseño</a>
-                            <a href="#" class="nav-link" data-board="photography">📸 /photo/ - Fotografía</a>
-                            <a href="#" class="nav-link" data-board="writing">✍️ /write/ - Escritura</a>
-                        </div>
-                    </div>
-
-                    <div class="nav-category">
-                        <h3>💻 Tecnología</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="programming">💻 /prog/ - Programación</a>
-                            <a href="#" class="nav-link" data-board="ai">🤖 /ai/ - IA</a>
-                            <a href="#" class="nav-link" data-board="tech">🔧 /tech/ - Tecnología</a>
-                            <a href="#" class="nav-link" data-board="hardware">💾 /hw/ - Hardware</a>
-                            <a href="#" class="nav-link" data-board="cyber">🛡️ /cyber/ - Cybersecurity</a>
-                            <a href="#" class="nav-link" data-board="webdev">🌐 /web/ - Web Dev</a>
-                        </div>
-                    </div>
-
-                    <div class="nav-category">
-                        <h3>🎮 Juegos</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="videogames">🎮 /v/ - Videojuegos</a>
-                            <a href="#" class="nav-link" data-board="retro">🕹️ /retro/ - Retro</a>
-                            <a href="#" class="nav-link" data-board="mmo">⚔️ /mmo/ - MMO</a>
-                            <a href="#" class="nav-link" data-board="mobile">📱 /mobile/ - Mobile</a>
-                            <a href="#" class="nav-link" data-board="pc">🖥️ /pc/ - PC Gaming</a>
-                            <a href="#" class="nav-link" data-board="console">🎯 /console/ - Consolas</a>
-                        </div>
-                    </div>
-
-                    <div class="nav-category">
-                        <h3>🇯🇵 Anime & Manga</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="anime">🇯🇵 /a/ - Anime</a>
-                            <a href="#" class="nav-link" data-board="manga">📖 /m/ - Manga</a>
-                            <a href="#" class="nav-link" data-board="cosplay">👘 /cos/ - Cosplay</a>
-                            <a href="#" class="nav-link" data-board="figures">🗿 /fig/ - Figuras</a>
-                            <a href="#" class="nav-link" data-board="japan">🗾 /jp/ - Japón</a>
-                        </div>
-                    </div>
-
-                    <div class="nav-category">
-                        <h3>🎬 Entretenimiento</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="movies">🎬 /tv/ - Cine & TV</a>
-                            <a href="#" class="nav-link" data-board="comics">🦸 /comic/ - Cómics</a>
-                            <a href="#" class="nav-link" data-board="sports">⚽ /sports/ - Deportes</a>
-                            <a href="#" class="nav-link" data-board="fitness">💪 /fit/ - Fitness</a>
-                            <a href="#" class="nav-link" data-board="food">🍕 /food/ - Comida</a>
-                        </div>
-                    </div>
-
-                    <div class="nav-category">
-                        <h3>💬 Discusión</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="politics">🏛️ /pol/ - Política</a>
-                            <a href="#" class="nav-link" data-board="science">🔬 /sci/ - Ciencia</a>
-                            <a href="#" class="nav-link" data-board="history">📜 /his/ - Historia</a>
-                            <a href="#" class="nav-link" data-board="philosophy">🧠 /phi/ - Filosofía</a>
-                            <a href="#" class="nav-link" data-board="psychology">💫 /psy/ - Psicología</a>
-                        </div>
-                    </div>
-
-                    <div class="nav-category">
-                        <h3>🔞 NSFW</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link nsfw-trigger" data-board="nsfw">🔞 /nsfw/ - Adultos</a>
-                            <a href="#" class="nav-link nsfw-trigger" data-board="hentai">💗 /h/ - Hentai</a>
-                            <a href="#" class="nav-link nsfw-trigger" data-board="ecchi">😳 /ecchi/ - Ecchi</a>
-                            <a href="#" class="nav-link nsfw-trigger" data-board="yuri">🌷 /yuri/ - Yuri</a>
-                            <a href="#" class="nav-link nsfw-trigger" data-board="yaoi">🎎 /yaoi/ - Yaoi</a>
-                        </div>
-                    </div>
-
-                    <!-- Más categorías se cargan dinámicamente -->
                 </nav>
             </div>
         </header>
-
-
-        <!-- Agregar después del header -->
-<button class="nav-toggle" id="nav-toggle">☰ Menú</button>
-
-<!-- Modificar la navegación -->
-<nav class="main-nav" id="main-nav">
-    <div class="nav-container">
-        <!-- Tus categorías existentes aquí -->
-        <div class="nav-category">
-            <h3>🚀 Navegación Rápida</h3>
-            <div class="nav-links">
-                <a href="#posts-container" class="nav-link">📝 Ver Posts</a>
-                <a href="#post-form" class="nav-link">✍️ Nuevo Post</a>
-                <a href="#games-section" class="nav-link">🎮 Juegos</a>
-                <button class="nav-link" onclick="voidChan.scrollToTop()">⬆️ Subir</button>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<!-- Agregar IDs para navegación -->
-<div class="post-form-container" id="post-form">
-    <!-- formulario existente -->
-</div>
-
-<div class="games-section" id="games-section">
-    <!-- juegos existentes -->
-</div>
-
-<div id="posts-container" class="posts-container">
-    <!-- posts existentes -->
-</div>
 
         <!-- Main Content -->
         <main class="main">
@@ -260,21 +461,8 @@
                     </div>
                 </div>
 
-                <!-- Quick Boards -->
-                <div class="quick-boards">
-                    <button class="quick-board active" data-board="global">💬 Global</button>
-                    <button class="quick-board" data-board="random">🎲 Random</button>
-                    <button class="quick-board" data-board="art">🎨 Arte</button>
-                    <button class="quick-board" data-board="programming">💻 Prog</button>
-                    <button class="quick-board" data-board="anime">🇯🇵 Anime</button>
-                    <button class="quick-board" data-board="videogames">🎮 Juegos</button>
-                    <button class="quick-board nsfw-trigger" data-board="nsfw">🔞 NSFW</button>
-                    <button class="quick-board" data-board="music">🎵 Música</button>
-                    <button class="quick-board" data-board="movies">🎬 Cine</button>
-                </div>
-
                 <!-- Post Form -->
-                <div class="post-form-container">
+                <div class="post-form-container" id="post-form-container">
                     <form id="post-form" class="post-form">
                         <div class="form-header">
                             <h3>📝 Crear Post</h3>
@@ -303,7 +491,7 @@
                 </div>
 
                 <!-- Games Section -->
-                <div class="games-section">
+                <div class="games-section" id="games-section">
                     <h3>🎮 Minijuegos</h3>
                     <div class="games-grid">
                         <div class="game-card" data-game="snake">
@@ -418,6 +606,141 @@
     </script>
 
     <script src="js/app.js"></script>
-    <script src="js/games.js"></script>
+    
+    <!-- Script para el sistema de scroll -->
+    <script>
+        // Sistema de Scroll Mejorado
+        class ScrollSystem {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.setupScrollToTop();
+                this.setupScrollIndicator();
+                this.setupCompactHeader();
+                this.setupQuickNavigation();
+                this.setupSmoothScroll();
+            }
+
+            setupScrollToTop() {
+                const scrollBtn = document.getElementById('scroll-to-top');
+                
+                window.addEventListener('scroll', () => {
+                    if (window.pageYOffset > 300) {
+                        scrollBtn.style.display = 'flex';
+                    } else {
+                        scrollBtn.style.display = 'none';
+                    }
+                });
+
+                scrollBtn.addEventListener('click', () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+
+            setupScrollIndicator() {
+                const indicator = document.getElementById('scroll-indicator');
+
+                window.addEventListener('scroll', () => {
+                    const winHeight = window.innerHeight;
+                    const docHeight = document.documentElement.scrollHeight;
+                    const scrollTop = window.pageYOffset;
+                    const scrollPercent = scrollTop / (docHeight - winHeight);
+                    
+                    indicator.style.transform = `scaleX(${scrollPercent})`;
+                });
+            }
+
+            setupCompactHeader() {
+                const header = document.getElementById('main-header');
+                let lastScroll = 0;
+
+                window.addEventListener('scroll', () => {
+                    const currentScroll = window.pageYOffset;
+                    
+                    if (currentScroll > 100) {
+                        header.classList.add('compact');
+                    } else {
+                        header.classList.remove('compact');
+                    }
+                    
+                    lastScroll = currentScroll;
+                });
+            }
+
+            setupQuickNavigation() {
+                document.querySelector('.quick-navigation').addEventListener('click', (e) => {
+                    if (e.target.matches('.nav-btn')) {
+                        const action = e.target.getAttribute('data-action');
+                        this.handleQuickNavigation(action);
+                    }
+                });
+            }
+
+            handleQuickNavigation(action) {
+                switch(action) {
+                    case 'scroll-to-posts':
+                        this.smoothScrollTo(document.getElementById('posts-container'));
+                        break;
+                    case 'scroll-to-form':
+                        this.smoothScrollTo(document.getElementById('post-form-container'));
+                        break;
+                    case 'scroll-to-games':
+                        this.smoothScrollTo(document.getElementById('games-section'));
+                        break;
+                    case 'scroll-to-top':
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        break;
+                }
+            }
+
+            setupSmoothScroll() {
+                // Smooth scroll para anclas internas
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const target = document.querySelector(this.getAttribute('href'));
+                        if (target) {
+                            this.smoothScrollTo(target);
+                        }
+                    }.bind(this));
+                });
+            }
+
+            smoothScrollTo(element) {
+                if (!element) return;
+                
+                const headerHeight = document.querySelector('.header').offsetHeight;
+                const navHeight = document.querySelector('.main-nav').offsetHeight;
+                const quickNavHeight = document.querySelector('.quick-navigation').offsetHeight;
+                
+                const totalOffset = headerHeight + navHeight + quickNavHeight + 20;
+                
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+
+            scrollToTop() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Inicializar cuando la página cargue
+        document.addEventListener('DOMContentLoaded', () => {
+            window.scrollSystem = new ScrollSystem();
+        });
+    </script>
 </body>
 </html>
