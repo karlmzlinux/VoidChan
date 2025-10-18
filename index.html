@@ -11,16 +11,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <style>
-        /* Estilos para la navegación mejorada */
+        /* Estilos para la navegación mejorada - CORREGIDO */
         .main-nav {
             position: sticky;
-            top: 0;
+            top: 120px; /* Debajo del header y quick navigation */
             background: var(--color-secondary);
-            z-index: 100;
-            max-height: 60vh;
+            z-index: 90; /* Menor que el header */
+            max-height: 50vh;
             overflow-y: auto;
             border-bottom: 2px solid var(--color-accent);
             transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .header.compact .main-nav {
+            top: 80px; /* Ajustado para header compacto */
+            max-height: 40vh;
         }
 
         .nav-container {
@@ -50,12 +56,71 @@
             gap: 0.3rem;
         }
 
-        .quick-boards {
+        /* Header principal */
+        .header {
             position: sticky;
             top: 0;
+            z-index: 100;
+            background: var(--color-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .header.compact {
+            padding: 0.3rem 0;
+        }
+
+        .header.compact .logo {
+            font-size: 1.3rem;
+        }
+
+        .header.compact .logo-subtitle {
+            display: none;
+        }
+
+        .header.compact .header-controls {
+            transform: scale(0.9);
+        }
+
+        /* Quick Navigation */
+        .quick-navigation {
+            position: sticky;
+            top: 60px; /* Debajo del header */
+            background: var(--color-secondary);
+            padding: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            z-index: 95;
+            border-bottom: 1px solid var(--color-border);
+            transition: top 0.3s ease;
+        }
+
+        .header.compact ~ .quick-navigation {
+            top: 40px; /* Ajustado para header compacto */
+        }
+
+        .nav-btn {
+            background: var(--color-primary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            padding: 6px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-1px);
+        }
+
+        /* Quick Boards */
+        .quick-boards {
             background: var(--color-secondary);
             padding: 1rem 0;
-            z-index: 99;
             border-bottom: 1px solid var(--color-border);
             display: flex;
             gap: 0.5rem;
@@ -126,48 +191,20 @@
             z-index: 1001;
         }
 
-        /* Navegación rápida */
-        .quick-navigation {
-            position: sticky;
-            top: 0;
-            background: var(--color-secondary);
-            padding: 0.5rem;
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            z-index: 98;
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .nav-btn {
-            background: var(--color-primary);
-            border: 1px solid var(--color-border);
-            color: var(--color-text);
-            padding: 6px 12px;
-            border-radius: 15px;
-            cursor: pointer;
+        /* Contador de usuarios en tiempo real */
+        .online-users-real {
+            background: var(--color-accent);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
             font-size: 0.8rem;
-            transition: all 0.3s ease;
-            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+            animation: pulse 2s infinite;
         }
 
-        .nav-btn:hover {
-            border-color: var(--color-accent);
-            transform: translateY(-1px);
-        }
-
-        /* Header compacto */
-        .header.compact {
-            padding: 0.5rem 0;
-        }
-
-        .header.compact .logo {
-            font-size: 1.5rem;
-        }
-
-        .header.compact .main-nav {
-            max-height: 40vh;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         /* Scroll personalizado */
@@ -202,6 +239,15 @@
             
             .quick-board, .nav-btn {
                 flex-shrink: 0;
+            }
+
+            .main-nav {
+                top: 100px;
+                max-height: 40vh;
+            }
+
+            .header.compact .main-nav {
+                top: 60px;
             }
         }
     </style>
@@ -284,37 +330,27 @@
                             </select>
                         </div>
 
-                        <!-- Language Selector Compact -->
-                        <div class="control-group">
-                            <label>🌐</label>
-                            <select id="language-select" class="compact-select">
-                                <option value="es">ES</option>
-                                <option value="en">EN</option>
-                                <option value="jp">JP</option>
-                                <option value="fr">FR</option>
-                                <option value="de">DE</option>
-                                <option value="ru">RU</option>
-                                <option value="zh">中文</option>
-                                <option value="ko">한국어</option>
-                            </select>
-                        </div>
-
-                        <!-- Online Users -->
+                        <!-- Online Users Real -->
                         <div class="online-display">
                             <span class="online-icon">👥</span>
-                            <span id="online-count">1</span>
+                            <span class="online-users-real" id="online-count">1</span>
                         </div>
                     </div>
                 </div>
+            </div>
+        </header>
 
-                <!-- Quick Navigation -->
-                <div class="quick-navigation">
-                    <button class="nav-btn" data-action="scroll-to-posts">📝 Ver Posts</button>
-                    <button class="nav-btn" data-action="scroll-to-form">✍️ Nuevo Post</button>
-                    <button class="nav-btn" data-action="scroll-to-games">🎮 Juegos</button>
-                    <button class="nav-btn" data-action="scroll-to-top">⬆️ Subir</button>
-                </div>
+        <!-- Quick Navigation -->
+        <div class="quick-navigation">
+            <button class="nav-btn" data-action="scroll-to-posts">📝 Ver Posts</button>
+            <button class="nav-btn" data-action="scroll-to-form">✍️ Nuevo Post</button>
+            <button class="nav-btn" data-action="scroll-to-games">🎮 Juegos</button>
+            <button class="nav-btn" data-action="scroll-to-top">⬆️ Subir</button>
+        </div>
 
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
                 <!-- Quick Boards -->
                 <div class="quick-boards">
                     <button class="quick-board active" data-board="global">💬 Global</button>
@@ -328,7 +364,7 @@
                     <button class="quick-board" data-board="movies">🎬 Cine</button>
                 </div>
 
-                <!-- Main Navigation with 150+ Boards -->
+                <!-- Main Navigation -->
                 <nav class="main-nav" id="main-nav">
                     <div class="nav-container">
                         <div class="nav-category">
@@ -428,17 +464,12 @@
                                 <a href="#posts-container" class="nav-link">📝 Ir a Posts</a>
                                 <a href="#post-form-container" class="nav-link">✍️ Nuevo Post</a>
                                 <a href="#games-section" class="nav-link">🎮 Minijuegos</a>
-                                <button class="nav-link" onclick="window.voidChan.scrollToTop()" style="background: none; border: none; color: inherit; text-align: left; font: inherit; cursor: pointer;">⬆️ Subir al Inicio</button>
+                                <button class="nav-link" onclick="window.scrollSystem.scrollToTop()" style="background: none; border: none; color: inherit; text-align: left; font: inherit; cursor: pointer;">⬆️ Subir al Inicio</button>
                             </div>
                         </div>
                     </div>
                 </nav>
-            </div>
-        </header>
 
-        <!-- Main Content -->
-        <main class="main">
-            <div class="container">
                 <!-- Board Header -->
                 <div class="board-header">
                     <div class="board-info">
@@ -607,7 +638,7 @@
 
     <script src="js/app.js"></script>
     
-    <!-- Script para el sistema de scroll -->
+    <!-- Script para el sistema de scroll y usuarios en tiempo real -->
     <script>
         // Sistema de Scroll Mejorado
         class ScrollSystem {
@@ -715,16 +746,16 @@
                 if (!element) return;
                 
                 const headerHeight = document.querySelector('.header').offsetHeight;
-                const navHeight = document.querySelector('.main-nav').offsetHeight;
                 const quickNavHeight = document.querySelector('.quick-navigation').offsetHeight;
+                const navHeight = document.querySelector('.main-nav').offsetHeight;
                 
-                const totalOffset = headerHeight + navHeight + quickNavHeight + 20;
+                const totalOffset = headerHeight + quickNavHeight + navHeight + 40;
                 
                 const elementPosition = element.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
 
                 window.scrollTo({
-                    top: offsetPosition,
+                    top: Math.max(0, offsetPosition),
                     behavior: 'smooth'
                 });
             }
@@ -737,10 +768,114 @@
             }
         }
 
+        // Sistema de Usuarios en Tiempo Real
+        class OnlineUsersSystem {
+            constructor() {
+                this.users = new Map();
+                this.currentUser = this.generateUserId();
+                this.init();
+            }
+
+            init() {
+                this.addUser(this.currentUser);
+                this.startUserTracking();
+                this.startRealTimeUpdates();
+            }
+
+            generateUserId() {
+                return 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+            }
+
+            addUser(userId) {
+                this.users.set(userId, {
+                    id: userId,
+                    lastSeen: Date.now(),
+                    active: true
+                });
+                this.updateDisplay();
+            }
+
+            removeUser(userId) {
+                this.users.delete(userId);
+                this.updateDisplay();
+            }
+
+            startUserTracking() {
+                // Actualizar último visto cada 30 segundos
+                setInterval(() => {
+                    this.users.forEach((user, userId) => {
+                        user.lastSeen = Date.now();
+                    });
+                    this.cleanInactiveUsers();
+                }, 30000);
+
+                // Remover usuario al cerrar la página
+                window.addEventListener('beforeunload', () => {
+                    this.removeUser(this.currentUser);
+                });
+            }
+
+            cleanInactiveUsers() {
+                const now = Date.now();
+                const inactiveTime = 2 * 60 * 1000; // 2 minutos
+                
+                for (let [userId, user] of this.users) {
+                    if (now - user.lastSeen > inactiveTime) {
+                        this.users.delete(userId);
+                    }
+                }
+                this.updateDisplay();
+            }
+
+            startRealTimeUpdates() {
+                // Simular otros usuarios entrando y saliendo
+                setInterval(() => {
+                    const currentCount = this.users.size;
+                    const shouldAdd = currentCount < 5 || Math.random() > 0.7;
+                    const shouldRemove = currentCount > 8 && Math.random() > 0.8;
+                    
+                    if (shouldAdd) {
+                        const newUser = 'user_' + Math.random().toString(36).substr(2, 6);
+                        this.addUser(newUser);
+                        
+                        // Remover después de un tiempo
+                        setTimeout(() => {
+                            this.removeUser(newUser);
+                        }, 60000 + Math.random() * 120000);
+                    }
+                    
+                    if (shouldRemove && this.users.size > 1) {
+                        const usersArray = Array.from(this.users.keys());
+                        const randomUser = usersArray[Math.floor(Math.random() * usersArray.length)];
+                        if (randomUser !== this.currentUser) {
+                            this.removeUser(randomUser);
+                        }
+                    }
+                }, 10000); // Cada 10 segundos
+            }
+
+            updateDisplay() {
+                const count = this.users.size;
+                
+                // Actualizar todos los contadores
+                document.querySelectorAll('#online-count, #board-online, #footer-online, #welcome-online').forEach(element => {
+                    element.textContent = count;
+                });
+                
+                // Efecto visual cuando cambia
+                const onlineElement = document.getElementById('online-count');
+                if (onlineElement) {
+                    onlineElement.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        onlineElement.style.transform = 'scale(1)';
+                    }, 300);
+                }
+            }
+
+            getOnlineCount() {
+                return this.users.size;
+            }
+        }
+
         // Inicializar cuando la página cargue
-        document.addEventListener('DOMContentLoaded', () => {
-            window.scrollSystem = new ScrollSystem();
-        });
-    </script>
-</body>
-</html>
+        document.addEventListener('DOMContent
