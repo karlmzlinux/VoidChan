@@ -592,3 +592,201 @@ textarea {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--void-accent-hover);
 }
+
+/* Navegación Fija Mejorada */
+.main-nav {
+    position: sticky;
+    top: 0;
+    background: var(--color-secondary);
+    z-index: 100;
+    max-height: 60vh;
+    overflow-y: auto;
+    border-bottom: 2px solid var(--color-accent);
+}
+
+/* Contenedor de navegación con scroll */
+.nav-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.nav-category {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+}
+
+.nav-category h3 {
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+/* Botón para mostrar/ocultar navegación */
+.nav-toggle {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    z-index: 1000;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+/* Quick Boards Mejorados */
+.quick-boards {
+    position: sticky;
+    top: 0;
+    background: var(--color-secondary);
+    padding: 1rem 0;
+    z-index: 99;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.quick-board {
+    background: var(--color-primary);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.quick-board:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+}
+
+.quick-board.active {
+    background: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+}
+
+/* Scroll personalizado para navegación */
+.main-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.main-nav::-webkit-scrollbar-track {
+    background: var(--color-primary);
+}
+
+.main-nav::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 3px;
+}
+
+.main-nav::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-light);
+}
+
+/* Botón flotante para subir */
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.scroll-to-top:hover {
+    background: var(--color-accent-light);
+    transform: translateY(-3px);
+}
+
+/* Indicador de scroll */
+.scroll-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+    z-index: 1001;
+}
+
+/* Header compacto cuando se hace scroll */
+.header.compact {
+    padding: 0.5rem 0;
+}
+
+.header.compact .logo {
+    font-size: 1.5rem;
+}
+
+.header.compact .main-nav {
+    max-height: 40vh;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-toggle {
+        display: flex;
+    }
+    
+    .main-nav {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        height: 100vh;
+        background: var(--color-secondary);
+        transition: left 0.3s ease;
+        z-index: 999;
+        padding: 2rem;
+    }
+    
+    .main-nav.active {
+        left: 0;
+    }
+    
+    .nav-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-boards {
+        position: relative;
+        top: auto;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding: 0.5rem;
+    }
+}
