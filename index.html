@@ -1,64 +1,458 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VOIDCHAN — Boards, Threads & Minigames</title>
-    <script defer src="messages.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VOIDCHAN — Boards, Threads & Games</title>
+<meta name="description" content="VOIDCHAN — community boards, threads and browser minigames. Hecho por KarlDev © 2025">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%2300b04a%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2250%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Verdana%22>V</text></svg>">
+<!-- Tailwind CDN for faster pretty UI (no build step) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* extra custom */
+  body { background: radial-gradient(ellipse at top left, rgba(6,12,20,0.85), rgba(8,10,15,1)), #071019; color: #e6eef6; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+  .glass { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(6px); }
+  .accent { background: linear-gradient(90deg,#20d18e,#60ffc6); color:#00170f; font-weight:800; }
+  .board-pill { background: linear-gradient(90deg,#00e686,#00d18e); color:#012; font-weight:800; padding:6px 10px; border-radius:8px; display:inline-block; }
+  .neon { text-shadow: 0 2px 20px rgba(32,209,142,0.12); }
+  /* scroll */
+  .scrollbox::-webkit-scrollbar { width: 10px; }
+  .scrollbox::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.04); border-radius: 999px; }
+  /* post styles */
+  .post { border-radius:10px; border:1px solid rgba(255,255,255,0.03); padding:14px; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00)); }
+  /* small */
+  .muted { color: rgba(230,238,246,0.45); }
+  /* responsive tweaks */
+  @media (max-width: 920px) { .desktop-only { display:none } .mobile-grid { grid-template-columns: 1fr !important } }
+</style>
+</head>
+<body class="antialiased">
 
-  <body class="bg-[#0a0f1a] text-gray-200 font-sans">
-    <header class="flex items-center justify-between px-6 py-4 bg-[#111827] shadow-lg">
-      <h1 class="text-2xl font-extrabold text-[#00ffae] tracking-wide">VOIDCHAN</h1>
-      <div class="flex gap-3">
-        <button class="px-4 py-2 bg-[#00ffae1a] rounded-lg hover:bg-[#00ffae33] transition">Theme</button>
-        <button class="px-4 py-2 bg-[#00ffae1a] rounded-lg hover:bg-[#00ffae33] transition">Home</button>
+<!-- APP -->
+<div class="max-w-7xl mx-auto p-6">
+
+  <!-- HEADER -->
+  <header class="flex items-center justify-between gap-4 mb-6">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-2xl accent flex items-center justify-center text-2xl neon">V</div>
+      <div>
+        <div class="text-xl font-extrabold">VOIDCHAN</div>
+        <div class="text-sm muted">Boards • Threads • Minigames — Hecho por <strong>KarlDev</strong> © 2025</div>
       </div>
-    </header>
+    </div>
 
-    <main class="grid grid-cols-12 gap-6 p-6">
-      <!-- Sidebar -->
-      <aside class="col-span-3 bg-[#111827] rounded-2xl p-4 shadow-lg border border-[#1f2937]">
-        <input
-          type="text"
-          placeholder="Buscar hilos / posts..."
-          class="w-full mb-4 p-2 rounded-lg bg-[#0f172a] text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#00ffae]"
-        />
-        <h2 class="text-xl font-bold mb-2 text-[#00ffae]">Boards</h2>
-        <ul class="space-y-3">
-          <li class="hover:bg-[#00ffae1a] p-2 rounded-lg cursor-pointer"><b>/g/</b> Technology</li>
-          <li class="hover:bg-[#00ffae1a] p-2 rounded-lg cursor-pointer"><b>/v/</b> Video Games</li>
-          <li class="hover:bg-[#00ffae1a] p-2 rounded-lg cursor-pointer"><b>/a/</b> Anime</li>
-          <li class="hover:bg-[#00ffae1a] p-2 rounded-lg cursor-pointer"><b>/b/</b> Random</li>
-          <li class="hover:bg-[#00ffae1a] p-2 rounded-lg cursor-pointer"><b>/mu/</b> Music</li>
-          <li class="hover:bg-[#00ffae1a] p-2 rounded-lg cursor-pointer"><b>/fit/</b> Fitness</li>
-          <li class="hover:bg-[#00ffae1a] p-2 rounded-lg cursor-pointer"><b>/x/</b> Paranormal</li>
-        </ul>
+    <div class="flex items-center gap-3">
+      <select id="langSelect" class="glass px-3 py-2 rounded-lg muted">
+        <!-- filled by JS -->
+      </select>
+      <button id="themeBtn" class="glass px-3 py-2 rounded-lg muted">Theme</button>
+      <button id="homeBtn" class="glass px-3 py-2 rounded-lg muted">Home</button>
+    </div>
+  </header>
 
-        <div class="mt-6">
-          <button
-            id="postGlobal"
-            class="w-full bg-[#00ffae] text-black py-2 rounded-lg font-bold hover:bg-[#00e69d] transition"
-          >
-            Global Post
-          </button>
-        </div>
-      </aside>
+  <div class="grid grid-cols-12 gap-6">
 
-      <!-- Main content -->
-      <section class="col-span-9 space-y-8">
-        <div class="bg-[#111827] p-6 rounded-2xl border border-[#1f2937] shadow-lg">
-          <h2 class="text-2xl font-bold mb-4 text-[#00ffae]">🌍 Global Threads</h2>
-          <div id="messagesContainer" class="space-y-4 text-gray-300">
-            <p class="text-gray-500">Cargando mensajes...</p>
+    <!-- SIDEBAR: BOARDS -->
+    <aside class="col-span-3 glass p-4 rounded-2xl h-[72vh] overflow-hidden">
+      <div class="flex items-center gap-2 mb-3">
+        <input id="searchInput" class="w-full glass px-3 py-2 rounded-lg" placeholder="Buscar hilos / posts..." />
+        <button id="searchClear" class="glass px-3 py-2 rounded-lg muted">Clear</button>
+      </div>
+
+      <div class="text-sm muted mb-2">Boards</div>
+      <div id="boardsList" class="space-y-3 h-[60%] overflow-y-auto scrollbox pr-2"></div>
+
+      <hr class="my-3 border-white/5" />
+      <div class="text-sm muted">Quick</div>
+      <div class="flex gap-2 mt-2">
+        <button id="newThreadQuick" class="accent px-3 py-2 rounded-lg">New Thread</button>
+        <button id="globalFeedBtn" class="glass px-3 py-2 rounded-lg muted">Global</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="col-span-9 min-h-[72vh]">
+
+      <!-- HOME PANEL -->
+      <section id="homePanel" class="panel">
+        <div class="grid grid-cols-3 gap-6 mb-6">
+          <div class="col-span-2">
+            <div class="glass p-4 rounded-2xl">
+              <h2 class="text-xl font-bold neon" id="heroTitle">Explora los boards</h2>
+              <p class="muted" id="heroDesc">Selecciona un board a la izquierda para ver hilos. Todo listo para escalar a backend real.</p>
+              <div id="featuredBoards" class="mt-4 space-y-3"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="glass p-4 rounded-2xl">
+              <h3 class="font-bold neon">Minigames</h3>
+              <div id="gamesGrid" class="mt-3 space-y-3"></div>
+              <div class="text-xs muted mt-3">Records se guardan localmente (localStorage).</div>
+            </div>
           </div>
         </div>
       </section>
-    </main>
 
-    <footer class="text-center text-gray-500 py-6 text-sm">
-      Hecho por <b>KarlDev</b> © 2025
-    </footer>
-  </body>
+      <!-- BOARD PANEL -->
+      <section id="boardPanel" class="panel hidden">
+        <div class="flex justify-between items-start gap-4 mb-4">
+          <div>
+            <div class="muted" id="boardSlug">/g/</div>
+            <h2 class="text-2xl font-bold" id="boardName">Technology</h2>
+            <div class="muted" id="boardDesc">Hardware, software y hacks.</div>
+          </div>
+          <div>
+            <button id="backToHome" class="glass px-3 py-2 rounded-lg muted">Back</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-6">
+          <div class="col-span-2">
+            <div id="threadsList" class="space-y-3"></div>
+
+            <div class="glass p-4 rounded-2xl mt-6">
+              <h3 class="font-bold neon">Crear nuevo hilo</h3>
+              <input id="threadTitle" class="glass mt-2 px-3 py-2 rounded-lg w-full" placeholder="Título" />
+              <textarea id="threadBody" class="glass mt-2 px-3 py-2 rounded-lg w-full" rows="4" placeholder="Primer post..."></textarea>
+              <div class="flex gap-2 mt-3">
+                <input id="threadAuthor" class="glass px-3 py-2 rounded-lg" placeholder="Nombre (opcional)" />
+                <button id="threadCreateBtn" class="accent px-4 py-2 rounded-lg">Crear Thread</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="glass p-4 rounded-2xl">
+            <div class="muted">Board Info</div>
+            <div class="font-bold mt-2" id="boardInfoName">Technology</div>
+            <div class="muted mt-1" id="boardInfoDesc">Hardware y cosas</div>
+            <div class="mt-3 muted">Threads: <span id="boardThreadCount">0</span></div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- THREAD PANEL -->
+      <section id="threadPanel" class="panel hidden">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <div class="muted" id="threadBreadcrumb">/g/ › Title</div>
+            <h2 class="text-2xl font-bold" id="threadTitleView">Thread Title</h2>
+          </div>
+          <div>
+            <button id="backToBoardBtn" class="glass px-3 py-2 rounded-lg muted">Back</button>
+          </div>
+        </div>
+
+        <div id="postsContainer" class="space-y-4 mb-6"></div>
+
+        <div class="glass p-4 rounded-2xl">
+          <h3 class="font-bold">Reply</h3>
+          <input id="replyName" class="glass mt-2 px-3 py-2 rounded-lg w-full" placeholder="Name (optional)" />
+          <textarea id="replyBody" class="glass mt-2 px-3 py-2 rounded-lg w-full" rows="4" placeholder="Write reply..."></textarea>
+          <div class="flex gap-2 mt-3">
+            <button id="replySendBtn" class="accent px-4 py-2 rounded-lg">Enviar</button>
+            <button id="quoteBtn" class="glass px-4 py-2 rounded-lg muted">Quote last</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- GLOBAL FEED PANEL -->
+      <section id="globalPanel" class="panel hidden">
+        <div class="glass p-4 rounded-2xl">
+          <h2 class="text-xl font-bold neon">🌍 Global Feed</h2>
+          <div id="globalFeedList" class="space-y-3 mt-3"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="mt-6 muted text-center">VOIDCHAN — Hecho por <strong>KarlDev</strong> © 2025</footer>
+</div>
+
+<!-- ================= JS: frontend logic (all in one file for facilidad) ================= -->
+<script>
+/* VOIDCHAN — frontend script
+   - Panels: home, board, thread, global
+   - Local storage persistence and hooks to Netlify Functions (GET/POST)
+   - Minigames placeholders + small games implemented
+*/
+
+// ------------- CONFIG -------------
+const API_GET = '/.netlify/functions/getMessages';     // GET global messages (server)
+const API_POST = '/.netlify/functions/postMessage';   // POST new message
+const LS_BOARDS = 'vc_boards_v1';
+const LS_THREADS = 'vc_threads_v1';
+const LS_POSTS = 'vc_posts_v1';
+const LS_NAME = 'vc_name_v1';
+
+// ------------- I18N (small) -------------
+const TRANSL = {
+  en:{explore:'Explore the boards', featured:'Featured boards', global:'Global Feed', newthread:'Create thread', reply:'Reply'},
+  es:{explore:'Explora los boards', featured:'Boards destacados', global:'Feed Global', newthread:'Crear hilo', reply:'Responder'}
+};
+const LANGS = ['es','en'];
+function populateLangSel(){
+  const sel = document.getElementById('langSelect');
+  LANGS.forEach(l=>{ const o=document.createElement('option'); o.value=l; o.textContent = l.toUpperCase(); sel.appendChild(o); });
+  sel.value = localStorage.getItem('vc_lang') || 'es';
+  applyLang(sel.value);
+  sel.addEventListener('change', e=>{ localStorage.setItem('vc_lang', e.target.value); applyLang(e.target.value); });
+}
+function applyLang(l){ document.getElementById('heroTitle').textContent = TRANSL[l].explore; document.getElementById('heroDesc').textContent = TRANSL[l].featured; }
+
+// ------------- BOARDS (defaults) -------------
+const DEFAULT_BOARDS = [
+  ['/g/','Technology','Hardware, software and hacks.'],
+  ['/v/','Video Games','Consoles, PC, indie and retro.'],
+  ['/a/','Anime','Discussion and fanart.'],
+  ['/b/','Random','The chaos corner.'],
+  ['/mu/','Music','Tracks and production.'],
+  ['/fit/','Fitness','Workouts and routines.'],
+  ['/x/','Paranormal','Weird and unexplained.'],
+  ['/art/','Art','OC, WIPs.'],
+  ['/technews/','Tech News','Leaks and rumours.'],
+  ['/memes/','Memes','Memes & jokes.']
+];
+function ensureStorage(){
+  if(!localStorage.getItem(LS_BOARDS)) localStorage.setItem(LS_BOARDS, JSON.stringify(DEFAULT_BOARDS));
+  if(!localStorage.getItem(LS_THREADS)) localStorage.setItem(LS_THREADS, JSON.stringify({}));
+  if(!localStorage.getItem(LS_POSTS)) localStorage.setItem(LS_POSTS, JSON.stringify({}));
+}
+ensureStorage();
+
+// ------------- UI helpers -------------
+const panels = { home: 'homePanel', board: 'boardPanel', thread: 'threadPanel', global: 'globalPanel' };
+function showPanel(key){
+  Object.values(panels).forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById(panels[key]).classList.remove('hidden');
+}
+
+// ------------- Render boards -------------
+function renderBoards(){
+  const boards = JSON.parse(localStorage.getItem(LS_BOARDS) || '[]');
+  const list = document.getElementById('boardsList'); list.innerHTML='';
+  boards.forEach(([slug,name,desc])=>{
+    const node = document.createElement('div'); node.className='board-card p-3 rounded-lg glass flex gap-3 items-center';
+    node.innerHTML = `<div class="board-pill">${slug.replace(/\//g,'')}</div><div><div class="font-bold">${name}</div><div class="muted text-xs">${desc}</div></div>`;
+    node.addEventListener('click', ()=> openBoard(slug,name,desc));
+    list.appendChild(node);
+  });
+  // featured
+  const featured = document.getElementById('featuredBoards'); featured.innerHTML='';
+  boards.slice(0,6).forEach(b=>{
+    const [s,n,d]=b; const el=document.createElement('div'); el.className='p-3 rounded-lg post glass';
+    el.innerHTML = `<div class="font-bold">${n}</div><div class="muted text-sm">${d} <span class="muted text-xs">${s}</span></div>`;
+    featured.appendChild(el);
+  });
+}
+populateLangSel();
+renderBoards();
+
+// ------------- Threads + posts storage helpers -------------
+function threadsMap(){ return JSON.parse(localStorage.getItem(LS_THREADS)||'{}'); }
+function postsMap(){ return JSON.parse(localStorage.getItem(LS_POSTS)||'{}'); }
+function saveThreadsMap(m){ localStorage.setItem(LS_THREADS, JSON.stringify(m)); }
+function savePostsMap(m){ localStorage.setItem(LS_POSTS, JSON.stringify(m)); }
+
+function listThreadsFor(boardSlug){
+  const m = threadsMap(); return (m[boardSlug] || []).slice().sort((a,b)=> new Date(b.bumped_at) - new Date(a.bumped_at));
+}
+
+// ------------- Open board -------------
+let CURRENT = { board: null, thread: null };
+function openBoard(slug,name,desc){
+  CURRENT.board = slug;
+  document.getElementById('boardSlug').textContent = slug;
+  document.getElementById('boardName').textContent = name;
+  document.getElementById('boardDesc').textContent = desc;
+  document.getElementById('boardInfoName').textContent = name;
+  document.getElementById('boardInfoDesc').textContent = desc;
+  renderThreads(slug);
+  showPanel('board');
+}
+document.getElementById('backToHome').addEventListener('click', ()=> showPanel('home'));
+
+// ------------- Render threads in board -------------
+function renderThreads(slug){
+  const list = document.getElementById('threadsList'); list.innerHTML='';
+  const threads = listThreadsFor(slug);
+  if(!threads.length) list.innerHTML = `<div class="muted">No threads yet. Be the first.</div>`;
+  threads.forEach(t=>{
+    const el = document.createElement('div'); el.className='post';
+    el.innerHTML = `<div class="flex justify-between"><div class="font-bold">${escapeHtml(t.title)}</div><div class="muted text-sm">${escapeHtml(t.author)} · ${new Date(t.created_at).toLocaleString()}</div></div>
+                    <div class="muted text-xs mt-2">id: <span class="code">${t.id}</span></div>`;
+    el.addEventListener('click', ()=> openThread(t.id, t.title));
+    list.appendChild(el);
+  });
+  document.getElementById('boardThreadCount').textContent = threads.length;
+}
+
+// ------------- Create thread -------------
+document.getElementById('threadCreateBtn').addEventListener('click', ()=>{
+  const title = document.getElementById('threadTitle').value.trim();
+  const body = document.getElementById('threadBody').value.trim();
+  const author = document.getElementById('threadAuthor').value.trim() || localStorage.getItem(LS_NAME) || 'Anonymous';
+  if(!title || !body){ alert('Title and body required'); return; }
+  const id = Date.now();
+  // save thread
+  const tm = threadsMap();
+  tm[CURRENT.board] = tm[CURRENT.board] || [];
+  tm[CURRENT.board].unshift({ id, title, author, created_at: new Date().toISOString(), bumped_at: new Date().toISOString() });
+  saveThreadsMap(tm);
+  // save first post
+  const pm = postsMap();
+  pm[id] = pm[id] || [];
+  pm[id].push({ id: Date.now()+1, author, content: body, created_at: new Date().toISOString() });
+  savePostsMap(pm);
+  // render and open
+  document.getElementById('threadTitle').value=''; document.getElementById('threadBody').value=''; document.getElementById('threadAuthor').value='';
+  renderThreads(CURRENT.board);
+  openThread(id, title);
+});
+
+// ------------- Open thread & render posts -------------
+function openThread(threadId, title){
+  CURRENT.thread = threadId;
+  document.getElementById('threadBread').textContent = `${CURRENT.board} › ${title}`;
+  document.getElementById('threadTitleView').textContent = title;
+  renderPosts(threadId);
+  showPanel('thread');
+}
+document.getElementById('backToBoardBtn').addEventListener('click', ()=> { renderThreads(CURRENT.board); showPanel('board'); });
+
+function renderPosts(threadId){
+  const c = document.getElementById('postsContainer'); c.innerHTML='';
+  const pm = postsMap();
+  const arr = pm[threadId] || [];
+  if(!arr.length) c.innerHTML = '<div class="muted">No replies yet.</div>';
+  arr.forEach(p=>{
+    const el = document.createElement('div'); el.className='post';
+    el.innerHTML = `<div class="flex justify-between"><div class="font-bold" style="color:#2fe49e">${escapeHtml(p.author)}</div><div class="muted text-sm">${new Date(p.created_at).toLocaleString()}</div></div><div class="mt-2">${escapeHtml(p.content)}</div>`;
+    c.appendChild(el);
+  });
+}
+
+// ------------- Reply send -------------
+document.getElementById('replySendBtn').addEventListener('click', ()=>{
+  const body = document.getElementById('replyBody').value.trim();
+  const author = document.getElementById('replyName').value.trim() || localStorage.getItem(LS_NAME) || 'Anonymous';
+  if(!body){ alert('Write something'); return; }
+  const pm = postsMap();
+  pm[CURRENT.thread] = pm[CURRENT.thread] || [];
+  pm[CURRENT.thread].push({ id: Date.now(), author, content: body, created_at: new Date().toISOString() });
+  savePostsMap(pm);
+  // bump thread locally
+  const tm = threadsMap();
+  for(const b in tm){
+    const t=tm[b].find(x=>x.id===CURRENT.thread);
+    if(t){ t.bumped_at = new Date().toISOString(); saveThreadsMap(tm); break; }
+  }
+  document.getElementById('replyBody').value='';
+  renderPosts(CURRENT.thread);
+});
+
+// ------------- Global feed (server-backed) -------------
+const globalList = document.getElementById('globalFeedList');
+
+async function loadGlobalFeed(){
+  globalList.innerHTML = '<div class="muted">Loading...</div>';
+  try{
+    const res = await fetch(API_GET);
+    if(!res.ok) throw new Error('no ok');
+    const data = await res.json();
+    globalList.innerHTML = data.reverse().map(m=>`
+      <div class="post">
+        <div class="flex justify-between"><div class="font-bold">${escapeHtml(m.user||'Anon')}</div><div class="muted">${escapeHtml(m.date)}</div></div>
+        <div class="mt-2">${escapeHtml(m.text)}</div>
+      </div>`).join('');
+  }catch(e){
+    globalList.innerHTML = '<div class="muted">Error loading global feed or no server. Using local posts.</div>';
+    // fallback: show recent local posts
+    const pm = postsMap(); const items=[];
+    for(const k in pm) (pm[k]||[]).forEach(p=>items.push(p));
+    items.sort((a,b)=> new Date(b.created_at)-new Date(a.created_at));
+    globalList.innerHTML = items.slice(0,50).map(p=>`<div class="post"><div class="font-bold">${escapeHtml(p.author)} <span class="muted text-xs">${fmt(p.created_at)}</span></div><div>${escapeHtml(p.content)}</div></div>`).join('');
+  }
+}
+
+// ------------- Post global message (server) -------------
+async function postGlobal(text){
+  try{
+    const res = await fetch(API_POST, { method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ text, user: localStorage.getItem(LS_NAME) || 'Anon' }) });
+    if(!res.ok) throw new Error('post failed');
+    await loadGlobalFeed();
+  }catch(e){ alert('Error posting global message (server may be down).'); console.error(e); }
+}
+
+// hook global button
+document.getElementById('globalFeedBtn').addEventListener('click', ()=>{ loadGlobalFeed(); showPanel('global'); });
+document.getElementById('newThreadQuick').addEventListener('click', ()=>{ const boards = JSON.parse(localStorage.getItem(LS_BOARDS)||'[]'); const first = boards[0][0]; openBoard(first,boards[0][1],boards[0][2]); window.scrollTo({top:0, behavior:'smooth'}); });
+document.getElementById('searchClear').addEventListener('click', ()=>{ document.getElementById('searchInput').value=''; renderBoards(); });
+
+// quick global post button in sidebar
+document.getElementById('postGlobal')?.addEventListener('click', async ()=>{
+  const text = prompt('Write global message:');
+  if(!text) return;
+  await postGlobal(text);
+});
+
+// ------------- Mini games (simple, many) -------------
+function setupGames(){
+  const grid = document.getElementById('gamesGrid');
+  grid.innerHTML='';
+  const base = [
+    {id:'cps', title:'CPS 5s', desc:'Clicks per 5 seconds'},
+    {id:'reaction', title:'Reaction Test', desc:'Wait & click the green'},
+    {id:'typing', title:'Typing 10s', desc:'Chars in 10 seconds'},
+    {id:'guess', title:'Guess Number', desc:'Find the number 1-100'}
+  ];
+  // create 12 cards by repeating pattern
+  for(let i=0;i<12;i++){
+    const b = base[i%base.length];
+    const el = document.createElement('div'); el.className='p-3 rounded-lg post';
+    el.innerHTML = `<div class="font-bold">${b.title} ${(i>0?('#'+(i+1)):'')}</div><div class="muted text-sm">${b.desc}</div><div class="mt-3"><button class="glass px-3 py-1 rounded-lg" data-game="${b.id}">Play</button></div><div class="mt-2" id="game-${b.id}-${i}"></div>`;
+    grid.appendChild(el);
+    el.querySelector('button').addEventListener('click', ()=> runMiniGame(b.id, i));
+  }
+}
+
+// simple implementations
+function runMiniGame(id, idx){
+  const slot = document.getElementById(`game-${id}-${idx}`);
+  slot.innerHTML = '';
+  if(id==='cps'){
+    let clicks=0; const btn = document.createElement('button'); btn.className='accent px-3 py-1 rounded-lg'; btn.textContent='Click me'; slot.appendChild(btn);
+    const out = document.createElement('div'); out.className='muted mt-2'; out.textContent='0'; slot.appendChild(out);
+    btn.addEventListener('click', ()=>{ clicks++; out.textContent = clicks; localStorage.setItem('vc_game_cps', Math.max(Number(localStorage.getItem('vc_game_cps')||0), clicks)); });
+    setTimeout(()=>{ btn.disabled=true; alert('Time up: '+clicks+' clicks'); },5000);
+  } else if(id==='reaction'){
+    const box = document.createElement('div'); box.className='p-4 rounded-lg glass text-center'; box.textContent='Wait...'; slot.appendChild(box);
+    let t0=null; const wait = Math.random()*2000+800; setTimeout(()=>{ box.textContent='CLICK!'; box.style.background='linear-gradient(90deg,#00ff9a,#00c77a)'; t0=Date.now(); box.addEventListener('click', ()=>{ const ms = Date.now()-t0; alert('Reaction: '+ms+'ms'); }); }, wait);
+  } else if(id==='typing'){
+    const phrase = ['voidchan rules','anonymous forever','hello world','speed test'][Math.floor(Math.random()*4)];
+    const p = document.createElement('div'); p.textContent = phrase; slot.appendChild(p);
+    const inp = document.createElement('input'); inp.className='glass px-2 py-1 rounded-lg mt-2 w-full'; slot.appendChild(inp); const start = Date.now();
+    inp.addEventListener('input', ()=>{ if(inp.value===phrase){ const t=((Date.now()-start)/1000).toFixed(2); alert('Time: '+t+'s'); }});
+  } else if(id==='guess'){
+    const target = Math.floor(Math.random()*100)+1; const inp = document.createElement('input'); slot.appendChild(inp); const btn = document.createElement('button'); btn.className='accent px-3 py-1 rounded-lg ml-2'; btn.textContent='Try'; slot.appendChild(btn);
+    btn.addEventListener('click', ()=>{ const v=Number(inp.value); if(v===target) alert('You guessed it!'); else alert(v<target? 'Higher':'Lower'); });
+  } else { slot.textContent='Game not implemented'; }
+}
+
+// ------------- Utilities -------------
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmt(d){ return new Date(d).toLocaleString(); }
+
+// ------------- boot -------------
+(function boot(){
+  populateLangSel(); renderBoards(); setupGames(); showPanel('home');
+  // event handlers
+  document.getElementById('homeBtn').addEventListener('click', ()=> showPanel('home'));
+  document.getElementById('themeBtn').addEventListener('click', ()=> { document.body.classList.toggle('light'); });
+  document.getElementById('searchInput').addEventListener('input', (e)=>{/* simple: no-op for now */});
+  document.getElementById('backToBoard')?.addEventListener('click', ()=> showPanel('home'));
+})();
+</script>
+</body>
 </html>
