@@ -6,207 +6,385 @@
     <title>void chan - donde el vacío habla</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/themes.css">
+    <link rel="stylesheet" href="styles/animations.css">
     <link rel="icon" href="assets/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
 <body class="theme-purple">
-    <!-- Loading Screen Simple -->
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+
+    <!-- Loading Screen -->
     <div id="loading-screen" class="loading-screen">
-        <div class="loader">
-            <div class="spinner"></div>
+        <div class="void-loader">
+            <div class="void-spinner"></div>
             <h1>void chan</h1>
-            <p>Cargando el foro...</p>
+            <p>Inicializando el vacío...</p>
+            <div class="load-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <span class="progress-text" id="progress-text">0%</span>
+            </div>
         </div>
     </div>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-top">
-                <h1 class="logo">void chan</h1>
-                <div class="header-controls">
-                    <!-- Selector de Temas -->
-                    <div class="theme-selector">
-                        <select id="theme-select">
-                            <option value="purple">🟣 Morado</option>
-                            <option value="blue">🔵 Azul</option>
-                            <option value="green">🟢 Verde</option>
-                            <option value="red">🔴 Rojo</option>
-                            <option value="orange">🟠 Naranja</option>
-                            <option value="pink">🩷 Rosa</option>
-                            <option value="cyber">👾 Cyber</option>
-                            <option value="matrix">💚 Matrix</option>
-                        </select>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="welcome-screen">
+        <div class="welcome-content">
+            <h1>void chan</h1>
+            <p class="welcome-subtitle">Donde el vacío habla</p>
+            <div class="welcome-stats">
+                <div class="stat">
+                    <span class="stat-number" id="welcome-online">0</span>
+                    <span class="stat-label">usuarios en línea</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="welcome-posts">0</span>
+                    <span class="stat-label">posts totales</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="welcome-boards">150</span>
+                    <span class="stat-label">boards activos</span>
+                </div>
+            </div>
+            <button id="enter-btn" class="enter-btn">🌌 Entrar al Void</button>
+            <div class="welcome-footer">
+                <p>Foro anónimo · Sin censura · Comunidad global</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (hidden initially) -->
+    <div id="main-app" class="main-app" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-top">
+                    <div class="logo-section">
+                        <h1 class="logo">void chan</h1>
+                        <span class="logo-subtitle">/ donde el vacío habla /</span>
                     </div>
                     
-                    <!-- Selector de Idioma -->
-                    <div class="language-selector">
-                        <select id="language-select">
-                            <option value="es">🇪🇸 Español</option>
-                            <option value="en">🇺🇸 English</option>
-                            <option value="jp">🇯🇵 日本語</option>
-                            <option value="fr">🇫🇷 Français</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navegación Principal -->
-            <nav class="main-nav">
-                <div class="nav-section">
-                    <h3>🌐 Principal</h3>
-                    <div class="nav-links">
-                        <a href="#" class="nav-link active" data-board="global">💬 Global</a>
-                        <a href="#" class="nav-link" data-board="random">🎲 Random</a>
-                        <a href="#" class="nav-link" data-board="void">🌌 Void</a>
-                    </div>
-                </div>
-
-                <div class="nav-section">
-                    <h3>🎨 Creativo</h3>
-                    <div class="nav-links">
-                        <a href="#" class="nav-link" data-board="art">🎨 Arte</a>
-                        <a href="#" class="nav-link" data-board="music">🎵 Música</a>
-                        <a href="#" class="nav-link" data-board="literature">📚 Literatura</a>
-                    </div>
-                </div>
-
-                <div class="nav-section">
-                    <h3>💻 Tecnología</h3>
-                    <div class="nav-links">
-                        <a href="#" class="nav-link" data-board="programming">💻 Programación</a>
-                        <a href="#" class="nav-link" data-board="ai">🤖 IA</a>
-                        <a href="#" class="nav-link" data-board="tech">🔧 Tech</a>
-                    </div>
-                </div>
-
-                <div class="nav-section">
-                    <h3>🎮 Entretenimiento</h3>
-                    <div class="nav-links">
-                        <a href="#" class="nav-link" data-board="anime">🇯🇵 Anime</a>
-                        <a href="#" class="nav-link" data-board="games">🎮 Juegos</a>
-                        <a href="#" class="nav-link nsfw-trigger" data-board="nsfw">🔞 NSFW</a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="main">
-        <div class="container">
-            <!-- Board Header -->
-            <div class="board-header">
-                <div class="board-info">
-                    <h2 id="board-title">/global/ - Canal Global</h2>
-                    <p id="board-description">Conversaciones en tiempo real con todos los usuarios</p>
-                </div>
-                <div class="board-stats">
-                    <div class="stat">
-                        <span class="stat-icon">👥</span>
-                        <span id="online-count">1</span> en línea
-                    </div>
-                    <div class="stat">
-                        <span class="stat-icon">💬</span>
-                        <span id="post-count">0</span> posts
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Boards -->
-            <div class="quick-boards">
-                <button class="quick-board active" data-board="global">💬 Global</button>
-                <button class="quick-board" data-board="random">🎲 Random</button>
-                <button class="quick-board" data-board="art">🎨 Arte</button>
-                <button class="quick-board" data-board="programming">💻 Prog</button>
-                <button class="quick-board" data-board="anime">🇯🇵 Anime</button>
-                <button class="quick-board" data-board="games">🎮 Juegos</button>
-                <button class="quick-board nsfw-trigger" data-board="nsfw">🔞 NSFW</button>
-            </div>
-
-            <!-- Post Form -->
-            <div class="post-form">
-                <h3>📝 Crear Post</h3>
-                <form id="post-form">
-                    <div class="form-row">
-                        <input type="text" id="post-name" placeholder="Nombre (opcional)" maxlength="50">
-                        <input type="text" id="post-subject" placeholder="Asunto (opcional)" maxlength="100">
-                    </div>
-                    <textarea id="post-message" placeholder="Escribe tu mensaje aquí..." required maxlength="2000"></textarea>
-                    <div class="form-footer">
-                        <div class="char-counter">
-                            <span id="char-count">0</span>/2000
+                    <div class="header-controls">
+                        <!-- Theme Selector Compact -->
+                        <div class="control-group">
+                            <label>🎨</label>
+                            <select id="theme-select" class="compact-select">
+                                <option value="purple">Morado</option>
+                                <option value="blue">Azul</option>
+                                <option value="green">Verde</option>
+                                <option value="red">Rojo</option>
+                                <option value="orange">Naranja</option>
+                                <option value="pink">Rosa</option>
+                                <option value="cyber">Cyber</option>
+                                <option value="matrix">Matrix</option>
+                            </select>
                         </div>
-                        <button type="submit" class="submit-btn">🚀 Publicar</button>
-                    </div>
-                </form>
-            </div>
 
-            <!-- Games Section -->
-            <div id="games-section" class="games-section">
-                <h3>🎮 Minijuegos</h3>
-                <div class="games-grid">
-                    <div class="game-card" data-game="snake">
-                        <div class="game-icon">🐍</div>
-                        <h4>Snake</h4>
-                        <p>Juego clásico de la serpiente</p>
+                        <!-- Language Selector Compact -->
+                        <div class="control-group">
+                            <label>🌐</label>
+                            <select id="language-select" class="compact-select">
+                                <option value="es">ES</option>
+                                <option value="en">EN</option>
+                                <option value="jp">JP</option>
+                                <option value="fr">FR</option>
+                                <option value="de">DE</option>
+                                <option value="ru">RU</option>
+                                <option value="zh">中文</option>
+                                <option value="ko">한국어</option>
+                            </select>
+                        </div>
+
+                        <!-- Online Users -->
+                        <div class="online-display">
+                            <span class="online-icon">👥</span>
+                            <span id="online-count">1</span>
+                        </div>
                     </div>
-                    <div class="game-card" data-game="pong">
-                        <div class="game-icon">🎾</div>
-                        <h4>Pong</h4>
-                        <p>Juego clásico de tenis</p>
+                </div>
+
+                <!-- Main Navigation with 150+ Boards -->
+                <nav class="main-nav">
+                    <div class="nav-category">
+                        <h3>🌐 Principal</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link active" data-board="global">💬 /global/ - Global</a>
+                            <a href="#" class="nav-link" data-board="random">🎲 /b/ - Random</a>
+                            <a href="#" class="nav-link" data-board="void">🌌 /void/ - Void</a>
+                            <a href="#" class="nav-link" data-board="meta">💭 /meta/ - Meta</a>
+                        </div>
                     </div>
-                    <div class="game-card" data-game="memory">
-                        <div class="game-icon">🧠</div>
-                        <h4>Memory</h4>
-                        <p>Juego de memoria</p>
+
+                    <div class="nav-category">
+                        <h3>🎨 Creativo</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="art">🎨 /art/ - Arte</a>
+                            <a href="#" class="nav-link" data-board="music">🎵 /mu/ - Música</a>
+                            <a href="#" class="nav-link" data-board="literature">📚 /lit/ - Literatura</a>
+                            <a href="#" class="nav-link" data-board="design">🎭 /design/ - Diseño</a>
+                            <a href="#" class="nav-link" data-board="photography">📸 /photo/ - Fotografía</a>
+                            <a href="#" class="nav-link" data-board="writing">✍️ /write/ - Escritura</a>
+                        </div>
                     </div>
-                    <div class="game-card" data-game="miner">
-                        <div class="game-icon">⛏️</div>
-                        <h4>Void Miner</h4>
-                        <p>Mineria en el vacío</p>
+
+                    <div class="nav-category">
+                        <h3>💻 Tecnología</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="programming">💻 /prog/ - Programación</a>
+                            <a href="#" class="nav-link" data-board="ai">🤖 /ai/ - IA</a>
+                            <a href="#" class="nav-link" data-board="tech">🔧 /tech/ - Tecnología</a>
+                            <a href="#" class="nav-link" data-board="hardware">💾 /hw/ - Hardware</a>
+                            <a href="#" class="nav-link" data-board="cyber">🛡️ /cyber/ - Cybersecurity</a>
+                            <a href="#" class="nav-link" data-board="webdev">🌐 /web/ - Web Dev</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>🎮 Juegos</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="videogames">🎮 /v/ - Videojuegos</a>
+                            <a href="#" class="nav-link" data-board="retro">🕹️ /retro/ - Retro</a>
+                            <a href="#" class="nav-link" data-board="mmo">⚔️ /mmo/ - MMO</a>
+                            <a href="#" class="nav-link" data-board="mobile">📱 /mobile/ - Mobile</a>
+                            <a href="#" class="nav-link" data-board="pc">🖥️ /pc/ - PC Gaming</a>
+                            <a href="#" class="nav-link" data-board="console">🎯 /console/ - Consolas</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>🇯🇵 Anime & Manga</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="anime">🇯🇵 /a/ - Anime</a>
+                            <a href="#" class="nav-link" data-board="manga">📖 /m/ - Manga</a>
+                            <a href="#" class="nav-link" data-board="cosplay">👘 /cos/ - Cosplay</a>
+                            <a href="#" class="nav-link" data-board="figures">🗿 /fig/ - Figuras</a>
+                            <a href="#" class="nav-link" data-board="japan">🗾 /jp/ - Japón</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>🎬 Entretenimiento</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="movies">🎬 /tv/ - Cine & TV</a>
+                            <a href="#" class="nav-link" data-board="comics">🦸 /comic/ - Cómics</a>
+                            <a href="#" class="nav-link" data-board="sports">⚽ /sports/ - Deportes</a>
+                            <a href="#" class="nav-link" data-board="fitness">💪 /fit/ - Fitness</a>
+                            <a href="#" class="nav-link" data-board="food">🍕 /food/ - Comida</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>💬 Discusión</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link" data-board="politics">🏛️ /pol/ - Política</a>
+                            <a href="#" class="nav-link" data-board="science">🔬 /sci/ - Ciencia</a>
+                            <a href="#" class="nav-link" data-board="history">📜 /his/ - Historia</a>
+                            <a href="#" class="nav-link" data-board="philosophy">🧠 /phi/ - Filosofía</a>
+                            <a href="#" class="nav-link" data-board="psychology">💫 /psy/ - Psicología</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-category">
+                        <h3>🔞 NSFW</h3>
+                        <div class="nav-links">
+                            <a href="#" class="nav-link nsfw-trigger" data-board="nsfw">🔞 /nsfw/ - Adultos</a>
+                            <a href="#" class="nav-link nsfw-trigger" data-board="hentai">💗 /h/ - Hentai</a>
+                            <a href="#" class="nav-link nsfw-trigger" data-board="ecchi">😳 /ecchi/ - Ecchi</a>
+                            <a href="#" class="nav-link nsfw-trigger" data-board="yuri">🌷 /yuri/ - Yuri</a>
+                            <a href="#" class="nav-link nsfw-trigger" data-board="yaoi">🎎 /yaoi/ - Yaoi</a>
+                        </div>
+                    </div>
+
+                    <!-- Más categorías se cargan dinámicamente -->
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Board Header -->
+                <div class="board-header">
+                    <div class="board-info">
+                        <h2 id="board-title">/global/ - Canal Global</h2>
+                        <p id="board-description">Conversaciones en tiempo real con la comunidad global</p>
+                    </div>
+                    <div class="board-stats">
+                        <div class="stat">
+                            <span class="stat-icon">👥</span>
+                            <span id="board-online">1</span> en línea
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">💬</span>
+                            <span id="board-posts">0</span> posts
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">⚡</span>
+                            <span id="board-activity">0</span>/min
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Boards -->
+                <div class="quick-boards">
+                    <button class="quick-board active" data-board="global">💬 Global</button>
+                    <button class="quick-board" data-board="random">🎲 Random</button>
+                    <button class="quick-board" data-board="art">🎨 Arte</button>
+                    <button class="quick-board" data-board="programming">💻 Prog</button>
+                    <button class="quick-board" data-board="anime">🇯🇵 Anime</button>
+                    <button class="quick-board" data-board="videogames">🎮 Juegos</button>
+                    <button class="quick-board nsfw-trigger" data-board="nsfw">🔞 NSFW</button>
+                    <button class="quick-board" data-board="music">🎵 Música</button>
+                    <button class="quick-board" data-board="movies">🎬 Cine</button>
+                </div>
+
+                <!-- Post Form -->
+                <div class="post-form-container">
+                    <form id="post-form" class="post-form">
+                        <div class="form-header">
+                            <h3>📝 Crear Post</h3>
+                            <div class="form-meta">
+                                <span class="char-counter">
+                                    <span id="char-count">0</span>/2000
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <input type="text" id="post-name" placeholder="🕶️ Nombre (opcional)" maxlength="50">
+                            <input type="text" id="post-subject" placeholder="📌 Asunto (opcional)" maxlength="100">
+                        </div>
+                        
+                        <textarea id="post-message" placeholder="💭 Escribe tu mensaje aquí..." required maxlength="2000"></textarea>
+                        
+                        <div class="form-actions">
+                            <button type="button" id="clear-form" class="btn-secondary">🗑️ Limpiar</button>
+                            <button type="submit" class="btn-primary">
+                                <span class="btn-text">🚀 Publicar</span>
+                                <div class="btn-glow"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Games Section -->
+                <div class="games-section">
+                    <h3>🎮 Minijuegos</h3>
+                    <div class="games-grid">
+                        <div class="game-card" data-game="snake">
+                            <div class="game-icon">🐍</div>
+                            <h4>Snake</h4>
+                            <p>Clásico juego de la serpiente</p>
+                        </div>
+                        <div class="game-card" data-game="pong">
+                            <div class="game-icon">🎾</div>
+                            <h4>Pong</h4>
+                            <p>Tenis retro</p>
+                        </div>
+                        <div class="game-card" data-game="memory">
+                            <div class="game-icon">🧠</div>
+                            <h4>Memory</h4>
+                            <p>Encuentra las parejas</p>
+                        </div>
+                        <div class="game-card" data-game="miner">
+                            <div class="game-icon">⛏️</div>
+                            <h4>Void Miner</h4>
+                            <p>Minería espacial</p>
+                        </div>
+                        <div class="game-card" data-game="tetris">
+                            <div class="game-icon">🧱</div>
+                            <h4>Tetris</h4>
+                            <p>Clásico ruso</p>
+                        </div>
+                        <div class="game-card" data-game="flappy">
+                            <div class="game-icon">🐦</div>
+                            <h4>Flappy Void</h4>
+                            <p>Esquiva obstáculos</p>
+                        </div>
+                        <div class="game-card" data-game="dino">
+                            <div class="game-icon">🦖</div>
+                            <h4>Dino Run</h4>
+                            <p>Corre sin parar</p>
+                        </div>
+                        <div class="game-card" data-game="space">
+                            <div class="game-icon">🚀</div>
+                            <h4>Space Invaders</h4>
+                            <p>Defiende la Tierra</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Posts Container -->
+                <div id="posts-container" class="posts-container">
+                    <!-- Posts se cargan aquí -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <h3>void chan</h3>
+                        <p>Foro anónimo global · 150+ boards · Tiempo real</p>
+                    </div>
+                    <div class="footer-credits">
+                        <p>&copy; 2025 <strong>Hecho por KarlDev</strong>. Todos los derechos reservados.</p>
+                        <p class="footer-stats">
+                            <span id="footer-online">0</span> en línea · 
+                            <span id="footer-posts">0</span> posts · 
+                            <span id="footer-boards">150</span> boards
+                        </p>
                     </div>
                 </div>
             </div>
-
-            <!-- Posts Container -->
-            <div id="posts-container" class="posts-container">
-                <!-- Los posts aparecerán aquí -->
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <h3>void chan</h3>
-                    <p>Foro anónimo - Sin censura, con responsabilidad</p>
-                </div>
-                <div class="footer-credits">
-                    <p>&copy; 2025 <strong>Hecho por KarlDev</strong>. Todos los derechos reservados.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     <!-- NSFW Warning -->
-    <div id="nsfw-warning" class="nsfw-modal">
+    <div id="nsfw-warning" class="nsfw-modal" style="display: none;">
         <div class="nsfw-content">
-            <h3>⚠️ Contenido para Adultos</h3>
-            <p>Debes ser mayor de 18 años para acceder a este contenido.</p>
-            <div class="nsfw-buttons">
-                <button id="nsfw-confirm" class="btn-primary">✅ Soy mayor de edad</button>
-                <button id="nsfw-cancel" class="btn-secondary">❌ Salir</button>
+            <div class="nsfw-header">
+                <h3>⚠️ Zona NSFW - Solo Mayores de 18+</h3>
+            </div>
+            <div class="nsfw-body">
+                <p>Este contenido está restringido para adultos. Confirma que eres mayor de edad.</p>
+                <div class="nsfw-actions">
+                    <button id="nsfw-confirm" class="btn-primary">✅ Soy mayor de edad</button>
+                    <button id="nsfw-cancel" class="btn-secondary">❌ Salir</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript -->
-    <script src="js/app.js"></script>
-</body>
-</html>
+    <!-- Game Container -->
+    <div id="game-container" class="game-container" style="display: none;">
+        <div class="game-header">
+            <h3 id="game-title">Juego</h3>
+            <button id="close-game" class="close-btn">✕</button>
+        </div>
+        <div id="game-content" class="game-content">
+            <!-- Juegos se cargan aquí -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
-    <script src="js/app-fixed.js"></script>
+    <!-- Configuración Supabase -->
+    <script>
+        const SUPABASE_URL = 'https://hyoqobgkjmvnjwfpkmyv.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5b3FvYmdram12bmp3ZnBrbXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA3MzQ5MzIsImV4cCI6MjA3NjMxMDkzMn0.iTCBoaZOWF5jAyYa3tas4XjtZLAtPpoBrJEod-xSWC4';
+        
+        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase configurado');
+    </script>
+
+    <script src="js/app.js"></script>
+    <script src="js/games.js"></script>
 </body>
 </html>
