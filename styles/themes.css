@@ -1,117 +1,15 @@
-/* Variables de temas */
-:root {
-    /* Tema Morado (Default) */
-    --purple-primary: #0a0a0a;
-    --purple-secondary: #1a1a1a;
-    --purple-accent: #8a2be2;
-    --purple-accent-light: #9d4dff;
-    --purple-text: #e0e0e0;
-}
-
-.theme-purple {
-    --color-primary: var(--purple-primary);
-    --color-secondary: var(--purple-secondary);
-    --color-accent: var(--purple-accent);
-    --color-accent-light: var(--purple-accent-light);
-    --color-text: var(--purple-text);
-}
-
-/* Tema Azul */
+/* Temas adicionales pueden ir aquí */
 .theme-blue {
-    --color-primary: #0a0a1a;
-    --color-secondary: #1a1a2a;
-    --color-accent: #2b6be2;
-    --color-accent-light: #4d8dff;
-    --color-text: #e0e0ff;
+    --color-accent: #2b6cb0;
+    --color-accent-light: #3182ce;
 }
 
-/* Tema Verde */
 .theme-green {
-    --color-primary: #0a1a0a;
-    --color-secondary: #1a2a1a;
-    --color-accent: #2be26b;
-    --color-accent-light: #4dff8d;
-    --color-text: #e0ffe0;
+    --color-accent: #38a169;
+    --color-accent-light: #48bb78;
 }
 
-/* Tema Rojo */
 .theme-red {
-    --color-primary: #1a0a0a;
-    --color-secondary: #2a1a1a;
-    --color-accent: #e22b2b;
-    --color-accent-light: #ff4d4d;
-    --color-text: #ffe0e0;
-}
-
-/* Tema Naranja */
-.theme-orange {
-    --color-primary: #1a100a;
-    --color-secondary: #2a201a;
-    --color-accent: #e26b2b;
-    --color-accent-light: #ff8d4d;
-    --color-text: #ffe8e0;
-}
-
-/* Tema Rosa */
-.theme-pink {
-    --color-primary: #1a0a1a;
-    --color-secondary: #2a1a2a;
-    --color-accent: #e22b9d;
-    --color-accent-light: #ff4db8;
-    --color-text: #ffe0f5;
-}
-
-/* Tema Cyber */
-.theme-cyber {
-    --color-primary: #000b1a;
-    --color-secondary: #001a33;
-    --color-accent: #00ffff;
-    --color-accent-light: #66ffff;
-    --color-text: #ccffff;
-}
-
-/* Tema Matrix */
-.theme-matrix {
-    --color-primary: #000f00;
-    --color-secondary: #001a00;
-    --color-accent: #00ff00;
-    --color-accent-light: #66ff66;
-    --color-text: #ccffcc;
-}
-
-/* Aplicar variables a los elementos */
-body {
-    background-color: var(--color-primary);
-    color: var(--color-text);
-}
-
-.header {
-    background: var(--color-secondary);
-    border-bottom: 3px solid var(--color-accent);
-}
-
-.nav-link.active,
-.quick-board.active {
-    background: var(--color-accent);
-    color: white;
-}
-
-.submit-btn {
-    background: var(--color-accent);
-}
-
-.submit-btn:hover {
-    background: var(--color-accent-light);
-}
-
-.post {
-    background: var(--color-secondary);
-    border-left: 3px solid var(--color-accent);
-}
-
-.theme-selector select,
-.language-selector select {
-    background: var(--color-secondary);
-    color: var(--color-text);
-    border: 1px solid var(--color-accent);
+    --color-accent: #e53e3e;
+    --color-accent-light: #f56565;
 }
