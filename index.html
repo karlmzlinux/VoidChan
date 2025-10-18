@@ -1,44 +1,78 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeoChan - Foro Retro Futurista</title>
-  <link rel="stylesheet" href="style.css" />
-  <script type="module" src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>void chan - donde el vacío habla</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
 <body>
-  <header>
-    <h1>🜲 NeoChan</h1>
-    <nav>
-      <button data-board="general">General</button>
-      <button data-board="random">Random</button>
-      <button data-board="tech">Tech</button>
-      <button data-board="anime">Anime</button>
-      <button data-board="games">Games</button>
-      <a href="admin.html">Admin</a>
-    </nav>
-  </header>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">void chan</h1>
+            <nav class="nav">
+                <a href="#" class="nav-link active" data-board="random">/b/</a>
+                <a href="#" class="nav-link" data-board="anime">/a/</a>
+                <a href="#" class="nav-link" data-board="video">/v/</a>
+                <a href="#" class="nav-link" data-board="void">/void/</a>
+            </nav>
+        </div>
+    </header>
 
-  <main>
-    <section id="thread-form">
-      <h2>Nuevo hilo</h2>
-      <input id="username" placeholder="Tu nombre (opcional)" />
-      <input id="title" placeholder="Título del hilo" />
-      <textarea id="content" placeholder="Escribe tu mensaje aquí..."></textarea>
-      <button id="post-btn">Publicar</button>
-    </section>
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Board Info -->
+            <div class="board-info">
+                <h2 id="board-title">/b/ - Random</h2>
+                <p id="board-description">El vacío espera tus pensamientos...</p>
+            </div>
 
-    <section id="threads">
-      <h2>Hilos recientes</h2>
-      <div id="thread-list"></div>
-    </section>
-  </main>
+            <!-- Post Form -->
+            <div class="post-form-container">
+                <form id="post-form" class="post-form">
+                    <div class="form-row">
+                        <input type="text" id="name" name="name" placeholder="Nombre (opcional)" maxlength="50">
+                        <input type="text" id="subject" name="subject" placeholder="Asunto (opcional)" maxlength="100">
+                    </div>
+                    <textarea id="message" name="message" placeholder="Escribe tu mensaje aquí..." required maxlength="2000"></textarea>
+                    <div class="form-actions">
+                        <input type="file" id="image" name="image" accept="image/*" class="file-input">
+                        <button type="submit" class="submit-btn">Publicar</button>
+                    </div>
+                </form>
+            </div>
 
-  <footer>
-    <p>© 2025 NeoChan – mezcla retro-futurista ⚡</p>
-  </footer>
+            <!-- Posts Container -->
+            <div id="posts-container" class="posts-container">
+                <!-- Los posts se cargan aquí dinámicamente -->
+            </div>
+
+            <!-- Loading -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Cargando el vacío...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>void chan - donde las ideas se pierden en el vacío</p>
+            <p>Total de posts: <span id="post-count">0</span></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/posts-manager.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
-
 
