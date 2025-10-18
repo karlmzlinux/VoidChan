@@ -1,186 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VOIDCHAN — Boards • Threads • Games</title>
-  <meta name="description" content="VOIDCHAN — retro + moderno imageboard. Hecho por KarlDev © 2025" />
-  <!-- Icon inline -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2300b04a'/><text x='50' y='62' font-size='60' text-anchor='middle' fill='white' font-family='Verdana'>V</text></svg>">
-  <!-- Tailwind quick for utility classes (no build) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- custom style file (separate) -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Top comment: REPLACE KEYS IN script.js, NOT HERE -->
-  <!--
-    IMPORTANT:
-    - Put your Supabase creds in script.js (SUPABASE_URL, SUPABASE_ANON_KEY).
-    - This index expects script.js and style.css in the same folder.
-    - After uploading to GitHub connect the repo to Netlify (drag-n-drop or from Git).
-    - For production hide keys with Netlify env vars and, if you want, move sensitive operations to server-side functions.
-  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeoChan - Foro Retro Futurista</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="script.js"></script>
 </head>
-<body class="antialiased bg-page text-main">
+<body>
+  <header>
+    <h1>🜲 NeoChan</h1>
+    <nav>
+      <button data-board="general">General</button>
+      <button data-board="random">Random</button>
+      <button data-board="tech">Tech</button>
+      <button data-board="anime">Anime</button>
+      <button data-board="games">Games</button>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
 
-  <!-- APP WRAPPER -->
-  <div id="app" class="max-w-7xl mx-auto p-5">
+  <main>
+    <section id="thread-form">
+      <h2>Nuevo hilo</h2>
+      <input id="username" placeholder="Tu nombre (opcional)" />
+      <input id="title" placeholder="Título del hilo" />
+      <textarea id="content" placeholder="Escribe tu mensaje aquí..."></textarea>
+      <button id="post-btn">Publicar</button>
+    </section>
 
-    <!-- HEADER -->
-    <header class="flex items-center justify-between mb-6">
-      <div class="flex items-center gap-4">
-        <div class="brand flex items-center gap-3">
-          <div class="logo-blob">V</div>
-          <div>
-            <h1 class="site-title">VOIDCHAN</h1>
-            <div class="muted small">Boards • Threads • Minigames — Hecho por <strong>KarlDev</strong> © 2025</div>
-          </div>
-        </div>
-      </div>
+    <section id="threads">
+      <h2>Hilos recientes</h2>
+      <div id="thread-list"></div>
+    </section>
+  </main>
 
-      <div class="flex items-center gap-3">
-        <select id="langSelect" class="ui glass px-3 py-2 rounded-md"></select>
-        <button id="themeToggle" class="ui glass px-3 py-2 rounded-md">Modo</button>
-        <button id="homeBtn" class="ui glass px-3 py-2 rounded-md">Home</button>
-      </div>
-    </header>
-
-    <!-- LAYOUT -->
-    <div class="grid grid-cols-12 gap-6">
-
-      <!-- SIDEBAR: BOARDS -->
-      <aside class="col-span-3 glass p-4 rounded-2xl h-[72vh] overflow-hidden">
-        <div class="flex gap-2 mb-3">
-          <input id="searchInput" placeholder="Buscar hilos / posts..." class="w-full ui glass px-3 py-2 rounded-md" />
-          <button id="searchClear" class="ui glass px-3 py-2 rounded-md">Clear</button>
-        </div>
-
-        <div class="muted mb-2">Boards</div>
-        <div id="boardsList" class="space-y-3 overflow-y-auto h-[58%] pr-2 scrollbox"></div>
-
-        <hr class="my-3 border-white/5" />
-        <div class="muted">Quick</div>
-        <div class="flex gap-2 mt-2">
-          <button id="newThreadQuick" class="accent px-3 py-2 rounded-md">New Thread</button>
-          <button id="globalFeedBtn" class="ui glass px-3 py-2 rounded-md">Global</button>
-        </div>
-      </aside>
-
-      <!-- MAIN CONTENT -->
-      <main class="col-span-9 min-h-[72vh]">
-
-        <!-- HOME PANEL -->
-        <section id="homePanel" class="panel">
-          <div class="grid grid-cols-3 gap-6 mb-6">
-            <div class="col-span-2">
-              <div class="glass p-4 rounded-2xl">
-                <h2 id="heroTitle" class="text-xl font-bold">Explora los boards</h2>
-                <p id="heroDesc" class="muted">Selecciona un board en la izquierda para empezar. Boards fijos o ampliables via supabase.</p>
-                <div id="featuredBoards" class="mt-4 space-y-3"></div>
-              </div>
-
-              <div class="glass p-4 rounded-2xl mt-6">
-                <h3 class="font-bold neon">Últimos hilos (local cache)</h3>
-                <div id="recentLocal" class="mt-3 space-y-2"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="glass p-4 rounded-2xl">
-                <h3 class="font-bold neon">Minigames</h3>
-                <div id="gamesGrid" class="mt-3 space-y-3"></div>
-                <div class="text-xs muted mt-3">Records guardados localmente. Pista: pulsa F2 para poner tu nombre local.</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- BOARD PANEL -->
-        <section id="boardPanel" class="panel hidden">
-          <div class="flex justify-between items-start gap-4 mb-4">
-            <div>
-              <div id="boardSlug" class="muted">/g/</div>
-              <h2 id="boardName" class="site-heading">Technology</h2>
-              <div id="boardDesc" class="muted">Hardware, software y hacks.</div>
-            </div>
-            <div>
-              <button id="backToHome" class="ui glass px-3 py-2 rounded-md">Back</button>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-6">
-            <div class="col-span-2">
-              <div id="threadsList" class="space-y-3"></div>
-
-              <div class="glass p-4 rounded-2xl mt-6">
-                <h3 class="font-bold neon">Crear nuevo hilo</h3>
-                <input id="threadTitle" class="ui glass mt-2 px-3 py-2 rounded-md w-full" placeholder="Título" />
-                <textarea id="threadBody" class="ui glass mt-2 px-3 py-2 rounded-md w-full" rows="4" placeholder="Primer post..."></textarea>
-                <div class="flex gap-2 mt-3">
-                  <input id="threadAuthor" class="ui glass px-3 py-2 rounded-md" placeholder="Nombre (opcional)" />
-                  <button id="threadCreateBtn" class="accent px-4 py-2 rounded-md">Crear Thread</button>
-                </div>
-              </div>
-            </div>
-
-            <aside class="glass p-4 rounded-2xl">
-              <div class="muted">Board Info</div>
-              <div id="boardInfoName" class="font-bold mt-2">Technology</div>
-              <div id="boardInfoDesc" class="muted mt-1">Hardware y cosas</div>
-              <div class="mt-3 muted">Threads: <span id="boardThreadCount">0</span></div>
-            </aside>
-          </div>
-        </section>
-
-        <!-- THREAD PANEL -->
-        <section id="threadPanel" class="panel hidden">
-          <div class="flex justify-between items-center mb-4">
-            <div>
-              <div id="threadBreadcrumb" class="muted">/g/ › Thread</div>
-              <h2 id="threadTitleView" class="site-heading">Thread Title</h2>
-            </div>
-            <div>
-              <button id="backToBoardBtn" class="ui glass px-3 py-2 rounded-md">Back</button>
-            </div>
-          </div>
-
-          <div id="postsContainer" class="space-y-4 mb-6"></div>
-
-          <div class="glass p-4 rounded-2xl">
-            <h3 class="font-bold">Reply</h3>
-            <input id="replyName" class="ui glass mt-2 px-3 py-2 rounded-md w-full" placeholder="Name (optional)" />
-            <textarea id="replyBody" class="ui glass mt-2 px-3 py-2 rounded-md w-full" rows="4" placeholder="Write reply..."></textarea>
-            <div class="flex gap-2 mt-3">
-              <button id="replySendBtn" class="accent px-4 py-2 rounded-md">Enviar</button>
-              <button id="quoteBtn" class="ui glass px-4 py-2 rounded-md">Quote last</button>
-            </div>
-          </div>
-        </section>
-
-        <!-- GLOBAL FEED PANEL -->
-        <section id="globalPanel" class="panel hidden">
-          <div class="glass p-4 rounded-2xl">
-            <h2 class="text-xl font-bold neon">🌍 Global Feed</h2>
-            <div id="globalFeedList" class="space-y-3 mt-3"></div>
-            <div class="mt-3">
-              <button id="globalPostBtn" class="accent px-4 py-2 rounded-md">Post Global</button>
-            </div>
-          </div>
-        </section>
-
-      </main>
-
-    </div>
-
-    <footer class="mt-6 muted text-center">VOIDCHAN — Hecho por <strong>KarlDev</strong> © 2025</footer>
-  </div>
-
-  <!-- ====== SCRIPT: main logic (external file: script.js) ====== -->
-  <!-- Put supabase keys in script.js as instructed (DO NOT COMMIT KEYS if public repo). -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="script.js" defer></script>
-
+  <footer>
+    <p>© 2025 NeoChan – mezcla retro-futurista ⚡</p>
+  </footer>
 </body>
 </html>
+
 
