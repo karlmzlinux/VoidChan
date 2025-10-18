@@ -23,6 +23,38 @@
             --color-error: #ff4444;
         }
 
+        /* Temas de color */
+        .theme-purple {
+            --color-accent: #8a2be2;
+            --color-accent-light: #9d4dff;
+        }
+
+        .theme-blue {
+            --color-accent: #2b6cb0;
+            --color-accent-light: #3182ce;
+        }
+
+        .theme-green {
+            --color-accent: #38a169;
+            --color-accent-light: #48bb78;
+        }
+
+        .theme-red {
+            --color-accent: #e53e3e;
+            --color-accent-light: #f56565;
+        }
+
+        .theme-orange {
+            --color-accent: #dd6b20;
+            --color-accent-light: #ed8936;
+        }
+
+        .theme-cyber {
+            --color-accent: #00ff88;
+            --color-accent-light: #88ffaa;
+            --color-bg: #0a0a1a;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -35,6 +67,7 @@
             color: var(--color-text);
             line-height: 1.6;
             overflow-x: hidden;
+            transition: background-color 0.3s ease;
         }
 
         .container {
@@ -82,7 +115,7 @@
             color: var(--color-accent);
             margin-bottom: 1rem;
             text-shadow: 0 0 10px var(--color-accent-light);
-            letter-spacing: 2px; /* Separación entre letras */
+            letter-spacing: 2px;
         }
 
         .load-progress {
@@ -135,7 +168,7 @@
             font-size: 4rem;
             color: var(--color-accent);
             margin-bottom: 0.5rem;
-            letter-spacing: 3px; /* Separación entre letras */
+            letter-spacing: 3px;
         }
 
         .welcome-subtitle {
@@ -204,7 +237,7 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 2rem;
             color: var(--color-accent);
-            letter-spacing: 2px; /* Separación entre letras */
+            letter-spacing: 2px;
         }
 
         .header-controls {
@@ -219,6 +252,12 @@
             border: 1px solid var(--color-border);
             padding: 0.3rem 0.5rem;
             border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .compact-select:focus {
+            outline: none;
+            border-color: var(--color-accent);
         }
 
         .online-users-real {
@@ -253,6 +292,7 @@
 
         .nav-btn:hover {
             border-color: var(--color-accent);
+            transform: translateY(-1px);
         }
 
         .quick-boards {
@@ -327,6 +367,7 @@
             border-radius: 4px;
             font-size: 0.8rem;
             transition: all 0.2s ease;
+            cursor: pointer;
         }
 
         .nav-link:hover, .nav-link.active {
@@ -390,6 +431,12 @@
             color: var(--color-text);
             padding: 0.8rem;
             border-radius: 4px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .form-row input:focus {
+            outline: none;
+            border-color: var(--color-accent);
         }
 
         #post-message {
@@ -402,6 +449,12 @@
             border-radius: 4px;
             resize: vertical;
             margin-bottom: 1rem;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        #post-message:focus {
+            outline: none;
+            border-color: var(--color-accent);
         }
 
         .form-actions {
@@ -415,6 +468,7 @@
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-family: 'Share Tech Mono', monospace;
         }
 
         .btn-primary {
@@ -422,10 +476,19 @@
             color: white;
         }
 
+        .btn-primary:hover {
+            background: var(--color-accent-light);
+            transform: translateY(-2px);
+        }
+
         .btn-secondary {
             background: var(--color-secondary);
             color: var(--color-text);
             border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-border);
         }
 
         /* === POSTS === */
@@ -439,6 +502,12 @@
             padding: 1.2rem;
             margin-bottom: 1rem;
             border-left: 3px solid var(--color-accent);
+            transition: all 0.2s ease;
+        }
+
+        .post:hover {
+            transform: translateX(2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         .post-header {
@@ -665,6 +734,9 @@
                             <option value="purple">Morado</option>
                             <option value="blue">Azul</option>
                             <option value="green">Verde</option>
+                            <option value="red">Rojo</option>
+                            <option value="orange">Naranja</option>
+                            <option value="cyber">Cyber</option>
                         </select>
                         <div class="online-display">
                             <span class="online-users-real" id="online-count">42</span>
@@ -859,7 +931,7 @@
         
         window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // VoidChan Class - MEJORADA
+        // VoidChan Class - CORREGIDA
         class VoidChan {
             constructor() {
                 this.currentBoard = 'global';
@@ -916,8 +988,8 @@
             getLoadingMessage(progress) {
                 if (progress < 20) return "Inicializando núcleo del void...";
                 if (progress < 40) return "Cargando interfaz espacial...";
-                if (progress < 60) return "Conectando a la matrix...";
-                if (progress < 80) return "Sincronizando partículas...";
+                if (progress < 60) return "Conectando a la base de datos...";
+                if (progress < 80) return "Sincronizando posts...";
                 if (progress < 100) return "Activando protocolos...";
                 return "¡Void listo!";
             }
@@ -983,6 +1055,18 @@
 
                     if (error) {
                         console.log('❌ Error cargando posts:', error);
+                        // Si hay error, mostrar posts de ejemplo
+                        this.posts = {
+                            'global': [
+                                {
+                                    name: 'Sistema',
+                                    subject: '¡Bienvenido a Void Chan!',
+                                    message: 'Este es el foro global. Los posts se guardan en Supabase.\n\n¡Publica algo para comenzar!',
+                                    board: 'global',
+                                    created_at: new Date().toISOString()
+                                }
+                            ]
+                        };
                         return;
                     }
 
@@ -995,6 +1079,19 @@
                             this.posts[post.board].push(post);
                         });
                         console.log(`✅ Cargados ${data.length} posts de Supabase`);
+                    } else {
+                        console.log('ℹ️ No hay posts en la base de datos');
+                        this.posts = {
+                            'global': [
+                                {
+                                    name: 'Sistema',
+                                    subject: 'Base de datos vacía',
+                                    message: 'No hay posts aún. ¡Sé el primero en publicar!',
+                                    board: 'global',
+                                    created_at: new Date().toISOString()
+                                }
+                            ]
+                        };
                     }
                 } catch (error) {
                     console.log('❌ Error crítico:', error);
@@ -1027,15 +1124,29 @@
                     });
                 });
 
-                // Formulario
-                document.getElementById('post-form').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.handlePostSubmit();
-                });
+                // Formulario - CORREGIDO
+                const postForm = document.getElementById('post-form');
+                if (postForm) {
+                    postForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handlePostSubmit();
+                    });
+                }
 
-                document.getElementById('clear-form').addEventListener('click', () => {
-                    this.clearPostForm();
-                });
+                const clearForm = document.getElementById('clear-form');
+                if (clearForm) {
+                    clearForm.addEventListener('click', () => {
+                        this.clearPostForm();
+                    });
+                }
+
+                // Selector de temas - CORREGIDO
+                const themeSelect = document.getElementById('theme-select');
+                if (themeSelect) {
+                    themeSelect.addEventListener('change', (e) => {
+                        this.changeTheme(e.target.value);
+                    });
+                }
 
                 // Juegos - SOLO MEMORY
                 document.querySelectorAll('.game-card').forEach(card => {
@@ -1049,15 +1160,31 @@
                     });
                 });
 
-                // Tema
-                document.getElementById('theme-select').addEventListener('change', (e) => {
-                    document.body.className = 'theme-' + e.target.value;
-                });
-
                 // Contador de caracteres
-                document.getElementById('post-message').addEventListener('input', (e) => {
-                    document.getElementById('char-count').textContent = e.target.value.length;
-                });
+                const postMessage = document.getElementById('post-message');
+                if (postMessage) {
+                    postMessage.addEventListener('input', (e) => {
+                        document.getElementById('char-count').textContent = e.target.value.length;
+                    });
+                }
+            }
+
+            changeTheme(theme) {
+                console.log('🎨 Cambiando tema a:', theme);
+                document.body.className = 'theme-' + theme;
+                // Guardar preferencia
+                localStorage.setItem('voidchan-theme', theme);
+            }
+
+            loadTheme() {
+                const savedTheme = localStorage.getItem('voidchan-theme');
+                if (savedTheme) {
+                    this.changeTheme(savedTheme);
+                    const themeSelect = document.getElementById('theme-select');
+                    if (themeSelect) {
+                        themeSelect.value = savedTheme;
+                    }
+                }
             }
 
             changeBoard(boardName) {
@@ -1106,12 +1233,16 @@
             }
 
             async handlePostSubmit() {
-                const name = document.getElementById('post-name').value || 'Anónimo';
-                const subject = document.getElementById('post-subject').value;
-                const message = document.getElementById('post-message').value;
+                const nameInput = document.getElementById('post-name');
+                const subjectInput = document.getElementById('post-subject');
+                const messageInput = document.getElementById('post-message');
 
-                if (!message.trim()) {
-                    alert('Escribe un mensaje');
+                const name = nameInput.value.trim() || 'Anónimo';
+                const subject = subjectInput.value.trim();
+                const message = messageInput.value.trim();
+
+                if (!message) {
+                    alert('❌ Escribe un mensaje antes de publicar');
                     return;
                 }
 
@@ -1143,7 +1274,7 @@
                     }
                 } catch (error) {
                     console.log('❌ Error guardando en Supabase:', error);
-                    alert('Error al publicar. Intenta nuevamente.');
+                    alert('❌ Error al publicar. Intenta nuevamente.');
                     return;
                 }
 
@@ -1178,7 +1309,7 @@
                         <div class="post">
                             <div class="post-header">
                                 <span class="post-name">${post.name}</span>
-                                <span class="post-date">${new Date(post.created_at).toLocaleString()}</span>
+                                <span class="post-date">${new Date(post.created_at).toLocaleString('es-ES')}</span>
                             </div>
                             ${post.subject ? `<div class="post-subject">${post.subject}</div>` : ''}
                             <div class="post-content">${post.message.replace(/\n/g, '<br>')}</div>
@@ -1336,6 +1467,8 @@
         // Inicializar cuando cargue la página
         window.addEventListener('DOMContentLoaded', () => {
             window.voidChan = new VoidChan();
+            // Cargar tema guardado
+            voidChan.loadTheme();
         });
     </script>
 </body>
