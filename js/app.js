@@ -1,4 +1,4 @@
-// js/app.js - Versión simple y funcional
+// js/app.js 
 
 class VoidChan {
     constructor() {
