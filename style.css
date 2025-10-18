@@ -1,0 +1,125 @@
+/* ====== VOIDCHAN STYLES ====== */
+:root {
+  --bg: #0e1111;
+  --text: #e0e0e0;
+  --accent: #00ff88;
+  --card: #1a1a1a;
+  --border: #333;
+}
+
+body {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(90deg, #008000, #00ff88);
+  color: #000;
+  font-weight: bold;
+  font-size: 2.2em;
+  letter-spacing: 2px;
+}
+
+.board-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+.board {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 15px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  text-align: center;
+}
+
+.board:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+.board h3 {
+  margin: 5px 0;
+  font-size: 1.2em;
+  color: var(--accent);
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  background: #111;
+  color: #888;
+  font-size: 0.9em;
+  border-top: 2px solid var(--border);
+}
+
+#langSelector, #themeToggle {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--accent);
+  cursor: pointer;
+}
+
+.message-box {
+  margin: 20px;
+  padding: 20px;
+  background: var(--card);
+  border-radius: 10px;
+  border: 2px solid var(--accent);
+}
+
+.message-box input, .message-box textarea {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  background: #111;
+  border: 1px solid var(--border);
+  color: #fff;
+}
+
+button {
+  background: var(--accent);
+  color: #000;
+  font-weight: bold;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+#messages {
+  margin: 20px;
+  background: #111;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.minigame {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.dark-mode {
+  --bg: #fafafa;
+  --text: #0e0e0e;
+  --card: #fff;
+  --border: #ccc;
+  --accent: #009933;
+}
