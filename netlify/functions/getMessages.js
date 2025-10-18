@@ -1,4 +1,3 @@
-// Netlify Function para obtener los mensajes
 import { promises as fs } from "fs";
 
 export async function handler() {
@@ -6,13 +5,12 @@ export async function handler() {
     const data = await fs.readFile("./messages.json", "utf8");
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: data
+      body: data,
     };
-  } catch (error) {
+  } catch {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Error reading messages" })
+      statusCode: 200,
+      body: "[]",
     };
   }
 }
