@@ -1,4 +1,4 @@
-// Configuración de Supabase
+// Configuración de Supabase - REEMPLAZA CON TUS CREDENCIALES
 const SUPABASE_URL = 'https://hyoqobgkjmvnjwfpkmyv.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5b3FvYmdram12bmp3ZnBrbXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA3MzQ5MzIsImV4cCI6MjA3NjMxMDkzMn0.iTCBoaZOWF5jAyYa3tas4XjtZLAtPpoBrJEod-xSWC4';
 
@@ -8,6 +8,7 @@ const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 class SupabaseClient {
     constructor() {
         this.client = supabase;
+        this.onlineUsers = new Set();
     }
 
     // Obtener todos los posts de un tablero
@@ -17,7 +18,8 @@ class SupabaseClient {
                 .from('posts')
                 .select('*')
                 .eq('board', board)
-                .order('created_at', { ascending: false });
+                .order('created_at', { ascending: false })
+                .limit(100);
 
             if (error) throw error;
             return data || [];
@@ -90,6 +92,25 @@ class SupabaseClient {
         }
     }
 
+    // Seguimiento de usuarios online
+    trackOnlineUsers() {
+        // Simular usuarios online (en producción usarías WebSockets)
+        setInterval(() => {
+            const onlineCount = Math.floor(Math.random() * 50) + 1;
+            this.onlineUsers = new Set(Array(onlineCount).fill().map((_, i) => `user_${i}`));
+            this.updateOnlineCounter();
+        }, 30000);
+
+        this.updateOnlineCounter();
+    }
+
+    updateOnlineCounter() {
+        const onlineElement = document.getElementById('online-count');
+        if (onlineElement) {
+            onlineElement.textContent = `🌐 ${this.onlineUsers.size} usuarios en línea`;
+        }
+    }
+
     // Hash simple para IP (para moderación)
     async hashIP(ip) {
         const encoder = new TextEncoder();
@@ -106,20 +127,4 @@ class SupabaseClient {
         return this.client
             .channel('posts-channel')
             .on(
-                'postgres_changes',
-                {
-                    event: 'INSERT',
-                    schema: 'public',
-                    table: 'posts',
-                    filter: `board=eq.${board}`
-                },
-                (payload) => {
-                    callback(payload.new);
-                }
-            )
-            .subscribe();
-    }
-}
-
-// Instancia global
-const supabaseClient = new SupabaseClient();
+                'postgres
