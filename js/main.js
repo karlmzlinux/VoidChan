@@ -1,11 +1,12 @@
-// Sistema de Void Chan COMPLETO
+// Sistema de Void Chan MEJORADO
 class VoidChan {
     constructor() {
         this.currentBoard = 'global';
         this.posts = {};
-        this.onlineUsers = 1;
+        this.onlineUsers = 15;
         this.currentTheme = 'purple';
         this.userId = this.generateUserId();
+        this.isConnectedToSupabase = false;
         this.init();
     }
 
@@ -15,8 +16,6 @@ class VoidChan {
 
     async init() {
         console.log('🚀 Iniciando Void Chan...');
-        
-        // INICIAR CARGA CON PROGRESO - FUNCIONANDO
         this.startLoadingProgress();
     }
 
@@ -26,182 +25,180 @@ class VoidChan {
         const progressText = document.getElementById('progress-text');
         const loadingMessage = document.getElementById('loading-message');
         
-        console.log('🔄 Iniciando barra de carga...');
-        
-        const progressInterval = setInterval(() => {
-            progress += Math.random() * 10 + 5; // Incremento variable más realista
+        const progressInterval = setInterval(async () => {
+            progress += Math.random() * 15 + 5;
             if (progress > 100) progress = 100;
             
-            // ACTUALIZAR PROGRESO VISUAL - CORREGIDO
-            if (progressFill) {
-                progressFill.style.width = progress + '%';
-                progressFill.style.transition = 'width 0.3s ease';
-            }
-            if (progressText) {
-                progressText.textContent = Math.round(progress) + '%';
-            }
+            if (progressFill) progressFill.style.width = progress + '%';
+            if (progressText) progressText.textContent = Math.round(progress) + '%';
             
-            // Actualizar mensaje de estado
             const message = this.getLoadingMessage(progress);
-            if (loadingMessage) {
-                loadingMessage.textContent = message;
-            }
+            if (loadingMessage) loadingMessage.textContent = message;
             
-            console.log(`Progreso: ${Math.round(progress)}% - ${message}`);
+            // En 50% intentar conectar a Supabase
+            if (progress >= 50 && !this.isConnectedToSupabase) {
+                await this.testSupabaseConnection();
+            }
             
             if (progress >= 100) {
                 clearInterval(progressInterval);
-                console.log('✅ Carga completada');
                 this.showWelcomeScreen();
             }
-        }, 200); // Más lento para mejor visualización
+        }, 150);
+    }
+
+    async testSupabaseConnection() {
+        try {
+            console.log('🔗 Probando conexión a Supabase...');
+            const { data, error } = await window.supabase
+                .from('posts')
+                .select('id')
+                .limit(1);
+            
+            if (error) {
+                if (error.message.includes('does not exist')) {
+                    await this.createPostsTable();
+                } else {
+                    throw error;
+                }
+            }
+            
+            this.isConnectedToSupabase = true;
+            console.log('✅ Conectado a Supabase');
+            
+        } catch (error) {
+            console.log('❌ Error conectando a Supabase:', error.message);
+            this.isConnectedToSupabase = false;
+        }
+    }
+
+    async createPostsTable() {
+        try {
+            console.log('📦 Creando tabla posts...');
+            // Crear tabla insertando un post de prueba
+            const testPost = {
+                name: 'Sistema',
+                subject: 'Tabla Creada',
+                message: 'La base de datos ha sido inicializada',
+                board: 'global',
+                created_at: new Date().toISOString()
+            };
+            
+            const { error } = await window.supabase
+                .from('posts')
+                .insert([testPost]);
+            
+            if (error) throw error;
+            console.log('✅ Tabla posts creada exitosamente');
+            
+        } catch (error) {
+            console.log('❌ Error creando tabla:', error.message);
+        }
     }
 
     getLoadingMessage(progress) {
-        if (progress < 15) return "Inicializando núcleo del void...";
-        if (progress < 30) return "Cargando interfaz espacial...";
-        if (progress < 45) return "Conectando a la matrix...";
-        if (progress < 60) return "Sincronizando partículas...";
-        if (progress < 75) return "Cargando posts cósmicos...";
-        if (progress < 90) return "Configurando tiempo real...";
-        if (progress < 100) return "Activando protocolos...";
-        return "¡Void listo!";
+        if (progress < 20) return "Inicializando void...";
+        if (progress < 40) return "Cargando interfaz...";
+        if (progress < 60) return "Conectando a la base...";
+        if (progress < 80) return "Sincronizando datos...";
+        return "Activando sistemas...";
     }
 
     showWelcomeScreen() {
-        console.log('🎭 Mostrando pantalla de bienvenida...');
-        
-        const loadingScreen = document.getElementById('loading-screen');
-        const welcomeScreen = document.getElementById('welcome-screen');
-        
-        if (loadingScreen) {
-            loadingScreen.style.display = 'none';
-        }
-        if (welcomeScreen) {
-            welcomeScreen.style.display = 'flex';
-        }
-        
-        this.updateWelcomeStats();
-        this.setupWelcomeEvents();
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('welcome-screen').style.display = 'flex';
+            this.updateWelcomeStats();
+            this.setupWelcomeEvents();
+        }, 500);
     }
 
     setupWelcomeEvents() {
         const enterBtn = document.getElementById('enter-btn');
         if (enterBtn) {
-            enterBtn.addEventListener('click', () => {
-                this.hideWelcomeScreen();
-            });
+            enterBtn.addEventListener('click', () => this.hideWelcomeScreen());
         }
     }
 
     updateWelcomeStats() {
-        // Simular estadísticas
         const welcomeOnline = document.getElementById('welcome-online');
         const welcomePosts = document.getElementById('welcome-posts');
         
-        if (welcomeOnline) welcomeOnline.textContent = Math.floor(Math.random() * 50) + 10;
-        if (welcomePosts) welcomePosts.textContent = Math.floor(Math.random() * 1000) + 500;
+        if (welcomeOnline) welcomeOnline.textContent = this.onlineUsers;
+        if (welcomePosts) welcomePosts.textContent = '1.2k';
     }
 
     hideWelcomeScreen() {
-        console.log('🌌 Entrando al void...');
-        
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const mainApp = document.getElementById('main-app');
-        
-        if (welcomeScreen) welcomeScreen.style.display = 'none';
-        if (mainApp) {
-            mainApp.style.display = 'block';
-            // Iniciar sistemas después de mostrar la app principal
-            this.setupMainSystems();
-        }
-        
-        this.showMessage('🎉 ¡Bienvenido a Void Chan!', 'success');
+        document.getElementById('welcome-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        this.setupMainSystems();
     }
 
     setupMainSystems() {
-        console.log('⚙️ Configurando sistemas principales...');
-        
         this.setupParticles();
         this.setupEventListeners();
         this.loadUserPreferences();
         this.setupOnlineUsers();
-        this.renderPosts();
+        this.loadAllPosts();
         this.updateAllStats();
     }
 
     setupParticles() {
-        console.log('✨ Configurando partículas...');
         try {
             if (typeof particlesJS !== 'undefined') {
                 particlesJS('particles-js', {
                     particles: {
-                        number: { value: 80, density: { enable: true, value_area: 800 } },
+                        number: { value: 60, density: { enable: true, value_area: 800 } },
                         color: { value: "#8a2be2" },
                         shape: { type: "circle" },
-                        opacity: { value: 0.5, random: true },
-                        size: { value: 3, random: true },
+                        opacity: { value: 0.3, random: true },
+                        size: { value: 2, random: true },
                         line_linked: {
                             enable: true,
-                            distance: 150,
+                            distance: 120,
                             color: "#8a2be2",
-                            opacity: 0.4,
+                            opacity: 0.2,
                             width: 1
                         },
                         move: {
                             enable: true,
-                            speed: 2,
+                            speed: 1.5,
                             direction: "none",
                             random: true,
                             straight: false,
-                            out_mode: "out",
-                            bounce: false
-                        }
-                    },
-                    interactivity: {
-                        detect_on: "canvas",
-                        events: {
-                            onhover: { enable: true, mode: "repulse" },
-                            onclick: { enable: true, mode: "push" },
-                            resize: true
+                            out_mode: "out"
                         }
                     }
                 });
             }
         } catch (error) {
-            console.log('⚠️ No se pudieron cargar las partículas');
+            console.log('⚠️ Partículas no disponibles');
         }
     }
 
     setupEventListeners() {
-        console.log('🎯 Configurando event listeners...');
-        
         // Selector de temas
         const themeSelect = document.getElementById('theme-select');
         if (themeSelect) {
-            themeSelect.addEventListener('change', (e) => {
-                this.changeTheme(e.target.value);
-            });
+            themeSelect.addEventListener('change', (e) => this.changeTheme(e.target.value));
         }
-        
-        // Navegación rápida
-        const navBtns = document.querySelectorAll('.nav-btn');
-        navBtns.forEach(btn => {
+
+        // Navegación rápida - CORREGIDO
+        document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const action = e.target.getAttribute('data-action');
+                const action = e.target.closest('.nav-btn').getAttribute('data-action');
                 this.handleNavAction(action);
             });
         });
-        
-        // Boards rápidos
-        const quickBoards = document.querySelectorAll('.quick-board');
-        quickBoards.forEach(board => {
+
+        // Boards rápidos - CORREGIDO
+        document.querySelectorAll('.quick-board').forEach(board => {
             board.addEventListener('click', (e) => {
-                const boardName = e.target.getAttribute('data-board');
+                const boardName = e.target.closest('.quick-board').getAttribute('data-board');
                 this.changeBoard(boardName);
             });
         });
-        
+
         // Formulario de posts
         const postForm = document.getElementById('post-form');
         if (postForm) {
@@ -210,43 +207,59 @@ class VoidChan {
                 this.handlePostSubmit();
             });
         }
-        
+
         // Limpiar formulario
         const clearForm = document.getElementById('clear-form');
         if (clearForm) {
-            clearForm.addEventListener('click', () => {
-                this.clearPostForm();
-            });
+            clearForm.addEventListener('click', () => this.clearPostForm());
         }
-        
+
         // Contador de caracteres
         const postMessage = document.getElementById('post-message');
         if (postMessage) {
-            postMessage.addEventListener('input', () => {
-                this.updateCharCount();
-            });
+            postMessage.addEventListener('input', () => this.updateCharCount());
         }
+
+        // Categorías colapsables
+        document.querySelectorAll('.nav-category h3').forEach(header => {
+            header.addEventListener('click', (e) => {
+                const category = e.target.closest('.nav-category');
+                category.classList.toggle('collapsed');
+            });
+        });
+
+        // NSFW Warning
+        document.querySelectorAll('.nsfw-trigger').forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showNSFWWarning();
+            });
+        });
+
+        document.getElementById('nsfw-confirm')?.addEventListener('click', () => {
+            this.hideNSFWWarning();
+        });
+
+        document.getElementById('nsfw-cancel')?.addEventListener('click', () => {
+            this.hideNSFWWarning();
+        });
     }
 
     setupOnlineUsers() {
         // Simular usuarios en línea
         setInterval(() => {
-            const onlineCount = document.getElementById('online-count');
-            const boardOnline = document.getElementById('board-online');
-            const footerOnline = document.getElementById('footer-online');
-            
             const baseUsers = 15;
-            const randomUsers = Math.floor(Math.random() * 10);
+            const randomUsers = Math.floor(Math.random() * 8);
             const totalUsers = baseUsers + randomUsers;
-            
-            if (onlineCount) onlineCount.textContent = totalUsers;
-            if (boardOnline) boardOnline.textContent = totalUsers;
-            if (footerOnline) footerOnline.textContent = totalUsers;
-        }, 5000);
+            this.onlineUsers = totalUsers;
+
+            document.querySelectorAll('#online-count, #board-online, #footer-online').forEach(el => {
+                el.textContent = totalUsers;
+            });
+        }, 8000);
     }
 
     changeTheme(theme) {
-        console.log('🎨 Cambiando tema a:', theme);
         document.body.className = 'theme-' + theme;
         this.currentTheme = theme;
         localStorage.setItem('voidchan-theme', theme);
@@ -261,112 +274,193 @@ class VoidChan {
         }
     }
 
+    async loadAllPosts() {
+        try {
+            if (this.isConnectedToSupabase) {
+                const { data, error } = await window.supabase
+                    .from('posts')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                this.posts = {};
+                if (data && data.length > 0) {
+                    data.forEach(post => {
+                        if (!this.posts[post.board]) {
+                            this.posts[post.board] = [];
+                        }
+                        this.posts[post.board].push(post);
+                    });
+                    console.log(`✅ Cargados ${data.length} posts de Supabase`);
+                } else {
+                    await this.createSamplePosts();
+                }
+            } else {
+                this.loadLocalPosts();
+            }
+        } catch (error) {
+            console.log('⚠️ Cargando posts locales');
+            this.loadLocalPosts();
+        }
+        
+        this.renderPosts();
+    }
+
+    async createSamplePosts() {
+        const samplePosts = [
+            {
+                name: 'Sistema',
+                subject: '¡Bienvenido a Void Chan!',
+                message: 'Este es el foro global. Los posts se guardan permanentemente y son visibles para todos los usuarios.\n\n¡Únete a la conversación! 🌌',
+                board: 'global',
+                created_at: new Date().toISOString()
+            },
+            {
+                name: 'Anónimo',
+                subject: 'Primer post',
+                message: '¡Hola a todos! 👋\n\nForo conectado a base de datos real. Posts permanentes.',
+                board: 'global', 
+                created_at: new Date().toISOString()
+            }
+        ];
+
+        if (this.isConnectedToSupabase) {
+            const { error } = await window.supabase
+                .from('posts')
+                .insert(samplePosts);
+            
+            if (!error) {
+                samplePosts.forEach(post => {
+                    if (!this.posts[post.board]) this.posts[post.board] = [];
+                    this.posts[post.board].push(post);
+                });
+            }
+        } else {
+            samplePosts.forEach(post => {
+                if (!this.posts[post.board]) this.posts[post.board] = [];
+                this.posts[post.board].push(post);
+            });
+            this.saveLocalPosts();
+        }
+    }
+
+    loadLocalPosts() {
+        const saved = localStorage.getItem('voidchan-posts');
+        this.posts = saved ? JSON.parse(saved) : {};
+        
+        if (Object.keys(this.posts).length === 0) {
+            this.createSamplePosts();
+        }
+    }
+
+    saveLocalPosts() {
+        localStorage.setItem('voidchan-posts', JSON.stringify(this.posts));
+    }
+
     changeBoard(boardName) {
-        console.log('📋 Cambiando a board:', boardName);
         this.currentBoard = boardName;
         
-        // Actualizar UI
-        const quickBoards = document.querySelectorAll('.quick-board');
-        quickBoards.forEach(board => {
-            board.classList.remove('active');
-            if (board.getAttribute('data-board') === boardName) {
-                board.classList.add('active');
-            }
+        // Actualizar UI de boards
+        document.querySelectorAll('.quick-board').forEach(board => {
+            board.classList.toggle('active', board.getAttribute('data-board') === boardName);
         });
         
-        // Actualizar título del board
-        const boardTitle = document.getElementById('board-title');
-        const boardDescription = document.getElementById('board-description');
+        // Actualizar navegación
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.toggle('active', link.getAttribute('data-board') === boardName);
+        });
         
-        if (boardTitle && boardDescription) {
-            const boardInfo = this.getBoardInfo(boardName);
-            boardTitle.textContent = boardInfo.title;
-            boardDescription.textContent = boardInfo.description;
-        }
+        // Actualizar título
+        const boardInfo = this.getBoardInfo(boardName);
+        document.getElementById('board-title').textContent = boardInfo.title;
+        document.getElementById('board-description').textContent = boardInfo.description;
         
         this.renderPosts();
     }
 
     getBoardInfo(boardName) {
         const boards = {
-            'global': { title: '/global/ - Canal Global', description: 'Conversaciones en tiempo real con la comunidad global' },
-            'random': { title: '/b/ - Random', description: 'Todo vale, sin reglas' },
-            'art': { title: '/art/ - Arte', description: 'Comparte y discute arte' },
-            'programming': { title: '/prog/ - Programación', description: 'Código, lenguajes y tecnología' },
-            'anime': { title: '/a/ - Anime', description: 'Anime, manga y cultura japonesa' }
+            'global': { title: '/global/', description: 'Global' },
+            'random': { title: '/b/', description: 'Random' },
+            'art': { title: '/art/', description: 'Arte' },
+            'programming': { title: '/prog/', description: 'Programación' },
+            'anime': { title: '/a/', description: 'Anime' },
+            'videogames': { title: '/v/', description: 'Videojuegos' },
+            'music': { title: '/mu/', description: 'Música' },
+            'movies': { title: '/tv/', description: 'Cine & TV' }
         };
-        
-        return boards[boardName] || { title: `/${boardName}/`, description: 'Board de la comunidad' };
+        return boards[boardName] || { title: `/${boardName}/`, description: boardName };
     }
 
     renderPosts() {
-        const postsContainer = document.getElementById('posts-container');
-        if (!postsContainer) return;
-        
+        const container = document.getElementById('posts-container');
+        if (!container) return;
+
         const boardPosts = this.posts[this.currentBoard] || [];
         
         if (boardPosts.length === 0) {
-            postsContainer.innerHTML = `
+            container.innerHTML = `
                 <div class="no-posts">
                     <div class="no-posts-icon">🌌</div>
-                    <h3>No hay posts aún</h3>
-                    <p>Sé el primero en publicar en este board</p>
+                    <h3>Vacío cósmico</h3>
+                    <p>Sé el primero en romper el silencio</p>
                 </div>
             `;
-            return;
+        } else {
+            container.innerHTML = boardPosts.map(post => this.createPostHTML(post)).join('');
         }
         
-        postsContainer.innerHTML = boardPosts.map(post => `
-            <div class="post" data-post-id="${post.id}">
+        this.updatePostStats();
+    }
+
+    createPostHTML(post) {
+        const date = new Date(post.created_at).toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        return `
+            <div class="post">
                 <div class="post-header">
-                    <div class="post-meta">
-                        <span class="post-name">${post.name || 'Anónimo'}</span>
-                        <span class="post-id">ID: ${post.id || 'N/A'}</span>
-                    </div>
-                    <div class="post-date">${new Date(post.created_at).toLocaleString()}</div>
+                    <span class="post-name">${post.name || 'Anónimo'}</span>
+                    <span class="post-date">${date}</span>
                 </div>
                 ${post.subject ? `<div class="post-subject">${post.subject}</div>` : ''}
                 <div class="post-content">${this.formatPostContent(post.message)}</div>
             </div>
-        `).join('');
-        
-        // Actualizar estadísticas
-        this.updatePostStats();
+        `;
     }
 
     formatPostContent(content) {
-        // Convertir saltos de línea y URLs
         return content
             .replace(/\n/g, '<br>')
-            .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+            .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">🔗</a>');
     }
 
     updatePostStats() {
         const boardPosts = this.posts[this.currentBoard] || [];
-        const boardPostsElement = document.getElementById('board-posts');
-        const footerPostsElement = document.getElementById('footer-posts');
+        const totalPosts = Object.values(this.posts).flat().length;
         
-        if (boardPostsElement) boardPostsElement.textContent = boardPosts.length;
-        if (footerPostsElement) footerPostsElement.textContent = Object.values(this.posts).flat().length;
+        document.getElementById('board-posts').textContent = boardPosts.length;
+        document.getElementById('footer-posts').textContent = totalPosts;
     }
 
     updateAllStats() {
         this.updatePostStats();
-        
-        // Actualizar actividad
-        const boardActivity = document.getElementById('board-activity');
-        if (boardActivity) {
-            boardActivity.textContent = Math.floor(Math.random() * 5);
-        }
+        document.getElementById('board-activity').textContent = Math.floor(Math.random() * 3) + 1;
     }
 
     async handlePostSubmit() {
-        const name = document.getElementById('post-name').value || 'Anónimo';
-        const subject = document.getElementById('post-subject').value;
-        const message = document.getElementById('post-message').value;
+        const name = document.getElementById('post-name').value.trim() || 'Anónimo';
+        const subject = document.getElementById('post-subject').value.trim();
+        const message = document.getElementById('post-message').value.trim();
         
-        if (!message.trim()) {
-            this.showMessage('❌ El mensaje no puede estar vacío', 'error');
+        if (!message) {
+            this.showMessage('Escribe algo primero', 'error');
             return;
         }
         
@@ -378,38 +472,34 @@ class VoidChan {
             created_at: new Date().toISOString()
         };
         
-        console.log('📤 Publicando post:', post);
-        
         try {
-            // Intentar guardar en Supabase
-            const { data, error } = await window.supabase
-                .from('posts')
-                .insert([post]);
+            if (this.isConnectedToSupabase) {
+                const { data, error } = await window.supabase
+                    .from('posts')
+                    .insert([post])
+                    .select();
+                
+                if (error) throw error;
+                
+                if (data && data[0]) {
+                    post.id = data[0].id;
+                }
+            }
             
-            if (error) throw error;
-            
-            // Agregar a posts locales
+            // Agregar localmente
             if (!this.posts[this.currentBoard]) {
                 this.posts[this.currentBoard] = [];
             }
             this.posts[this.currentBoard].unshift(post);
+            this.saveLocalPosts();
             
             this.clearPostForm();
             this.renderPosts();
-            this.showMessage('✅ Post publicado exitosamente', 'success');
+            this.showMessage('Post publicado 🌟', 'success');
             
         } catch (error) {
-            console.log('⚠️ Guardando post localmente');
-            // Guardar localmente si falla Supabase
-            if (!this.posts[this.currentBoard]) {
-                this.posts[this.currentBoard] = [];
-            }
-            this.posts[this.currentBoard].unshift(post);
-            localStorage.setItem('voidchan-posts', JSON.stringify(this.posts));
-            
-            this.clearPostForm();
-            this.renderPosts();
-            this.showMessage('✅ Post publicado (modo local)', 'success');
+            console.log('Error publicando:', error);
+            this.showMessage('Error al publicar', 'error');
         }
     }
 
@@ -423,40 +513,37 @@ class VoidChan {
     updateCharCount() {
         const message = document.getElementById('post-message');
         const charCount = document.getElementById('char-count');
-        
         if (message && charCount) {
             const count = message.value.length;
             charCount.textContent = count;
-            
-            if (count > 1800) {
-                charCount.style.color = '#ff4444';
-            } else if (count > 1500) {
-                charCount.style.color = '#ffaa00';
-            } else {
-                charCount.style.color = '';
-            }
+            charCount.style.color = count > 1800 ? '#ff4444' : count > 1500 ? '#ffaa00' : '';
         }
     }
 
     handleNavAction(action) {
-        switch (action) {
-            case 'scroll-to-posts':
-                document.getElementById('posts-container').scrollIntoView({ behavior: 'smooth' });
-                break;
-            case 'scroll-to-form':
-                document.getElementById('post-form-container').scrollIntoView({ behavior: 'smooth' });
-                break;
-            case 'scroll-to-games':
-                document.getElementById('games-section').scrollIntoView({ behavior: 'smooth' });
-                break;
-            case 'scroll-to-top':
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                break;
+        const targets = {
+            'scroll-to-posts': 'posts-container',
+            'scroll-to-form': 'post-form-container', 
+            'scroll-to-games': 'games-section'
+        };
+        
+        if (action === 'scroll-to-top') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (targets[action]) {
+            const target = document.getElementById(targets[action]);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
         }
     }
 
+    showNSFWWarning() {
+        document.getElementById('nsfw-warning').style.display = 'flex';
+    }
+
+    hideNSFWWarning() {
+        document.getElementById('nsfw-warning').style.display = 'none';
+    }
+
     showMessage(text, type) {
-        // Crear mensaje temporal
         const message = document.createElement('div');
         message.className = `message ${type}`;
         message.textContent = text;
@@ -473,56 +560,11 @@ class VoidChan {
         `;
         
         document.body.appendChild(message);
-        
-        setTimeout(() => {
-            message.remove();
-        }, 3000);
-    }
-
-    loadLocalPosts() {
-        const savedPosts = localStorage.getItem('voidchan-posts');
-        if (savedPosts) {
-            this.posts = JSON.parse(savedPosts);
-        } else {
-            // Posts de ejemplo
-            this.posts = {
-                'global': [
-                    {
-                        name: 'Sistema',
-                        subject: '¡Bienvenido a Void Chan!',
-                        message: 'Este es el foro global. Puedes publicar mensajes y conversar con otros usuarios.\n\nCaracterísticas:\n✅ Posts en tiempo real\n✅ Múltiples boards\n✅ Interfaz espacial\n✅ Sin censura\n\n¡Disfruta del void! 🌌',
-                        board: 'global',
-                        created_at: new Date().toISOString()
-                    }
-                ]
-            };
-        }
+        setTimeout(() => message.remove(), 3000);
     }
 }
 
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎬 DOM cargado, iniciando Void Chan...');
+// Inicializar
+document.addEventListener('DOMContentLoaded', () => {
     window.voidChan = new VoidChan();
 });
-
-// CSS para animaciones de mensajes
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    .no-posts {
-        text-align: center;
-        padding: 3rem;
-        color: var(--color-text-secondary);
-    }
-    
-    .no-posts-icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-    }
-`;
-document.head.appendChild(style);
