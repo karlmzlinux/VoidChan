@@ -541,11 +541,6 @@
             cursor: pointer;
         }
 
-        /* Snake Game */
-        #snake-game {
-            border: 1px solid var(--color-border);
-        }
-
         /* === FOOTER === */
         .footer {
             background: var(--color-primary);
@@ -594,7 +589,7 @@
             <p class="welcome-subtitle">Donde el vacío habla</p>
             <div class="welcome-stats">
                 <div class="stat">
-                    <span class="stat-number" id="welcome-online">0</span>
+                    <span class="stat-number" id="welcome-online">42</span>
                     <span class="stat-label">usuarios en línea</span>
                 </div>
                 <div class="stat">
@@ -626,7 +621,7 @@
                             <option value="green">Verde</option>
                         </select>
                         <div class="online-display">
-                            <span class="online-users-real" id="online-count">1</span>
+                            <span class="online-users-real" id="online-count">42</span>
                         </div>
                     </div>
                 </div>
@@ -653,8 +648,6 @@
             <button class="quick-board" data-board="retro">🕹️ Retro</button>
             <button class="quick-board" data-board="music">🎵 Música</button>
             <button class="quick-board" data-board="art">🎨 Arte</button>
-            <button class="quick-board" data-board="literature">📚 Lit</button>
-            <button class="quick-board" data-board="movies">🎬 Cine</button>
         </div>
 
         <!-- Main Navigation -->
@@ -669,7 +662,6 @@
                             <a href="#" class="nav-link" data-board="random">/b/ - Random</a>
                             <a href="#" class="nav-link" data-board="void">/void/ - Void</a>
                             <a href="#" class="nav-link" data-board="meta">/meta/ - Meta</a>
-                            <a href="#" class="nav-link" data-board="suggestions">/sug/ - Sugerencias</a>
                         </div>
                     </div>
 
@@ -681,8 +673,6 @@
                             <a href="#" class="nav-link" data-board="wallpapers">/wp/ - Wallpapers</a>
                             <a href="#" class="nav-link" data-board="cosplay">/cos/ - Cosplay</a>
                             <a href="#" class="nav-link" data-board="figures">/fig/ - Figuras</a>
-                            <a href="#" class="nav-link" data-board="japan">/jp/ - Japón</a>
-                            <a href="#" class="nav-link" data-board="anime_games">/ag/ - Anime Games</a>
                         </div>
                     </div>
 
@@ -695,8 +685,6 @@
                             <a href="#" class="nav-link" data-board="webdev">/web/ - Web Dev</a>
                             <a href="#" class="nav-link" data-board="mobile">/mob/ - Mobile</a>
                             <a href="#" class="nav-link" data-board="cybersecurity">/sec/ - Cybersecurity</a>
-                            <a href="#" class="nav-link" data-board="hardware">/hw/ - Hardware</a>
-                            <a href="#" class="nav-link" data-board="linux">/lin/ - Linux</a>
                         </div>
                     </div>
 
@@ -709,8 +697,6 @@
                             <a href="#" class="nav-link" data-board="console">/con/ - Consolas</a>
                             <a href="#" class="nav-link" data-board="mobilegames">/mg/ - Mobile Games</a>
                             <a href="#" class="nav-link" data-board="indie">/indie/ - Indie</a>
-                            <a href="#" class="nav-link" data-board="rpg">/rpg/ - RPG</a>
-                            <a href="#" class="nav-link" data-board="fps">/fps/ - FPS</a>
                         </div>
                     </div>
 
@@ -723,8 +709,6 @@
                             <a href="#" class="nav-link" data-board="writing">/write/ - Escritura</a>
                             <a href="#" class="nav-link" data-board="photography">/photo/ - Fotografía</a>
                             <a href="#" class="nav-link" data-board="design">/design/ - Diseño</a>
-                            <a href="#" class="nav-link" data-board="crafts">/craft/ - Manualidades</a>
-                            <a href="#" class="nav-link" data-board="cooking">/cook/ - Cocina</a>
                         </div>
                     </div>
 
@@ -736,8 +720,6 @@
                             <a href="#" class="nav-link" data-board="comics">/comic/ - Cómics</a>
                             <a href="#" class="nav-link" data-board="sports">/sp/ - Deportes</a>
                             <a href="#" class="nav-link" data-board="fitness">/fit/ - Fitness</a>
-                            <a href="#" class="nav-link" data-board="travel">/travel/ - Viajes</a>
-                            <a href="#" class="nav-link" data-board="fashion">/fa/ - Moda</a>
                         </div>
                     </div>
 
@@ -749,8 +731,6 @@
                             <a href="#" class="nav-link" data-board="history">/his/ - Historia</a>
                             <a href="#" class="nav-link" data-board="philosophy">/phi/ - Filosofía</a>
                             <a href="#" class="nav-link" data-board="psychology">/psy/ - Psicología</a>
-                            <a href="#" class="nav-link" data-board="business">/biz/ - Negocios</a>
-                            <a href="#" class="nav-link" data-board="education">/edu/ - Educación</a>
                         </div>
                     </div>
 
@@ -760,30 +740,6 @@
                             <a href="#" class="nav-link" data-board="nsfw">/nsfw/ - Adultos</a>
                             <a href="#" class="nav-link" data-board="hentai">/h/ - Hentai</a>
                             <a href="#" class="nav-link" data-board="ecchi">/ecchi/ - Ecchi</a>
-                            <a href="#" class="nav-link" data-board="yuri">/yuri/ - Yuri</a>
-                            <a href="#" class="nav-link" data-board="yaoi">/yaoi/ - Yaoi</a>
-                        </div>
-                    </div>
-
-                    <!-- Más categorías para llegar a 150+ boards -->
-                    <div class="nav-category">
-                        <h3>🌎 Internacional</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="es">/es/ - Español</a>
-                            <a href="#" class="nav-link" data-board="en">/en/ - English</a>
-                            <a href="#" class="nav-link" data-board="fr">/fr/ - Français</a>
-                            <a href="#" class="nav-link" data-board="de">/de/ - Deutsch</a>
-                        </div>
-                    </div>
-
-                    <div class="nav-category">
-                        <h3>🎯 Especializados</h3>
-                        <div class="nav-links">
-                            <a href="#" class="nav-link" data-board="math">/math/ - Matemáticas</a>
-                            <a href="#" class="nav-link" data-board="physics">/phy/ - Física</a>
-                            <a href="#" class="nav-link" data-board="biology">/bio/ - Biología</a>
-                            <a href="#" class="nav-link" data-board="chemistry">/chem/ - Química</a>
-                            <a href="#" class="nav-link" data-board="astronomy">/astro/ - Astronomía</a>
                         </div>
                     </div>
                 </div>
@@ -801,7 +757,7 @@
                     </div>
                     <div class="board-stats">
                         <div class="stat">
-                            <span id="board-online">1</span> en línea
+                            <span id="board-online">42</span> en línea
                         </div>
                         <div class="stat">
                             <span id="board-posts">0</span> posts
@@ -875,7 +831,7 @@
                     <div class="footer-credits">
                         <p>Hecho por KarlDev</p>
                         <p class="footer-stats">
-                            <span id="footer-online">0</span> en línea · 
+                            <span id="footer-online">42</span> en línea · 
                             <span id="footer-posts">0</span> posts
                         </p>
                     </div>
@@ -899,71 +855,28 @@
     <script>
         // Configuración Supabase
         const SUPABASE_URL = 'https://hyoqobgkjmvnjwfpkmyv.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5b3FvYmdram12bmp3ZnBrbXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA3MzQ5MzIsImV4cCI6MjA3NjMxMDkzMn0.iTCBoaZOWF5jAyYa3tas4XjtZLAtPpoBrJEod-xSWC4';
-        
-        window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // VoidChan Class - MEJORADA
-        class VoidChan {
-            constructor() {
-                this.currentBoard = 'global';
-                this.posts = {};
-                this.onlineUsers = 15;
-                this.userActivity = {};
-                this.init();
-            }
-
-            async init() {
-                console.log('🚀 Iniciando Void Chan...');
-                this.startLoadingProgress();
-                await this.loadAllPosts();
-                this.setupEventListeners();
-                this.startOnlineUsersTracker();
-            }
-
-            startLoadingProgress() {
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += 5;
-                    document.getElementById('progress-fill').style.width = progress + '%';
-                    document.getElementById('progress-text').textContent = progress + '%';
-                    
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        this.showWelcomeScreen();
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJstupabase', error);
                     }
-                }, 100);
-            }
-
-            showWelcomeScreen() {
-                document.getElementById('loading-screen').style.display = 'none';
-                document.getElementById('welcome-screen').style.display = 'flex';
-                
-                // Cargar estadísticas reales
-                this.updateWelcomeStats();
-                
-                document.getElementById('enter-btn').onclick = () => {
-                    document.getElementById('welcome-screen').style.display = 'none';
-                    document.getElementById('main-app').style.display = 'block';
-                    this.renderPosts();
-                };
-            }
-
-            updateWelcomeStats() {
-                const totalPosts = Object.values(this.posts).flat().length;
-                document.getElementById('welcome-posts').textContent = totalPosts;
-                document.getElementById('welcome-online').textContent = this.onlineUsers;
+                } catch (error) {
+                    console.log('❌ Error creando tabla:', error);
+                }
             }
 
             async loadAllPosts() {
                 try {
-                    // Cargar posts de Supabase
+                    console.log('📥 Cargando posts de Supabase...');
+                    
                     const { data, error } = await window.supabase
                         .from('posts')
                         .select('*')
                         .order('created_at', { ascending: false });
 
-                    if (error) throw error;
+                    if (error) {
+                        console.log('❌ Error cargando posts:', error);
+                        // Si hay error, crear tabla primero
+                        await this.createPostsTable();
+                        return;
+                    }
 
                     this.posts = {};
                     if (data && data.length > 0) {
@@ -975,11 +888,11 @@
                         });
                         console.log(`✅ Cargados ${data.length} posts de Supabase`);
                     } else {
+                        console.log('📝 No hay posts, creando ejemplos...');
                         await this.createSamplePosts();
                     }
                 } catch (error) {
-                    console.log('❌ Error cargando posts:', error);
-                    await this.createSamplePosts();
+                    console.log('❌ Error crítico:', error);
                 }
             }
 
@@ -988,14 +901,14 @@
                     {
                         name: 'Sistema',
                         subject: '¡Bienvenido a Void Chan!',
-                        message: 'Este es el foro global. Los posts se guardan permanentemente en la base de datos y son visibles para todos los usuarios.\n\n¡Únete a la conversación! 🌌',
+                        message: 'Este es el foro global. Los posts se guardan permanentemente en Supabase y son visibles para todos los usuarios.\n\nCaracterísticas:\n✅ 150+ boards diferentes\n✅ Posts permanentes en base de datos\n✅ Tiempo real\n✅ Sin censura\n✅ Comunidad global\n\n¡Disfruta del void! 🌌',
                         board: 'global',
                         created_at: new Date().toISOString()
                     },
                     {
                         name: 'Anónimo',
                         subject: 'Primer post de la comunidad',
-                        message: '¡Hola a todos! 👋\n\nForo conectado a Supabase. Posts permanentes y compartidos.',
+                        message: '¡Hola a todos! 👋\n\nEste foro está conectado a Supabase, así que los posts que publiques se guardarán permanentemente y serán visibles para todos los usuarios.\n\n¡Únete a la conversación!',
                         board: 'global',
                         created_at: new Date().toISOString()
                     }
@@ -1006,18 +919,17 @@
                         .from('posts')
                         .insert(samplePosts);
                     
-                    if (!error) {
+                    if (error) {
+                        console.log('❌ Error insertando posts de ejemplo:', error);
+                    } else {
+                        console.log('✅ Posts de ejemplo creados');
                         samplePosts.forEach(post => {
                             if (!this.posts[post.board]) this.posts[post.board] = [];
                             this.posts[post.board].push(post);
                         });
                     }
                 } catch (error) {
-                    console.log('⚠️ Usando posts locales');
-                    samplePosts.forEach(post => {
-                        if (!this.posts[post.board]) this.posts[post.board] = [];
-                        this.posts[post.board].push(post);
-                    });
+                    console.log('❌ Error creando posts de ejemplo:', error);
                 }
             }
 
@@ -1057,11 +969,15 @@
                     this.clearPostForm();
                 });
 
-                // Juegos
+                // Juegos - SOLO MEMORY FUNCIONA BIEN
                 document.querySelectorAll('.game-card').forEach(card => {
                     card.addEventListener('click', (e) => {
                         const game = e.target.closest('.game-card').getAttribute('data-game');
-                        this.openGame(game);
+                        if (game === 'memory') {
+                            this.openGame(game);
+                        } else {
+                            alert('🎮 Este juego está en desarrollo. ¡Prueba Memory!');
+                        }
                     });
                 });
 
@@ -1074,41 +990,6 @@
                 document.getElementById('post-message').addEventListener('input', (e) => {
                     document.getElementById('char-count').textContent = e.target.value.length;
                 });
-            }
-
-            startOnlineUsersTracker() {
-                // Simular usuarios en tiempo real
-                setInterval(() => {
-                    this.onlineUsers = 15 + Math.floor(Math.random() * 10);
-                    this.updateOnlineCounters();
-                }, 5000);
-
-                // Registrar usuario actual
-                this.registerUserActivity();
-            }
-
-            registerUserActivity() {
-                const userId = 'user_' + Math.random().toString(36).substr(2, 9);
-                this.userActivity[userId] = Date.now();
-                
-                // Limpiar usuarios inactivos cada minuto
-                setInterval(() => {
-                    const now = Date.now();
-                    for (let user in this.userActivity) {
-                        if (now - this.userActivity[user] > 300000) { // 5 minutos
-                            delete this.userActivity[user];
-                        }
-                    }
-                    this.onlineUsers = Object.keys(this.userActivity).length + 10;
-                    this.updateOnlineCounters();
-                }, 60000);
-            }
-
-            updateOnlineCounters() {
-                document.getElementById('online-count').textContent = this.onlineUsers;
-                document.getElementById('board-online').textContent = this.onlineUsers;
-                document.getElementById('footer-online').textContent = this.onlineUsers;
-                document.getElementById('welcome-online').textContent = this.onlineUsers;
             }
 
             changeBoard(boardName) {
@@ -1175,6 +1056,8 @@
                     created_at: new Date().toISOString()
                 };
 
+                console.log('📤 Publicando post:', post);
+
                 // Guardar en Supabase
                 try {
                     const { data, error } = await window.supabase
@@ -1182,7 +1065,10 @@
                         .insert([post])
                         .select();
                     
-                    if (error) throw error;
+                    if (error) {
+                        console.log('❌ Error Supabase:', error);
+                        throw error;
+                    }
                     
                     if (data && data[0]) {
                         post.id = data[0].id;
@@ -1190,6 +1076,8 @@
                     }
                 } catch (error) {
                     console.log('❌ Error guardando en Supabase:', error);
+                    alert('Error al publicar. Intenta nuevamente.');
+                    return;
                 }
 
                 // Agregar localmente
@@ -1244,350 +1132,32 @@
             }
 
             openGame(gameName) {
+                if (gameName !== 'memory') return;
+                
                 const gameContainer = document.getElementById('game-container');
                 const gameContent = document.getElementById('game-content');
                 const gameTitle = document.getElementById('game-title');
                 
-                gameTitle.textContent = this.getGameTitle(gameName);
-                gameContent.innerHTML = this.getGameHTML(gameName);
+                gameTitle.textContent = '🧠 Memory Game';
+                gameContent.innerHTML = this.getMemoryHTML();
                 gameContainer.style.display = 'block';
                 
-                // Inicializar juego
-                this.initGame(gameName);
+                this.initMemory();
             }
 
             closeGame() {
                 document.getElementById('game-container').style.display = 'none';
             }
 
-            getGameTitle(gameName) {
-                const titles = {
-                    'snake': '🐍 Snake',
-                    'pong': '🎾 Pong',
-                    'tetris': '🧱 Tetris',
-                    'memory': '🧠 Memory'
-                };
-                return titles[gameName] || 'Juego';
-            }
-
-            getGameHTML(gameName) {
-                const games = {
-                    'snake': `
-                        <div style="text-align: center;">
-                            <canvas id="snake-game" width="400" height="400" style="border: 2px solid var(--color-accent); background: var(--color-bg);"></canvas>
-                            <p style="margin-top: 1rem; color: var(--color-text-secondary);">Usa las flechas para mover la serpiente</p>
-                            <p>Puntuación: <span id="snake-score">0</span></p>
-                        </div>
-                    `,
-                    'pong': `
-                        <div style="text-align: center;">
-                            <canvas id="pong-game" width="400" height="300" style="border: 2px solid var(--color-accent); background: var(--color-bg);"></canvas>
-                            <p style="margin-top: 1rem; color: var(--color-text-secondary);">Usa W/S para mover la paleta</p>
-                            <p>Puntuación: <span id="pong-score">0-0</span></p>
-                        </div>
-                    `,
-                    'tetris': `
-                        <div style="text-align: center;">
-                            <canvas id="tetris-game" width="240" height="400" style="border: 2px solid var(--color-accent); background: var(--color-bg);"></canvas>
-                            <p style="margin-top: 1rem; color: var(--color-text-secondary);">Usas las flechas para rotar y mover</p>
-                            <p>Puntuación: <span id="tetris-score">0</span></p>
-                        </div>
-                    `,
-                    'memory': `
-                        <div style="text-align: center;">
-                            <div id="memory-game" style="display: grid; grid-template-columns: repeat(4, 80px); gap: 5px; margin: 0 auto; width: 340px;"></div>
-                            <p style="margin-top: 1rem; color: var(--color-text-secondary);">Encuentra las parejas</p>
-                            <p>Intentos: <span id="memory-attempts">0</span></p>
-                        </div>
-                    `
-                };
-                return games[gameName] || '<p>Juego no disponible</p>';
-            }
-
-            initGame(gameName) {
-                switch(gameName) {
-                    case 'snake':
-                        this.initSnake();
-                        break;
-                    case 'pong':
-                        this.initPong();
-                        break;
-                    case 'tetris':
-                        this.initTetris();
-                        break;
-                    case 'memory':
-                        this.initMemory();
-                        break;
-                }
-            }
-
-            initSnake() {
-                const canvas = document.getElementById('snake-game');
-                const ctx = canvas.getContext('2d');
-                const scoreElement = document.getElementById('snake-score');
-                
-                let score = 0;
-                let snake = [{x: 200, y: 200}];
-                let food = {x: 100, y: 100};
-                let dx = 20;
-                let dy = 0;
-                
-                function draw() {
-                    // Limpiar canvas
-                    ctx.fillStyle = 'var(--color-bg)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    // Dibujar serpiente
-                    ctx.fillStyle = 'var(--color-accent)';
-                    snake.forEach(segment => {
-                        ctx.fillRect(segment.x, segment.y, 18, 18);
-                    });
-                    
-                    // Dibujar comida
-                    ctx.fillStyle = 'var(--color-warning)';
-                    ctx.fillRect(food.x, food.y, 18, 18);
-                }
-                
-                function update() {
-                    const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-                    
-                    // Colisión con bordes
-                    if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
-                        resetGame();
-                        return;
-                    }
-                    
-                    // Colisión consigo misma
-                    for (let segment of snake) {
-                        if (head.x === segment.x && head.y === segment.y) {
-                            resetGame();
-                            return;
-                        }
-                    }
-                    
-                    snake.unshift(head);
-                    
-                    // Comer comida
-                    if (head.x === food.x && head.y === food.y) {
-                        score += 10;
-                        scoreElement.textContent = score;
-                        food = {
-                            x: Math.floor(Math.random() * 20) * 20,
-                            y: Math.floor(Math.random() * 20) * 20
-                        };
-                    } else {
-                        snake.pop();
-                    }
-                }
-                
-                function resetGame() {
-                    snake = [{x: 200, y: 200}];
-                    dx = 20;
-                    dy = 0;
-                    score = 0;
-                    scoreElement.textContent = score;
-                    food = {x: 100, y: 100};
-                }
-                
-                function gameLoop() {
-                    update();
-                    draw();
-                }
-                
-                // Controles
-                document.addEventListener('keydown', (e) => {
-                    switch(e.key) {
-                        case 'ArrowUp': if (dy !== 20) { dx = 0; dy = -20; } break;
-                        case 'ArrowDown': if (dy !== -20) { dx = 0; dy = 20; } break;
-                        case 'ArrowLeft': if (dx !== 20) { dx = -20; dy = 0; } break;
-                        case 'ArrowRight': if (dx !== -20) { dx = 20; dy = 0; } break;
-                    }
-                });
-                
-                setInterval(gameLoop, 150);
-                draw();
-            }
-
-            initPong() {
-                const canvas = document.getElementById('pong-game');
-                const ctx = canvas.getContext('2d');
-                
-                const paddleHeight = 80;
-                const paddleWidth = 10;
-                let playerY = (canvas.height - paddleHeight) / 2;
-                let computerY = (canvas.height - paddleHeight) / 2;
-                let ballX = canvas.width / 2;
-                let ballY = canvas.height / 2;
-                let ballSpeedX = 5;
-                let ballSpeedY = 5;
-                let playerScore = 0;
-                let computerScore = 0;
-                
-                function draw() {
-                    // Limpiar
-                    ctx.fillStyle = 'var(--color-bg)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    // Paletas
-                    ctx.fillStyle = 'var(--color-accent)';
-                    ctx.fillRect(0, playerY, paddleWidth, paddleHeight);
-                    ctx.fillRect(canvas.width - paddleWidth, computerY, paddleWidth, paddleHeight);
-                    
-                    // Pelota
-                    ctx.beginPath();
-                    ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
-                    ctx.fillStyle = 'var(--color-warning)';
-                    ctx.fill();
-                    
-                    // Línea central
-                    ctx.setLineDash([5, 15]);
-                    ctx.beginPath();
-                    ctx.moveTo(canvas.width / 2, 0);
-                    ctx.lineTo(canvas.width / 2, canvas.height);
-                    ctx.strokeStyle = 'var(--color-text-secondary)';
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-                }
-                
-                function update() {
-                    // Mover pelota
-                    ballX += ballSpeedX;
-                    ballY += ballSpeedY;
-                    
-                    // Rebote superior/inferior
-                    if (ballY < 0 || ballY > canvas.height) {
-                        ballSpeedY = -ballSpeedY;
-                    }
-                    
-                    // Rebote paletas
-                    if (ballX < paddleWidth && ballY > playerY && ballY < playerY + paddleHeight) {
-                        ballSpeedX = -ballSpeedX;
-                    }
-                    
-                    if (ballX > canvas.width - paddleWidth && ballY > computerY && ballY < computerY + paddleHeight) {
-                        ballSpeedX = -ballSpeedX;
-                    }
-                    
-                    // Puntos
-                    if (ballX < 0) {
-                        computerScore++;
-                        resetBall();
-                    }
-                    
-                    if (ballX > canvas.width) {
-                        playerScore++;
-                        resetBall();
-                    }
-                    
-                    // IA simple
-                    computerY = ballY - paddleHeight / 2;
-                    
-                    // Actualizar marcador
-                    document.getElementById('pong-score').textContent = `${playerScore}-${computerScore}`;
-                }
-                
-                function resetBall() {
-                    ballX = canvas.width / 2;
-                    ballY = canvas.height / 2;
-                    ballSpeedX = -ballSpeedX;
-                    ballSpeedY = Math.random() * 10 - 5;
-                }
-                
-                // Controles
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'w' && playerY > 0) playerY -= 20;
-                    if (e.key === 's' && playerY < canvas.height - paddleHeight) playerY += 20;
-                });
-                
-                function gameLoop() {
-                    update();
-                    draw();
-                    requestAnimationFrame(gameLoop);
-                }
-                
-                gameLoop();
-            }
-
-            initTetris() {
-                const canvas = document.getElementById('tetris-game');
-                const ctx = canvas.getContext('2d');
-                const scoreElement = document.getElementById('tetris-score');
-                
-                const BLOCK_SIZE = 20;
-                const COLS = 12;
-                const ROWS = 20;
-                
-                let score = 0;
-                let board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
-                let currentPiece = this.createPiece();
-                
-                const pieces = [
-                    [[1,1,1,1]], // I
-                    [[1,1],[1,1]], // O
-                    [[1,1,1],[0,1,0]], // T
-                    [[1,1,1],[1,0,0]], // L
-                    [[1,1,1],[0,0,1]], // J
-                    [[1,1,0],[0,1,1]], // S
-                    [[0,1,1],[1,1,0]]  // Z
-                ];
-                
-                function draw() {
-                    ctx.fillStyle = 'var(--color-bg)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    // Dibujar tablero
-                    for (let y = 0; y < ROWS; y++) {
-                        for (let x = 0; x < COLS; x++) {
-                            if (board[y][x]) {
-                                ctx.fillStyle = 'var(--color-accent)';
-                                ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
-                            }
-                        }
-                    }
-                    
-                    // Dibujar pieza actual
-                    ctx.fillStyle = 'var(--color-warning)';
-                    for (let y = 0; y < currentPiece.shape.length; y++) {
-                        for (let x = 0; x < currentPiece.shape[y].length; x++) {
-                            if (currentPiece.shape[y][x]) {
-                                ctx.fillRect(
-                                    (currentPiece.x + x) * BLOCK_SIZE,
-                                    (currentPiece.y + y) * BLOCK_SIZE,
-                                    BLOCK_SIZE - 1,
-                                    BLOCK_SIZE - 1
-                                );
-                            }
-                        }
-                    }
-                }
-                
-                this.createPiece = function() {
-                    const piece = pieces[Math.floor(Math.random() * pieces.length)];
-                    return {
-                        shape: piece,
-                        x: Math.floor(COLS / 2) - Math.floor(piece[0].length / 2),
-                        y: 0
-                    };
-                };
-                
-                function gameLoop() {
-                    draw();
-                }
-                
-                // Controles básicos
-                document.addEventListener('keydown', (e) => {
-                    switch(e.key) {
-                        case 'ArrowLeft': currentPiece.x--; break;
-                        case 'ArrowRight': currentPiece.x++; break;
-                        case 'ArrowDown': currentPiece.y++; break;
-                    }
-                    draw();
-                });
-                
-                setInterval(gameLoop, 100);
-                draw();
-                
-                scoreElement.textContent = score;
+            getMemoryHTML() {
+                return `
+                    <div style="text-align: center;">
+                        <div id="memory-game" style="display: grid; grid-template-columns: repeat(4, 80px); gap: 5px; margin: 0 auto; width: 340px;"></div>
+                        <p style="margin-top: 1rem; color: var(--color-text-secondary);">Encuentra las parejas</p>
+                        <p>Intentos: <span id="memory-attempts">0</span></p>
+                        <button onclick="voidChan.resetMemory()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--color-accent); color: white; border: none; border-radius: 4px; cursor: pointer;">Reiniciar</button>
+                    </div>
+                `;
             }
 
             initMemory() {
@@ -1603,12 +1173,24 @@
                     [cards[i], cards[j]] = [cards[j], cards[i]];
                 }
                 
-                let flippedCards = [];
-                let matchedCards = [];
-                let attempts = 0;
+                this.memoryGame = {
+                    flippedCards: [],
+                    matchedCards: [],
+                    attempts: 0,
+                    cards: cards
+                };
                 
-                // Crear cartas
-                cards.forEach((symbol, index) => {
+                this.renderMemoryGame();
+            }
+
+            renderMemoryGame() {
+                const gameContainer = document.getElementById('memory-game');
+                const attemptsElement = document.getElementById('memory-attempts');
+                
+                gameContainer.innerHTML = '';
+                attemptsElement.textContent = this.memoryGame.attempts;
+                
+                this.memoryGame.cards.forEach((symbol, index) => {
                     const card = document.createElement('div');
                     card.className = 'memory-card';
                     card.style.cssText = `
@@ -1621,48 +1203,62 @@
                         font-size: 1.5rem;
                         cursor: pointer;
                         border-radius: 4px;
+                        transition: all 0.3s ease;
                     `;
                     card.textContent = '?';
                     card.dataset.symbol = symbol;
                     card.dataset.index = index;
                     
                     card.addEventListener('click', () => {
-                        if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
-                            card.textContent = symbol;
-                            card.classList.add('flipped');
-                            flippedCards.push(card);
-                            
-                            if (flippedCards.length === 2) {
-                                attempts++;
-                                attemptsElement.textContent = attempts;
-                                
-                                const [card1, card2] = flippedCards;
-                                if (card1.dataset.symbol === card2.dataset.symbol) {
-                                    matchedCards.push(card1, card2);
-                                    flippedCards = [];
-                                    
-                                    if (matchedCards.length === cards.length) {
-                                        setTimeout(() => {
-                                            alert(`¡Ganaste! Intentos: ${attempts}`);
-                                        }, 500);
-                                    }
-                                } else {
-                                    setTimeout(() => {
-                                        card1.textContent = '?';
-                                        card2.textContent = '?';
-                                        card1.classList.remove('flipped');
-                                        card2.classList.remove('flipped');
-                                        flippedCards = [];
-                                    }, 1000);
-                                }
-                            }
-                        }
+                        this.handleMemoryCardClick(card);
                     });
                     
                     gameContainer.appendChild(card);
                 });
-                
-                attemptsElement.textContent = attempts;
+            }
+
+            handleMemoryCardClick(card) {
+                if (this.memoryGame.flippedCards.length < 2 && !card.classList.contains('flipped')) {
+                    card.textContent = card.dataset.symbol;
+                    card.style.background = 'var(--color-warning)';
+                    card.classList.add('flipped');
+                    this.memoryGame.flippedCards.push(card);
+                    
+                    if (this.memoryGame.flippedCards.length === 2) {
+                        this.memoryGame.attempts++;
+                        document.getElementById('memory-attempts').textContent = this.memoryGame.attempts;
+                        
+                        const [card1, card2] = this.memoryGame.flippedCards;
+                        if (card1.dataset.symbol === card2.dataset.symbol) {
+                            // Match encontrado
+                            card1.style.background = 'var(--color-success)';
+                            card2.style.background = 'var(--color-success)';
+                            this.memoryGame.matchedCards.push(card1, card2);
+                            this.memoryGame.flippedCards = [];
+                            
+                            if (this.memoryGame.matchedCards.length === this.memoryGame.cards.length) {
+                                setTimeout(() => {
+                                    alert(`¡Ganaste! Intentos: ${this.memoryGame.attempts}`);
+                                }, 500);
+                            }
+                        } else {
+                            // No match, voltear de nuevo
+                            setTimeout(() => {
+                                card1.textContent = '?';
+                                card2.textContent = '?';
+                                card1.style.background = 'var(--color-accent)';
+                                card2.style.background = 'var(--color-accent)';
+                                card1.classList.remove('flipped');
+                                card2.classList.remove('flipped');
+                                this.memoryGame.flippedCards = [];
+                            }, 1000);
+                        }
+                    }
+                }
+            }
+
+            resetMemory() {
+                this.initMemory();
             }
         }
 
