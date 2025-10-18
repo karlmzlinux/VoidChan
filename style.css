@@ -1,95 +1,100 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
 body {
-  background-color: #0b0b0b;
-  color: #00ffcc;
-  font-family: 'Press Start 2P', cursive;
-  text-align: center;
+  background: radial-gradient(circle, #0a0a0a, #121212);
+  color: #ddd;
+  font-family: 'VT323', monospace;
   margin: 0;
   padding: 0;
 }
 
 header {
-  background: linear-gradient(90deg, #ff00cc, #3333ff);
-  padding: 20px;
+  background: linear-gradient(90deg, #5f0fff, #00ffff);
   color: white;
-}
-
-.subtitle {
-  font-size: 0.7rem;
-  margin-top: -10px;
+  text-align: center;
+  padding: 10px 0;
+  font-family: 'Orbitron', sans-serif;
+  box-shadow: 0 0 15px #5f0fff;
 }
 
 nav {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
-select {
-  padding: 10px;
-  font-family: 'Press Start 2P', cursive;
-  background: #111;
-  color: #00ffcc;
-  border: 2px solid #00ffcc;
-  border-radius: 5px;
+nav button, nav a {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: cyan;
+  margin: 3px;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.3s;
+  font-family: 'VT323', monospace;
+}
+
+nav button:hover, nav a:hover {
+  background: cyan;
+  color: black;
 }
 
 main {
+  max-width: 900px;
+  margin: 20px auto;
   padding: 20px;
+  background: rgba(20, 20, 20, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 0 20px #00ffff33;
 }
 
-form {
+#thread-form {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+#thread-form input, #thread-form textarea {
+  width: 100%;
+  background: black;
+  border: 1px solid cyan;
+  color: white;
+  padding: 8px;
+  margin: 5px 0;
+  font-family: 'VT323', monospace;
+}
+
+#thread-form button {
+  background: cyan;
+  color: black;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+#thread-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 30px;
-}
-
-input, textarea, button {
-  font-family: 'Press Start 2P', cursive;
-  padding: 10px;
-  background: #111;
-  color: #00ffcc;
-  border: 2px solid #00ffcc;
-  border-radius: 5px;
-}
-
-button {
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: #00ffcc;
-  color: #111;
-}
-
-#threads {
-  margin-top: 20px;
-  border-top: 2px solid #00ffcc;
-  padding-top: 20px;
+  gap: 15px;
 }
 
 .thread {
-  background: #111;
-  margin: 10px;
+  background: rgba(0, 255, 255, 0.05);
+  border-left: 4px solid cyan;
   padding: 15px;
-  border: 2px solid #00ffcc;
-  border-radius: 10px;
-  text-align: left;
+  border-radius: 6px;
 }
 
-.games-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 20px;
+.thread:hover {
+  background: rgba(0, 255, 255, 0.1);
 }
 
 footer {
-  margin-top: 40px;
-  background: #111;
+  text-align: center;
+  color: #666;
   padding: 15px;
-  font-size: 0.6rem;
-  border-top: 2px solid #00ffcc;
+  font-size: 0.9em;
 }
